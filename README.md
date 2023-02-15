@@ -1,2 +1,4 @@
 # CS4485.0W1-Intelligent-Discussion-Board
-This is a discussion board that will also have an intelligent bot that will recommend answers to posters
+We are making an intelligent discussion board. It will have the same functions as the discussion board from elearning, but we will also have an intelligent chatbot that will give answers to trivial questions that are asked. Before the user posts a question to the discussion board, the chatbot will scan the syllabus and the discussion board for previous answers and then prompt the user with possible solutions before they post.
+
+The design board will have a home page, a login system, and a search function. Users will login to the system and have the option to create posts and comment on other posts. When posts are created, the recommendation algorithm will scan the content of the post and if applicable, give some sort of relevant recommendation to the user.
