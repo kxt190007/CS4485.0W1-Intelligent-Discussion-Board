@@ -33,6 +33,7 @@ $classes = ['CS4344', 'SE3345','HIST 2144', 'ARTS 2331'];
         <li><a href = "./classBoard.php"><?= $classes[$i] ?></a> </li>
     <?php }?>
 </nav>
+<p>test</p>
 
 </body>
 </html>
