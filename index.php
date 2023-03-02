@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<?php
+$classes = ['CS4344', 'SE3345','HIST 2144', 'ARTS 2331'];
+?>
+
 <head>
     <title>Page Title</title>
     <meta charset="UTF-8" />
@@ -16,21 +21,18 @@
 <p>By team 12</p>
 <nav>
     <center>
-        <li><a href="./index.html">Home</a></li>
+        <li><a href="./index.php">Home</a></li>
 
         <li> <a href="./login.html">Login</a></li>
         <li> <a href="./create.html">Create</a></li>
     </center>
 </nav>
-<homediv1>
-    <a href="./class.html">Class1</a>
-</homediv1>
-<div>
-    <a href="./classBoard.php">ClassPHPtest</a>
-</div>
-<div3>
-    <a href="./index.html">Class3</a>
 
-</div3>
+<nav>
+    <?php for($i = 0; $i < sizeof($classes); $i++) {?>
+        <li><a href = "./classBoard.php"><?= $classes[$i] ?></a> </li>
+    <?php }?>
+</nav>
+
 </body>
 </html>

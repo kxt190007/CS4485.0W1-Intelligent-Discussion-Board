@@ -1,6 +1,6 @@
 <?php
 $postTitles = ['Question about hw', 'When is x exam??','Another redundant Post'];
-$postBodies = ['Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor??','blah blah'];
+$postBodies = ['Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. ', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor??','Donec quam felis'];
 ?>
 
 
@@ -18,7 +18,7 @@ $postBodies = ['Aenean massa. Cum sociis natoque penatibus et magnis dis parturi
 </h1>
 <nav>
     <center>
-        <li><a href="./index.html">Home</a></li>
+        <li><a href="./index.php">Home</a></li>
 
         <li> <a href="./login.html">Login</a></li>
         <li> <a href="./create.html">Create</a></li>
@@ -31,7 +31,7 @@ $postBodies = ['Aenean massa. Cum sociis natoque penatibus et magnis dis parturi
     <a href="./classBoard.php">ClassPHPtest</a>
 </div>
 <div3>
-    <a href="./index.html">Class3</a>
+    <a href="./index.php">Class3</a>
 
 </div3>
 
