@@ -7,7 +7,7 @@ VALUES(1, 1, 1, 'test', 'test')";
 
 if ($connect->query($sql) === TRUE) {
     echo "Record updated successfully";
-  } else {
+} else {
     echo "Error updating record: " . $connect->error;
 }
 
