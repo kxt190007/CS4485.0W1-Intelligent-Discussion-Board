@@ -23,22 +23,30 @@ def members():
 @app.route("/login", methods = ["POST"])
 def login():
     email = request.json.get('email')
-    print(email)
     password = request.json.get('password')
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM Users WHERE Email = %s AND Password = %s ', (email, password))
     rows = cursor.fetchone()
+    cursor.close()
     if rows:
-        return  {"status": "Success", "message": "message"}
-    return {"status": "Failed", "meesage": "message"}
+        return {"token" : rows[0]}
+    return {"token" : ""}
+
     
 @app.route("/post", methods = ['POST'])
 def post():
+    userID = request.json.get('userID')
+    print(userID[0])
+    postBody = request.json.get('postContent')
+    postTitle = request.json.get('postTitle')
+    postTag = request.json.get('postTag')
     cursor = mysql.connection.cursor()
-    cursor.execute('INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag) VALUES (1, 1, "hello", "test", "test")')
+    cursor.execute('INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag) VALUES (%s, 1, %s, %s, %s)', (userID, postBody, postTitle, postTag))
     mysql.connection.commit()
+    cursor.close()
     return  {"status": "Success", "message": "message"}
     
+
 
 if __name__ == "__main__":
     app.run(debug=True)

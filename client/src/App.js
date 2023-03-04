@@ -9,7 +9,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
 
-  const [data, setData] = useState([{}])
+
+  // if(!token){
+  //   return <Login setToken = {setToken} />
+  // }
 
   // useEffect(() => {
   //   fetch("http://localhost:5000/post", {
@@ -41,5 +44,7 @@ function App() {
     </BrowserRouter>
   );
 }
+
+
 
 export default App
