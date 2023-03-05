@@ -27,12 +27,28 @@ def login():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM Users WHERE Email = %s AND Password = %s ', (email, password))
     rows = cursor.fetchone()
+    print(rows)
     cursor.close()
     if rows:
-        return {"token" : rows[0]}
+        return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4]}
     return {"token" : ""}
 
-    
+@app.route("/getClasses", methods = ['POST'])
+def getClasses():
+    userID = request.json.get('userID')
+    print(userID)
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID,))
+    rows = cursor.fetchall()
+    print(rows)
+    classDict = dict()
+    for x in rows:
+        cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (x[1],))
+        classRow = cursor.fetchone()
+        classDict[classRow[0]] = classRow[1]
+    print(classDict)
+    return classDict
+
 @app.route("/post", methods = ['POST'])
 def post():
     userID = request.json.get('userID')
@@ -40,8 +56,9 @@ def post():
     postBody = request.json.get('postContent')
     postTitle = request.json.get('postTitle')
     postTag = request.json.get('postTag')
+    classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor.execute('INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag) VALUES (%s, 1, %s, %s, %s)', (userID, postBody, postTitle, postTag))
+    cursor.execute('INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)', (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
     cursor.close()
     return  {"status": "Success", "message": "message"}

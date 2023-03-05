@@ -6,7 +6,7 @@ function Register() {
     <div class="form-box">
       <h2>Sign Up</h2>
 
-      <form class="signUpForm">
+      <form>
         <div class="input-group">
           <i class="fa-solid fa-user"></i>
           <input
@@ -27,6 +27,9 @@ function Register() {
           />
         </div>
         <span class="error"></span>
+        <input placeHolder="First Name"/>
+        <input placeHolder="Last Name"/>
+
         <div class="SignButton">
           <button type="submit">Sign Up</button>
         </div>

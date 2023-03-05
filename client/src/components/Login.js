@@ -3,6 +3,7 @@ import Button from '@mui/material/Button'
 import { Outlet, Link } from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import PropTypes from 'prop-types'
+import UserProfile from './UserProfile.js'
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,14 @@ function Login() {
     });
     console.log(token.token);
     if(token.token !== ''){
-      sessionStorage.setItem('token', token.token);
+      const user = new UserProfile(token.token, token.email, token.password, token.name, token.lastname);
+      console.log(user.userID)
+      console.log(user)
+      sessionStorage.setItem('token', user.userID);
+      sessionStorage.setItem('email', user.email)
+      sessionStorage.setItem('name', user.name)
+      sessionStorage.setItem('lastname', user.lastname)
+      sessionStorage.setItem('password', user.password)
       navigate("/");
     }
     else{
@@ -77,8 +85,5 @@ function Login() {
   )
 }
 
-Login.propTypes = {
-  setToken: PropTypes.func.isRequired
-}
 
 export default Login
