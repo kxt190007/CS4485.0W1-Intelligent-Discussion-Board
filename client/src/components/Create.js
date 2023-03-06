@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Navigate, useNavigate} from 'react-router-dom'
 import { Link } from "react-router-dom";
+import Layout from './Layout.js'
 
 
 function Create() {
@@ -92,7 +93,9 @@ function Create() {
     )
   }
   return (
-    <div><h1>Create Post</h1>
+    <div>
+      <Layout/>
+      <h1>Create Post</h1>
 
       <form onSubmit={handleSubmit}>
       <label>
