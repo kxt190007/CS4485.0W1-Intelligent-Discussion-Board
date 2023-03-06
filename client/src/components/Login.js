@@ -4,6 +4,7 @@ import { Outlet, Link } from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import PropTypes from 'prop-types'
 import UserProfile from './UserProfile.js'
+import Layout from './Layout.js'
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -49,7 +50,8 @@ function Login() {
 
 
   return (
-    <div> Login
+    <div> 
+      <Layout />
       <body>
         <div class="form-box">
           <h2>Log In</h2>
