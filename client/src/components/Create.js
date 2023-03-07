@@ -17,9 +17,7 @@ function Create() {
   useEffect(() =>{
     async function fetchData(){
       //fetch classes list
-      const classList = await getClass({
-        userID : sessionStorage.getItem('token')
-      });
+      const classList = JSON.parse(sessionStorage.getItem('classes'))
       console.log(classList);
       setClasses(classList);
       console.log(classes);
@@ -48,18 +46,7 @@ function Create() {
       res=>res.json()
     )
   }
-  async function getClass(credentials){
-    return fetch("http://localhost:5000/getClasses",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(credentials),
-    })
-    .then(
-      res=>res.json()
-    )
-  }
+  
   const handleSubmit = async e => {
     console.log(inputs)
     e.preventDefault();
