@@ -1,6 +1,10 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
+<<<<<<< HEAD
+=======
+from array import *
+>>>>>>> aeffcbc6370be910d7f644ce18407126b4e37021
 
 app = Flask(__name__)
 mysql = MySQL(app)
@@ -38,12 +42,20 @@ def getClasses():
     userID = request.json.get('userID')
     print(userID)
     cursor = mysql.connection.cursor()
+<<<<<<< HEAD
     cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID,))
+=======
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID))
+>>>>>>> aeffcbc6370be910d7f644ce18407126b4e37021
     rows = cursor.fetchall()
     print(rows)
     classDict = dict()
     for x in rows:
+<<<<<<< HEAD
         cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (x[1],))
+=======
+        cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (x[1]))
+>>>>>>> aeffcbc6370be910d7f644ce18407126b4e37021
         classRow = cursor.fetchone()
         classDict[classRow[0]] = classRow[1]
     print(classDict)
@@ -63,7 +75,33 @@ def post():
     cursor.close()
     return  {"status": "Success", "message": "message"}
     
+<<<<<<< HEAD
 
+=======
+@app.route("/getPosts", methods = ['POST'])
+def getPosts():
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM Posts WHERE ClassID = %s', classID)
+    rows = cursor.fetchall()
+    print(rows)
+    postIDs = []
+    UserIDs = []
+    postStatus = []
+    postBodies = []
+    postTitles = []
+    postTags = []
+    for x in rows:
+        postIDs.append(x[0])
+        UserIDs.append(x[1])
+        postStatus.append(x[2])
+        postBodies.append(x[3])
+        postTitles.append(x[4])
+        postTags.append(x[5])
+    arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags]
+        
+    return arr
+>>>>>>> aeffcbc6370be910d7f644ce18407126b4e37021
 
 if __name__ == "__main__":
     app.run(debug=True)
