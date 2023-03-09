@@ -4,6 +4,7 @@ import { Outlet, Link } from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import PropTypes from 'prop-types'
 import UserProfile from './UserProfile.js'
+import Layout from './Layout.js'
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -24,6 +25,18 @@ function Login() {
       res=>res.json()
     )
   }
+  async function getClass(credentials){
+    return fetch("http://localhost:5000/getClasses",{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(credentials),
+    })
+    .then(
+      res=>res.json()
+    )
+  }
   const handleSubmit = async e => {
     e.preventDefault();
     const token = await loginUser({
@@ -32,14 +45,20 @@ function Login() {
     });
     console.log(token.token);
     if(token.token !== ''){
-      const user = new UserProfile(token.token, token.email, token.password, token.name, token.lastname);
+      const classList = await getClass({
+        userID : token.token
+      });
+      const user = new UserProfile(token.token, token.email, token.password, token.name, token.lastname, classList);
       console.log(user.userID)
       console.log(user)
+      sessionStorage.setItem('user', JSON.stringify(user))
       sessionStorage.setItem('token', user.userID);
       sessionStorage.setItem('email', user.email)
       sessionStorage.setItem('name', user.name)
       sessionStorage.setItem('lastname', user.lastname)
       sessionStorage.setItem('password', user.password)
+      sessionStorage.setItem('classes', JSON.stringify(user.classes))
+      console.log(sessionStorage.getItem('classes'))
       navigate("/");
     }
     else{
@@ -49,7 +68,8 @@ function Login() {
 
 
   return (
-    <div> Login
+    <div> 
+      <Layout />
       <body>
         <div class="form-box">
           <h2>Log In</h2>

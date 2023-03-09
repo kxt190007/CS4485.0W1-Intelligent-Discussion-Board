@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Navigate, useNavigate} from 'react-router-dom'
 import { Link } from "react-router-dom";
+import Layout from './Layout.js'
 
 
 function Create() {
@@ -16,9 +17,7 @@ function Create() {
   useEffect(() =>{
     async function fetchData(){
       //fetch classes list
-      const classList = await getClass({
-        userID : sessionStorage.getItem('token')
-      });
+      const classList = JSON.parse(sessionStorage.getItem('classes'))
       console.log(classList);
       setClasses(classList);
       console.log(classes);
@@ -47,18 +46,7 @@ function Create() {
       res=>res.json()
     )
   }
-  async function getClass(credentials){
-    return fetch("http://localhost:5000/getClasses",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(credentials),
-    })
-    .then(
-      res=>res.json()
-    )
-  }
+  
   const handleSubmit = async e => {
     console.log(inputs)
     e.preventDefault();
@@ -92,7 +80,9 @@ function Create() {
     )
   }
   return (
-    <div><h1>Create Post</h1>
+    <div>
+      <Layout/>
+      <h1>Create Post</h1>
 
       <form onSubmit={handleSubmit}>
       <label>
