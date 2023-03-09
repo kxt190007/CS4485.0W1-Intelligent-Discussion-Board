@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import Layout from './Layout'
+import {useNavigate} from "react-router-dom";
 import { List,ListItem, ListItemText, ListItemButton } from '@mui/material'
-
-
-
 import Box from '@mui/material/Box';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
 
 function Home() {
 
-  const [chosenclass, setchosenclass] = useState("");
+  const navigate = useNavigate();
   const [classes, setClasses] = useState([{}]);
   const [inputs, setInputs] = useState([]);
   const [userName, setUserName] = useState("");
@@ -43,13 +39,15 @@ function Home() {
   }, []);
 
   const handleChange = (event) =>{
-
+    sessionStorage.setItem('chosenClass', event.target.value)
+    console.log(sessionStorage.getItem('chosenClass'))
+    navigate("/board");
   }
 
   let listClasses = inputs.map((x) => 
     <>
-    <ListItem disablePadding>
-            <ListItemButton>
+    <ListItem disablePadding onClick = {(e) => handleChange(e)}>
+            <ListItemButton >
               <ListItemText primary={x}/>
             </ListItemButton>
           </ListItem>
@@ -78,15 +76,8 @@ function Home() {
           {listClasses}
         </List>
       </nav>
-  
     </Box>
     </div>
-    
-
-
-    
-
-
   )
 }
 
