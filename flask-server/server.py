@@ -2,6 +2,8 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 from array import *
+from helpbot import *
+from cosim import *
 
 app = Flask(__name__)
 mysql = MySQL(app)
@@ -13,15 +15,13 @@ app.config['MYSQL_PASSWORD'] = 'svdden+=479'
 app.config['MYSQL_DB'] = 'DiscussionBoard'
 
 
-
-
-
-#Members API Route
+# Members API Route
 @app.route("/members")
 def members():
     return {"members": ["Member1", "Member2", "Member3"]}
 
-@app.route("/login", methods = ["POST"])
+
+@app.route("/login", methods=["POST"])
 def login():
     email = request.json.get('email')
     password = request.json.get('password')
@@ -31,10 +31,11 @@ def login():
     print(rows)
     cursor.close()
     if rows:
-        return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4]}
-    return {"token" : ""}
+        return {"token": rows[0], "password": rows[1], "email": rows[2], "name": rows[3], "lastname": rows[4]}
+    return {"token": ""}
 
-@app.route("/getClasses", methods = ['POST'])
+
+@app.route("/getClasses", methods=['POST'])
 def getClasses():
     userID = request.json.get('userID')
     print(userID)
@@ -50,7 +51,8 @@ def getClasses():
     print(classDict)
     return classDict
 
-@app.route("/post", methods = ['POST'])
+
+@app.route("/post", methods=['POST'])
 def post():
     userID = request.json.get('userID')
     print(userID[0])
@@ -59,12 +61,28 @@ def post():
     postTag = request.json.get('postTag')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor.execute('INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)', (userID, postBody, postTitle, postTag, classID))
+    cursor.execute(
+        'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
+        (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
+    cursor.execute('SELECT PostTitle FROM Posts')
+    myresult = cursor.fetchall()
+    vartemp = 0
+    for postTitle2 in myresult:
+        similarity = text_similarity(postTitle, postTitle2)
+        if similarity > .5:
+            cursor.execute('Select PostBody FROM Posts WHERE PostTitle = {}'.format(postTitle2))
+            # insert
+            vartemp = 1
+            break
+    if vartemp = 0:
+        response = ask_question(postTitle)
+        # insert
     cursor.close()
-    return  {"status": "Success", "message": "message"}
-    
-@app.route("/getPosts", methods = ['POST'])
+    return {"status": "Success", "message": "message"}
+
+
+@app.route("/getPosts", methods=['POST'])
 def getPosts():
     classID = request.json.get('classID')
     cursor = mysql.connection.cursor()
@@ -84,8 +102,8 @@ def getPosts():
         postBodies.append(x[3])
         postTitles.append(x[4])
         postTags.append(x[5])
-    arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags]
-        
+    arr = [postIDs, UserIDs, postStatus, postBodies, postTitles, postTags]
+
     return arr
 
 
