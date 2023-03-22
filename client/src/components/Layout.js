@@ -1,7 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 
 function Layout(){
-  console.log(sessionStorage.getItem('accesslevel'))
   if (!sessionStorage.getItem('token')) {
     return (
       <>
