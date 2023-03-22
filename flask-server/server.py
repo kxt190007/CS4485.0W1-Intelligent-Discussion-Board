@@ -31,7 +31,7 @@ def login():
     print(rows)
     cursor.close()
     if rows:
-        return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4]}
+        return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
     return {"token" : ""}
 
 @app.route("/getClasses", methods = ['POST'])
