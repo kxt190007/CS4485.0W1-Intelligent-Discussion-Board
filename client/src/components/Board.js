@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import { Link } from 'react-router-dom'
 import Layout from './Layout'
+import {useNavigate} from "react-router-dom";
 import { List,ListItem, ListItemText, ListItemButton, Divider } from '@mui/material'
 import Box from '@mui/material/Box';
 
 function Board(){
 
+    const navigate = useNavigate();
     const classList = JSON.parse(sessionStorage.getItem('classes'))
     const classID = sessionStorage.getItem('chosenClass')
     //const [postJSON, setPostJSON] = useState([{}][{}]);
@@ -80,16 +82,30 @@ function Board(){
     var postArr = [];
     for(let i = 0; i < postIDs.length; i++){
         postArr.push(
-            <div>
-                <h3>{postTitles[i]}</h3>
-                <p>{postBodies[i]}</p>
+            <div value={i}>
+              <ListItem  value={i} disablePadding onClick = {(e) => handleChange(e)}>
+                <ListItemButton value={i} >
+                <ListItemText>
+                  <option value = {i}>{postTitles[i] }</option>
+                </ListItemText>
+                </ListItemButton>
+              </ListItem>
+              <p value={i} >{postBodies[i]}</p>
+
                 <Divider/>
             </div>
         )
     }
 
-    const handleChange = (event) => {
 
+
+    const handleChange = (event) => {
+      console.log(event.target.value)
+      sessionStorage.setItem('chosenPost', postIDs[event.target.value])
+      sessionStorage.setItem('postTitle', postTitles[event.target.value])
+      sessionStorage.setItem('postBody', postBodies[event.target.value])
+      console.log(sessionStorage.getItem('chosenPost'))
+      navigate("/post");
     }
 
 

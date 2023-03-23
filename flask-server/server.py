@@ -88,6 +88,25 @@ def getPosts():
         
     return arr
 
+@app.route("/getPostComments", methods = ['POST'])
+def getPostComments():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM PostComment WHERE PostID = %s', (postID,))
+    rows = cursor.fetchall()
+    userIDs = []
+    commentBodies = []
+    postTimes = []
+    for x in rows:
+        userIDs.append(x[1])
+        commentBodies.append(x[3])
+        postTimes.append(x[4])
+    arr = [userIDs, commentBodies, postTimes]
+
+    return arr
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

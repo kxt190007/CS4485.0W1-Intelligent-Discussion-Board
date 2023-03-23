@@ -28,6 +28,7 @@ function Home() {
           <option value = {k}>{classList[k]}</option>
         );
         setInputs(temp);
+        console.log("inputs:");
         console.log(inputs);
       }
       const userData = sessionStorage.getItem('name')
@@ -50,7 +51,7 @@ function Home() {
             <ListItemButton >
               <ListItemText primary={x}/>
             </ListItemButton>
-          </ListItem>
+    </ListItem>
 
     </>
   );

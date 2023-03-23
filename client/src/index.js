@@ -6,6 +6,7 @@ import Home from './components/Home.js'
 import Register from './components/Register'
 import Logout from "./components/Logout"
 import Board from "./components/Board"
+import Post from "./components/Post"
 import {
   createBrowserRouter,
   RouterProvider,
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "board",
         element: <Board />
+      },
+      {
+        path: "post",
+        element: <Post />,
       }
     ]
   },
