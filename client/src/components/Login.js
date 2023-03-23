@@ -5,6 +5,8 @@ import {useNavigate} from "react-router-dom";
 import PropTypes from 'prop-types'
 import UserProfile from './UserProfile.js'
 import Layout from './Layout.js'
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -67,8 +69,46 @@ function Login() {
     }
   }
 
+  const paperStyle = { padding: "30px 20px", height: '60vh', width: 320, margin: "20px auto" }
+  const avatarStyle = { backgroundColor: 'orange' }
+  const btnStyle = { margin: '8px 0' }
 
   return (
+    <Grid>
+      <Layout />
+      <Paper elevation={10} style={paperStyle}>
+        <Grid align='center'>
+          <Avatar style={avatarStyle}><AccountBoxIcon /></Avatar>
+          <h2>User Login</h2>
+        </Grid>
+        <form onSubmit={handleSubmit}>
+          <TextField 
+            id="standard-basic" 
+            label="Email" 
+            placeholder='Enter email' 
+            variant="standard" 
+            fullWidth required 
+            onChange={(e) => setEmail(e.target.value)}/>
+          <TextField 
+            id="standard-basic" 
+            label="Password" 
+            placeholder='Enter password' 
+            type='password' 
+            variant="standard" 
+            fullWidth required 
+            onChange={(e) => setPassword(e.target.value)}/>
+
+          <Button type = 'submit' variant="contained" style={btnStyle} fullWidth>Login</Button>
+          <p>{text}</p>
+        </form>
+        <Link to="/register">Sign Up</Link>
+      </Paper>
+    </Grid>
+
+
+
+    
+    /*
     <div> 
       <Layout />
       <body>
@@ -102,7 +142,7 @@ function Login() {
         </div>
       </body>
     </div>
-
+    */
   )
 }
 
