@@ -29,10 +29,8 @@ def login():
     print(rows)
     cursor.close()
     if rows:
-        return {"token": rows[0], "password": rows[1], "email": rows[2], "name": rows[3], "lastname": rows[4],
-                "accesslevel": rows[5]}
-    return {"token": ""}
-
+        return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
+    return {"token" : ""}
 
 @app.route("/getClasses", methods=['POST'])
 def getClasses():
@@ -109,10 +107,31 @@ def getPosts():
         postBodies.append(x[3])
         postTitles.append(x[4])
         postTags.append(x[5])
-    arr = [postIDs, UserIDs, postStatus, postBodies, postTitles, postTags]
+    arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags]
     cursor.close()
     return arr
 
+@app.route("/createUser", methods = ['POST'])
+def createUser():
+    firstName = request.json.get('firstName')
+    lastName = request.json.get('lastName')
+    email = request.json.get('email')
+    password = request.json.get('password')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM Users WHERE Email = %s', (email,))
+    rows = cursor.fetchall()
+    if rows:
+        return {"status": "Failed"}
+    cursor.execute("INSERT INTO Users (Password, Email, FirstName, LastName, AccessLevel) VALUES (%s, %s, %s, %s, 0)", (password, email, firstName, lastName))
+
+    mysql.connection.commit()
+    cursor.execute('SELECT * FROM Users WHERE Email = %s AND Password = %s ', (email, password))
+    rows = cursor.fetchone()
+    print(rows)
+    cursor.close()
+    if rows:
+        return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
+    return {"token" : ""}
 
 @app.route("/createUser", methods=['POST'])
 def createUser():
