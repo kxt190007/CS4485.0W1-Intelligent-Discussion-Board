@@ -10,5 +10,3 @@ def text_similarity(text1,text2):
     # Calculate the cosine similarity between the vectors
     similarity = ((cosine_similarity(vectors))[0])[1]
     return similarity
-
-

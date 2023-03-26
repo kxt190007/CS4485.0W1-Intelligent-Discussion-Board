@@ -51,7 +51,7 @@ def ask_question(question):
 
 
     #question will be pulled from the db -> maybe we can pass this in as a param
-    question = "what time is this class?"
+
 
     #pdf will be taken from the tags -> see post class (tag?) -> pull syllabus from there
     #syllabus = class + ".pdf" -> class pdf
@@ -59,7 +59,7 @@ def ask_question(question):
     #so new question will take the course syllabus
     #something like this:
 
-    new_question = "given this text " + syllabusText + question + " ?"
+    new_question = "given this text: " + syllabusText + "what is the answer to this question: " + question + " ?"
 
     response = get_response(INSTRUCTIONS + new_question)
     response = response.lstrip()
@@ -67,7 +67,6 @@ def ask_question(question):
         print("error")
         #do not pass response to DB
     else:
-        print(response)
         return response
         #pass response to db??
 

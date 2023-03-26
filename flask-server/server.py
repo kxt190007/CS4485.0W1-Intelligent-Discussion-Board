@@ -61,25 +61,34 @@ def post():
     postTag = request.json.get('postTag')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor.execute(
-        'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
-        (userID, postBody, postTitle, postTag, classID))
-    mysql.connection.commit()
+    cursor2 = mysql.connection.cursor()
+
+    #cursor.execute(
+    #    'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
+    #    (userID, postBody, postTitle, postTag, classID))
+    #mysql.connection.commit()
     cursor.execute('SELECT PostTitle FROM Posts')
     myresult = cursor.fetchall()
     vartemp = 0
-    for postTitle2 in myresult:
-        similarity = text_similarity(postTitle, postTitle2)
-        if similarity > .5:
-            cursor.execute('Select PostBody FROM Posts WHERE PostTitle = {}'.format(postTitle2))
+    if len(postTitle) > 1:
+        for postTitle2 in myresult:
+            postTitle2 = postTitle2[0]
+            similarity = text_similarity(postTitle, postTitle2)
+            if similarity > .5:
+                cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
+                body = cursor.fetchall()
+                print(body[-1][0])
+                #insert
+                print("similar post found at: {}".format(postTitle2))
+                vartemp = 1
+                break
+        if vartemp == 0:
+            response = ask_question(postTitle)
+            print(response)
             # insert
-            vartemp = 1
-            break
-    if vartemp = 0:
-        response = ask_question(postTitle)
-        # insert
     cursor.close()
     return {"status": "Success", "message": "message"}
+
 
 
 @app.route("/getPosts", methods=['POST'])
