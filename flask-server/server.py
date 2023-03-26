@@ -2,6 +2,8 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 from array import *
+from helpbot import *
+from cosim import *
 
 app = Flask(__name__)
 mysql = MySQL(app)
