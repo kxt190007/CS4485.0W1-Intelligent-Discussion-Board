@@ -2,8 +2,6 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 from array import *
-from helpbot import *
-from cosim import *
 
 app = Flask(__name__)
 mysql = MySQL(app)
@@ -31,7 +29,8 @@ def login():
     print(rows)
     cursor.close()
     if rows:
-        return {"token": rows[0], "password": rows[1], "email": rows[2], "name": rows[3], "lastname": rows[4]}
+        return {"token": rows[0], "password": rows[1], "email": rows[2], "name": rows[3], "lastname": rows[4],
+                "accesslevel": rows[5]}
     return {"token": ""}
 
 
@@ -63,10 +62,10 @@ def post():
     cursor = mysql.connection.cursor()
     cursor2 = mysql.connection.cursor()
 
-    #cursor.execute(
-    #    'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
-    #    (userID, postBody, postTitle, postTag, classID))
-    #mysql.connection.commit()
+    cursor.execute(
+        'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
+        (userID, postBody, postTitle, postTag, classID))
+    mysql.connection.commit()
     cursor.execute('SELECT PostTitle FROM Posts')
     myresult = cursor.fetchall()
     vartemp = 0
@@ -90,7 +89,6 @@ def post():
     return {"status": "Success", "message": "message"}
 
 
-
 @app.route("/getPosts", methods=['POST'])
 def getPosts():
     classID = request.json.get('classID')
@@ -112,8 +110,33 @@ def getPosts():
         postTitles.append(x[4])
         postTags.append(x[5])
     arr = [postIDs, UserIDs, postStatus, postBodies, postTitles, postTags]
-
+    cursor.close()
     return arr
+
+
+@app.route("/createUser", methods=['POST'])
+def createUser():
+    firstName = request.json.get('firstName')
+    lastName = request.json.get('lastName')
+    email = request.json.get('email')
+    password = request.json.get('password')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM Users WHERE Email = %s', (email,))
+    rows = cursor.fetchall()
+    if rows:
+        return {"status": "Failed"}
+    cursor.execute("INSERT INTO Users (Password, Email, FirstName, LastName, AccessLevel) VALUES (%s, %s, %s, %s, 0)",
+                   (password, email, firstName, lastName))
+
+    mysql.connection.commit()
+    cursor.execute('SELECT * FROM Users WHERE Email = %s AND Password = %s ', (email, password))
+    rows = cursor.fetchone()
+    print(rows)
+    cursor.close()
+    if rows:
+        return {"token": rows[0], "password": rows[1], "email": rows[2], "name": rows[3], "lastname": rows[4],
+                "accesslevel": rows[5]}
+    return {"token": ""}
 
 
 if __name__ == "__main__":
