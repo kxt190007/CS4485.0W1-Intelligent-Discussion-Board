@@ -2,6 +2,8 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 from array import *
+from helpbot import *
+from cosim import *
 
 app = Flask(__name__)
 mysql = MySQL(app)
@@ -133,29 +135,6 @@ def createUser():
         return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
     return {"token" : ""}
 
-@app.route("/createUser", methods=['POST'])
-def createUser():
-    firstName = request.json.get('firstName')
-    lastName = request.json.get('lastName')
-    email = request.json.get('email')
-    password = request.json.get('password')
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM Users WHERE Email = %s', (email,))
-    rows = cursor.fetchall()
-    if rows:
-        return {"status": "Failed"}
-    cursor.execute("INSERT INTO Users (Password, Email, FirstName, LastName, AccessLevel) VALUES (%s, %s, %s, %s, 0)",
-                   (password, email, firstName, lastName))
-
-    mysql.connection.commit()
-    cursor.execute('SELECT * FROM Users WHERE Email = %s AND Password = %s ', (email, password))
-    rows = cursor.fetchone()
-    print(rows)
-    cursor.close()
-    if rows:
-        return {"token": rows[0], "password": rows[1], "email": rows[2], "name": rows[3], "lastname": rows[4],
-                "accesslevel": rows[5]}
-    return {"token": ""}
 
 
 if __name__ == "__main__":
