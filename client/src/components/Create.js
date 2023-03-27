@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {Navigate, useNavigate} from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
 import Layout from './Layout.js'
 
@@ -14,18 +14,18 @@ function Create() {
   const [errorText, setErrorText] = useState("");
   const [inputs, setInputs] = useState([]);
   const navigate = useNavigate();
-  useEffect(() =>{
-    async function fetchData(){
+  useEffect(() => {
+    async function fetchData() {
       //fetch classes list
       const classList = JSON.parse(sessionStorage.getItem('classes'))
       console.log(classList);
       setClasses(classList);
       console.log(classes);
       const temp = [];
-      for(let k in classList){
+      for (let k in classList) {
         console.log(k);
         temp.push(
-          <option value = {k}>{classList[k]}</option>
+          <option value={k}>{classList[k]}</option>
         );
         setInputs(temp);
         console.log(inputs);
@@ -34,7 +34,7 @@ function Create() {
     fetchData();
 
   }, []);
-  async function createPost(credentials){
+  async function createPost(credentials) {
     return fetch("http://localhost:5000/post", {
       method: "POST",
       headers: {
@@ -42,15 +42,15 @@ function Create() {
       },
       body: JSON.stringify(credentials),
     })
-    .then(
-      res=>res.json()
-    )
+      .then(
+        res => res.json()
+      )
   }
-  
+
   const handleSubmit = async e => {
     console.log(inputs)
     e.preventDefault();
-    if(chosenclass === "" || chosenclass === "Select a Class"){
+    if (chosenclass === "" || chosenclass === "Select a Class") {
       setErrorText("Please select a class.")
       return;
     }
@@ -63,35 +63,35 @@ function Create() {
     });
     navigate("/")
   }
-  const handleChange = (event) =>{
+  const handleChange = (event) => {
     setchosenclass(event.target.value);
   }
 
-  if(!sessionStorage.getItem('token')){
-    return <Navigate replace to="/login"/>
+  if (!sessionStorage.getItem('token')) {
+    return <Navigate replace to="/login" />
   }
-  else if(classes.length === 0){
+  else if (classes.length === 0) {
     return (
       <body>
-      <p>No classes found associated with profile. Please sign up for a class before creating a post.</p>
-      <Link to="/">Sign Up</Link>
+        <p>No classes found associated with profile. Please sign up for a class before creating a post.</p>
+        <Link to="/">Sign Up</Link>
       </body>
       //TODO: Change Link to profile page OR whatever page to sign up for classes.
     )
   }
   return (
     <div>
-      <Layout/>
+      <Layout />
       <h1>Create Post</h1>
 
       <form onSubmit={handleSubmit}>
-      <label>
-        Select a class: 
-        <select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
-          <option value="Select a Class">Select a Class</option>
-          {inputs}
-        </select>
-      </label> <br/>
+        <label>
+          Select a class:
+          <select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
+            <option value="Select a Class">Select a Class</option>
+            {inputs}
+          </select>
+        </label> <br />
         <input
           name="posttitle"
           type="text"
