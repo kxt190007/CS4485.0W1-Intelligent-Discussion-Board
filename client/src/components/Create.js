@@ -18,14 +18,11 @@ function Create() {
     async function fetchData() {
       //fetch classes list
       const classList = JSON.parse(sessionStorage.getItem('classes'))
-      console.log(classList);
       setClasses(classList);
-      console.log(classes);
       const temp = [];
       for (let k in classList) {
-        console.log(k);
         temp.push(
-          <option value={k}>{classList[k]}</option>
+          <option value={classList[k][0]}>{classList[k][1]}</option>
         );
         setInputs(temp);
         console.log(inputs);

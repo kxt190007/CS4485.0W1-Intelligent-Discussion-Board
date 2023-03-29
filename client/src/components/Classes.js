@@ -9,40 +9,51 @@ import Box from '@mui/material/Box';
 function Classes() {
 
     const navigate = useNavigate();
-    const [classes, setClasses] = useState([{}]);
-    const [inputs, setInputs] = useState([]);
+    const [classes, setClasses] = useState([[]]);
     const [userName, setUserName] = useState("");
+
 
 
     useEffect(() => {
         async function fetchData() {
             //fetch classes list
             const classList = JSON.parse(sessionStorage.getItem('classes'))
-            console.log(classList);
             setClasses(classList);
-            console.log(classes);
-            const temp = [];
-            for (let k in classList) {
-                console.log(k);
-                temp.push(
-                    <div>
-                    <button onClick={() => handleChange(k)}>{classList[k]}</button>
-                    </div>
-                );
-                setInputs(temp);
-                console.log(inputs);
-            }
-            const userData = sessionStorage.getItem('name')
-            console.log(userData);
-            setUserName(userData);
+            setUserName(sessionStorage.getItem('name'))
         }
         fetchData();
 
     }, []);
 
-    const handleChange = (classID) => {
-        navigate("/classlist/" + classID);
+    async function removeClass(credentials) {
+        return fetch("http://localhost:5000/removeClass", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials),
+        })
+            .then(
+                res => res.json()
+            )
     }
+
+    const removeItem = async (index) =>{
+        const token = await removeClass({
+            classID: classes[index][0],
+        })
+        if (token.status == "Success"){
+            const temp = [...classes]
+            temp.splice(index, 1)
+            setClasses(temp)
+            sessionStorage.setItem('classes', JSON.stringify(temp))
+        }
+    }
+
+    const handleChange = (index) => {
+        navigate("/classlist/" + classes[index][0]);
+    }
+
 
     // let listClasses = inputs.map((x) =>
     //     <>
@@ -63,13 +74,16 @@ function Classes() {
         <div>
             <Layout />
             <p>Classes</p>
-            <Link to ="/create-class">Create Class</Link>  
+            <Link to="/create-class">Create Class</Link>
             <h2>{userName}'s Classes</h2>
             <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                 <nav aria-label="main mailbox folders">
-                    <List>
-                        {inputs}
-                    </List>
+                <p>{classes.map((classInfo, index) => (
+                <div>
+                    <button onClick={() => handleChange(index)}>{classInfo[1]}</button>
+                    <button onClick={() => removeItem(index)}>Delete</button>
+                </div>
+            ))}</p>
                 </nav>
             </Box>
         </div>

@@ -17,6 +17,8 @@ export function ClassList() {
     const [studentLabel, setStudentLabel] = useState("")
     const [moderatorLabel, setModeratorLabel] = useState("")
     const [instructorLabel, setInstructorLabel] = useState("")
+    const [addStudent, setAddStudent] = useState("")
+    const [errMessage, setErrMessage] = useState("")
     const classID = useLoaderData();
     const navigate = useNavigate()
     async function getStudents(credentials) {
@@ -67,6 +69,18 @@ export function ClassList() {
                 res => res.json()
             )
     }
+    async function addToClass(credentials) {
+        return fetch("http://localhost:5000/addToClass", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials),
+        })
+            .then(
+                res => res.json()
+            )
+    }
     useEffect(() => {
         async function fetchData() {
             const token = await getStudents({
@@ -75,12 +89,12 @@ export function ClassList() {
             console.log(token.instructors)
             console.log(sessionStorage.getItem('token'))
             var found = 0
-            for(let i = 0; i<token.instructors.length; i++ ){
-                if(token.instructors[i][0] == sessionStorage.getItem('token')){
+            for (let i = 0; i < token.instructors.length; i++) {
+                if (token.instructors[i][0] == sessionStorage.getItem('token')) {
                     found = 1
                 }
             }
-            if(found === 1){
+            if (found === 1) {
                 setClassName(token.classname)
                 const temp = [...token.instructors]
                 setInstructorList(temp)
@@ -92,13 +106,13 @@ export function ClassList() {
                 setModeratorLabel("Moderators")
                 setInstructorLabel("Instructors")
             }
-            else{
+            else {
                 navigate("/")
             }
         }
         fetchData();
     }, []);
-    const demoteStudent = async (index) =>{
+    const demoteStudent = async (index) => {
         const token = await demote({
             studentID: moderatorList[index][0],
             classID,
@@ -107,10 +121,10 @@ export function ClassList() {
         const temp = [...moderatorList]
         temp.splice(index, 1)
         setModeratorList(temp)
-        const temp1 = [...studentList,student]
+        const temp1 = [...studentList, student]
         setStudentList(temp1)
     }
-    const promoteStudent = async (index) =>{
+    const promoteStudent = async (index) => {
         const token = await promote({
             studentID: studentList[index][0],
             classID,
@@ -119,10 +133,10 @@ export function ClassList() {
         const temp = [...studentList]
         temp.splice(index, 1)
         setStudentList(temp)
-        const temp1 = [...moderatorList,student]
+        const temp1 = [...moderatorList, student]
         setModeratorList(temp1)
     }
-    const removeClassM = async (index) =>{
+    const removeClassM = async (index) => {
         const token = await remove({
             studentID: moderatorList[index][0],
             classID,
@@ -131,7 +145,7 @@ export function ClassList() {
         temp.splice(index, 1)
         setModeratorList(temp)
     }
-    const removeClassS = async (index) =>{
+    const removeClassS = async (index) => {
         const token = await remove({
             studentID: studentList[index][0],
             classID,
@@ -140,13 +154,42 @@ export function ClassList() {
         temp.splice(index, 1)
         setStudentList(temp)
     }
-    
+    const addStudentClass = async (event) => {
+        setErrMessage("")
+        var found = 0
+        for (let i = 0; i < studentList.length; i++) {
+            if (studentList[i][2] == addStudent) {
+                found = 1
+            }
+        }
+        for (let i = 0; i < moderatorList.length; i++) {
+            if (moderatorList[i][2] == addStudent) {
+                found = 1
+            }
+        }
+        if (found==1) {
+            setErrMessage("Student already in class")
+        }
+        else{
+            const token = await addToClass({
+                email: addStudent,
+                classID,
+            })
+            if(token.status === "Failed"){
+                setErrMessage(token.message)
+            }
+            else{
+                const temp = [...studentList, token.student]
+                setStudentList(temp)
+            }
+        }
+    }
     if (sessionStorage.getItem('accesslevel') != 5) {
         return <Navigate replace to="/" />
     }
     return (
         <div>
-            
+
             <Layout />
             <p>{className}</p>
             <label>{instructorLabel}</label>
@@ -174,6 +217,16 @@ export function ClassList() {
                     <button onClick={() => removeClassS(index)}>Remove from class</button>
                 </div>
             ))}</p>
+            <p>Add Students</p>
+            <label for="addstudent">Student Email: </label>
+            <input
+                name="addstudent"
+                id="addstudent"
+                class="input-box"
+                onChange={(e) => setAddStudent(e.target.value)}
+            ></input>
+            <button onClick={(e) => addStudentClass(e)}>Add</button><br />
+            {errMessage}
         </div>
     )
 }

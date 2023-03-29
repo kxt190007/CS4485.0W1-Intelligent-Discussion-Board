@@ -42,13 +42,12 @@ def getClasses():
     cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID,))
     rows = cursor.fetchall()
     print(rows)
-    classDict = dict()
+    classList = []
     for x in rows:
         cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (x[1],))
         classRow = cursor.fetchone()
-        classDict[classRow[0]] = classRow[1]
-    print(classDict)
-    return classDict
+        classList.append(classRow)
+    return {"status": "Success", "classList": classList}
 
 @app.route("/post", methods = ['POST'])
 def post():
@@ -219,6 +218,32 @@ def removeStudent():
     cursor.execute('SET SQL_SAFE_UPDATES = 1')
     mysql.connection.commit()
     return {"status": "Success"}
+
+@app.route("/addToClass", methods = ['POST'])
+def addToClass():
+    email = request.json.get('email')
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM Users WHERE Email = %s', (email,))
+    student = cursor.fetchone()
+    print(student)
+    if not student:
+        return {"status":"Failed", "message":"Student does not exist"}
+    if student[5] == 5:
+        return {"status":"Failed", "message":"Email is associated with an instructor"}
+    cursor.execute('INSERT INTO UserToClass(UserID, ClassID) Values(%s, %s)', (student[0], classID,))
+    mysql.connection.commit()
+    return {"status": "Success", "student": student}
+
+@app.route('/removeClass', methods = ['POST'])
+def removeClass():
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM UserToClass WHERE ClassID = %s',(classID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    return {"status":"Success"}
 
 
 if __name__ == "__main__":

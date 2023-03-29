@@ -44,9 +44,10 @@ function CreateClass() {
         }
         else {
             const classList = JSON.parse(sessionStorage.getItem('classes'))
-            classList[token.classID] = token.className
-            sessionStorage.setItem('classes', JSON.stringify(classList))
-            navigate("/")
+            const temp = [token.classID, token.className]
+            const temp1 = [...classList, temp]
+            sessionStorage.setItem('classes', JSON.stringify(temp1))
+            navigate("/classes")
         }
     }
 
