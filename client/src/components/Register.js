@@ -77,28 +77,24 @@ const Register = () => {
           <TextField 
             id="standard-basic" 
             label="First Name" 
-            placeholder='Enter first name' 
             variant="standard" 
             fullWidth required 
             onChange={(e) => setFirstName(e.target.value)}/>
           <TextField 
             id="standard-basic" 
             label="Last Name" 
-            placeholder='Enter last name' 
             variant="standard" 
             fullWidth required
             onChange={(e) => setLastName(e.target.value)}/>
           <TextField 
             id="standard-basic" 
             label="Email" 
-            placeholder='Enter email' 
             variant="standard" 
             fullWidth required 
             onChange={(e) => setEmail(e.target.value)}/>
           <TextField 
             id="standard-basic" 
             label="Password" 
-            placeholder='Enter password' 
             type='password' 
             variant="standard" 
             fullWidth required 

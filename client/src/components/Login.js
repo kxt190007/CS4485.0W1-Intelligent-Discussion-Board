@@ -85,14 +85,12 @@ function Login() {
           <TextField 
             id="standard-basic" 
             label="Email" 
-            placeholder='Enter email' 
             variant="standard" 
             fullWidth required 
             onChange={(e) => setEmail(e.target.value)}/>
           <TextField 
             id="standard-basic" 
             label="Password" 
-            placeholder='Enter password' 
             type='password' 
             variant="standard" 
             fullWidth required 
