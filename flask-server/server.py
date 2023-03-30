@@ -154,7 +154,17 @@ def createUser():
         return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
     return {"token" : ""}
 
-
+@app.route("/getCommentUser", methods = ['POST'])
+def getCommentUser():
+    userID = request.json.get('userID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT FirstName, LastName FROM Users WHERE UserID = %s', (userID,))
+    rows = cursor.fetchone()
+    cursor.close()
+    first = rows[0]
+    last = rows[1]
+    fullname = str(first + " " + last)
+    return {"name" : fullname}
 
 if __name__ == "__main__":
     app.run(debug=True)
