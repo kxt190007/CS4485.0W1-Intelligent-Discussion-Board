@@ -87,41 +87,10 @@ def post():
             print(response)
             # insert
     cursor.close()
-<<<<<<< HEAD
-    return  {"status": "Success", "message": "message"}
-    
-
-@app.route("/getPosts", methods = ['POST'])
-def getPosts():
-    classID = request.json.get('classID')
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM Posts WHERE ClassID = %s', classID)
-    rows = cursor.fetchall()
-    print(rows)
-    postIDs = []
-    UserIDs = []
-    postStatus = []
-    postBodies = []
-    postTitles = []
-    postTags = []
-    for x in rows:
-        postIDs.append(x[0])
-        UserIDs.append(x[1])
-        postStatus.append(x[2])
-        postBodies.append(x[3])
-        postTitles.append(x[4])
-        postTags.append(x[5])
-    arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags]
-        
-    return arr
-
-@app.route("/getPosts", methods = ['POST'])
-=======
     return {"status": "Success", "message": "message"}
 
 
 @app.route("/getPosts", methods=['POST'])
->>>>>>> 1fe113cf8c712f437ef853baddb5ad9017f9535e
 def getPosts():
     classID = request.json.get('classID')
     cursor = mysql.connection.cursor()

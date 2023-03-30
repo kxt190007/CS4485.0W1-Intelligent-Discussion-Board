@@ -27,10 +27,9 @@ function Home() {
       setClasses(classList);
       console.log(classes);
       const temp = [];
-      for(let k in classList){
-        console.log(k);
+      for(let i = 0; i<classList.length; i++){
         temp.push(
-          <option value = {k}>{classList[k]}</option>
+          <option value = {classList[i][0]}>{classList[i][1]}</option>
         );
         setInputs(temp);
         console.log("inputs:");
@@ -45,8 +44,8 @@ function Home() {
 
   }, []);
 
-  const handleChange = (index) => {
-    sessionStorage.setItem('chosenClass', classes[index][0])
+  const handleChange = (event) => {
+    sessionStorage.setItem('chosenClass', event.target.value)
     console.log(sessionStorage.getItem('chosenClass'))
     navigate("/board");
   }
