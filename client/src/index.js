@@ -7,10 +7,15 @@ import Register from './components/Register'
 import Logout from "./components/Logout"
 import Board from "./components/Board"
 import Post from "./components/Post"
+import Classes from "./components/Classes"
+import CreateClass from "./components/CreateClass"
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import ClassList, {
+  loader as classListLoader,
+} from "./components/ClassList"
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +47,17 @@ const router = createBrowserRouter([
       {
         path: "post",
         element: <Post />,
+        path: "classes",
+        element: <Classes />
+      },
+      {
+        path: "create-class",
+        element: <CreateClass />
+      },
+      {
+        path: "classlist/:classID",
+        element: <ClassList />,
+        loader: classListLoader,
       }
     ]
   },
