@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Button, Typography, Link } from '@mui/material'
+import { Avatar, Grid, Paper, TextField, Button, Typography} from '@mui/material'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Layout from './Layout.js'
 import {useNavigate} from "react-router-dom";
 import UserProfile from './UserProfile.js'
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import HomeIcon from '@mui/icons-material/Home';
 const Register = () => {
 
   const [firstName, setFirstName] = useState("");
@@ -60,14 +65,49 @@ const Register = () => {
     }
   }
 
-  const paperStyle = { padding: "30px 20px", height: '60vh', width: 320, margin: "20px auto" }
-  const avatarStyle = { backgroundColor: 'orange' }
-  const btnStyle = { margin: '8px 0' }
+  const paperStyle = { padding: "30px 20px", height: '55vh', width: 320, margin: "100px auto" }
+  const avatarStyle = { backgroundColor: '#f57c00' }
+  const btnStyle = { margin: '40px 0' }
 
   return (
 
     <Grid>
-      <Layout />
+      <Box sx={{ flexGrow: 1 }}> 
+      <AppBar position="static" style={{ background: '#f57c00' }}>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            href="/"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <HomeIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+              flexGrow: 1 
+            }}
+          >
+            INTELLIGENT DISCUSSION BOARD
+          </Typography>
+          <Button color="inherit" href="/login" >Login</Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
+
+    <Layout />
       <Paper elevation={10} style={paperStyle}>
         <Grid align='center'>
           <Avatar style={avatarStyle}><AccountBoxIcon /></Avatar>
@@ -105,41 +145,7 @@ const Register = () => {
         </form>
       </Paper>
     </Grid>
-    /*<div><body class="signup">
-    <div class="form-box">
-      <h2>Sign Up</h2>
-
-      <form>
-        <div class="input-group">
-          <i class="fa-solid fa-user"></i>
-          <input
-            type="email"
-            id="SignE"
-            class="user"
-            placeholder="Your Email"
-          />
-        </div>
-        <span class="error"></span>
-        <div class="input-group">
-          <i class="fa-solid fa-lock"></i>
-          <input
-            type="password"
-            id="SignP"
-            class="pass"
-            placeholder="Password"
-          />
-        </div>
-        <span class="error"></span>
-        <input placeHolder="First Name"/>
-        <input placeHolder="Last Name"/>
-
-        <div class="SignButton">
-          <button type="submit">Sign Up</button>
-        </div>
-      </form>
-    </div>
-  </body></div>*/
-
+    
   )
 }
 
