@@ -47,7 +47,7 @@ export function Board() {
       //fetch post list as JSON
 
       const postList = await getPosts({
-        classID: classID
+        classID: classID,
       });
       console.log(postList);
       console.log("postlist at 1 1: ")

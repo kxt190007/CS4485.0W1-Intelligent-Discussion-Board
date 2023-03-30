@@ -94,7 +94,7 @@ def post():
 def getPosts():
     classID = request.json.get('classID')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM Posts WHERE ClassID = %s', classID)
+    cursor.execute('SELECT * FROM Posts WHERE ClassID = %s', (classID,))
     rows = cursor.fetchall()
     print(rows)
     postIDs = []
