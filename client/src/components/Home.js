@@ -3,8 +3,14 @@ import Button from '@mui/material/Button'
 import { Link, Navigate } from 'react-router-dom'
 import Layout from './Layout'
 import {useNavigate} from "react-router-dom";
-import { List,ListItem, ListItemText, ListItemButton } from '@mui/material'
+import { ListItemText, ListItemButton, Paper, Divider} from '@mui/material'
 import Box from '@mui/material/Box';
+import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListDivider from '@mui/joy/ListDivider';
+import Stack from '@mui/joy/Stack';
+
 
 function Home() {
 
@@ -12,7 +18,7 @@ function Home() {
   const [classes, setClasses] = useState([{}]);
   const [inputs, setInputs] = useState([]);
   const [userName, setUserName] = useState("");
-
+  const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto"}
 
   useEffect(() =>{
     async function fetchData(){
@@ -52,6 +58,7 @@ function Home() {
               <ListItemText primary={x}/>
             </ListItemButton>
     </ListItem>
+    
 
     </>
   );
@@ -66,19 +73,29 @@ function Home() {
     )
   }
   return (
-    <div>
+    
+    <Stack
+      direction="column"
+      justifyContent="flex-start"
+      alignItems="flex-start"
+      spacing={2}
+    >
+
+      
       <Layout/>
-      <p>Home Page</p>
+      <Paper style = {paperStyle}>
 
       <h2>{userName}'s Classes</h2>
-      <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      <nav aria-label="main mailbox folders">
+      <Divider/>
+      <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+      <nav aria-label="enrolled classes">
         <List>
           {listClasses}
         </List>
       </nav>
     </Box>
-    </div>
+    </Paper>
+    </Stack>
   )
 }
 
