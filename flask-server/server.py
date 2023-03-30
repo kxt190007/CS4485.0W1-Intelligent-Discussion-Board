@@ -112,6 +112,25 @@ def getPosts():
     cursor.close()
     return arr
 
+@app.route("/getPostComments", methods = ['POST'])
+def getPostComments():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM PostComment WHERE PostID = %s', (postID,))
+    rows = cursor.fetchall()
+    userIDs = []
+    commentBodies = []
+    postTimes = []
+    for x in rows:
+        userIDs.append(x[1])
+        commentBodies.append(x[3])
+        postTimes.append(x[4])
+    arr = [userIDs, commentBodies, postTimes]
+
+    return arr
+
+
+
 @app.route("/createUser", methods = ['POST'])
 def createUser():
     firstName = request.json.get('firstName')
@@ -134,6 +153,17 @@ def createUser():
         return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
     return {"token" : ""}
 
+@app.route("/getCommentUser", methods = ['POST'])
+def getCommentUser():
+    userID = request.json.get('userID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT FirstName, LastName FROM Users WHERE UserID = %s', (userID,))
+    rows = cursor.fetchone()
+    cursor.close()
+    first = rows[0]
+    last = rows[1]
+    fullname = str(first + " " + last)
+    return {"name" : fullname}
 @app.route("/createClass", methods = ['POST'])
 def createClass():
     className = request.json.get('className')

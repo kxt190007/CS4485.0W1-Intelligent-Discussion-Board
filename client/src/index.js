@@ -6,6 +6,7 @@ import Home from './components/Home.js'
 import Register from './components/Register'
 import Logout from "./components/Logout"
 import Board from "./components/Board"
+import Post from "./components/Post"
 import Classes from "./components/Classes"
 import CreateClass from "./components/CreateClass"
 import {
@@ -44,6 +45,8 @@ const router = createBrowserRouter([
         element: <Board />
       },
       {
+        path: "post",
+        element: <Post />,
         path: "classes",
         element: <Classes />
       },

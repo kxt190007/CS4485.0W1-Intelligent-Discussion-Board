@@ -1,13 +1,32 @@
 import React, { useState, useEffect } from 'react'
+import { useLoaderData } from "react-router-dom";
 import Button from '@mui/material/Button'
 import { Link } from 'react-router-dom'
 import Layout from './Layout'
-import { List,ListItem, ListItemText, ListItemButton, Divider } from '@mui/material'
+import {useNavigate} from "react-router-dom";
+import { List,ListItem, ListItemText, ListItemButton, Divider, Paper, Grid } from '@mui/material'
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardMedia from '@mui/material/CardMedia';
+import Stack from '@mui/joy/Stack';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
 
-function Board(){
 
+export async function loader({ params }) {
+  console.log("Loader test: ")
+  console.log(params.classIDTEST)
+  //const classInfo = await getClass(params.classID);
+  return params.classIDTEST
+}
+
+export function Board(){
+
+    const navigate = useNavigate();
     const classList = JSON.parse(sessionStorage.getItem('classes'))
+    const classIDTEST = useLoaderData();
     const classID = sessionStorage.getItem('chosenClass')
     //const [postJSON, setPostJSON] = useState([{}][{}]);
     const [postIDs, setPostIDs] = useState([]);
@@ -16,7 +35,8 @@ function Board(){
     const [postBodies, setPostBodies] = useState([]);
     const [postTitles, setPostTitles] = useState([]);
     const [postTags, setPostTags] = useState([]);
-    
+    const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto"}
+
 
 
     useEffect(() =>{
@@ -80,37 +100,66 @@ function Board(){
     var postArr = [];
     for(let i = 0; i < postIDs.length; i++){
         postArr.push(
-            <div>
-                <h3>{postTitles[i]}</h3>
-                <p>{postBodies[i]}</p>
-                <Divider/>
-            </div>
+          <Card sx={{ maxWidth: 345, m: 2, maxHeight: 200}}>
+          <CardActionArea onClick = {(e) => handleChange(e)}>
+            
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+              <option value = {i}>{postTitles[i] }</option>
+              </Typography>
+              <Divider/>
+              <Typography variant="body2" color="text.secondary">
+              {postBodies[i]}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Card>
         )
     }
 
-    const handleChange = (event) => {
 
+
+    const handleChange = (event) => {
+      console.log(event.target.value)
+      sessionStorage.setItem('chosenPost', postIDs[event.target.value])
+      sessionStorage.setItem('postTitle', postTitles[event.target.value])
+      sessionStorage.setItem('postBody', postBodies[event.target.value])
+      console.log(sessionStorage.getItem('chosenPost'))
+      navigate("/post");
     }
 
 
 
 
     return (
-        <div>
+        <Grid>
           <Layout/>
-          <p>Discussion Board</p>
+          <Paper style = {paperStyle} elevation = {10}>
           <h2>Discussion Board for {classList[classID]}</h2>
+          <Divider/>
 
-
-          <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
           <nav>
-            <List>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              flexWrap: 'wrap',
+              p: 1,
+              m: 1,
+              bgcolor: 'background.paper',
+              maxWidth: "100%",
+              borderRadius: 1,
+            }}
+          >
                 {postArr}
-            </List>
+            </Box>
           </nav>
       
         </Box>
-        </div>
+        </Paper>
+      </Grid>
     )
 }
 
