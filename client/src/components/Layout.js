@@ -9,13 +9,13 @@ function Layout(){
       <>
         <nav>
           <ul>
-            <li>
+            {/* <li>
               <Link to="/">Home</Link>
             </li>
             <li>
               <Link to="/login">Login</Link>
             </li>
-            {/* <li>
+            <li>
               <Link to="/create">Create</Link>
             </li> */}
           </ul>

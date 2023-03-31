@@ -7,6 +7,12 @@ import UserProfile from './UserProfile.js'
 import Layout from './Layout.js'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import HomeIcon from '@mui/icons-material/Home';
+import Box from '@mui/material/Box';
+
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -69,12 +75,50 @@ function Login() {
     }
   }
 
-  const paperStyle = { padding: "30px 20px", height: '60vh', width: 320, margin: "20px auto" }
-  const avatarStyle = { backgroundColor: 'orange' }
-  const btnStyle = { margin: '8px 0' }
+ 
+  const paperStyle = { padding: "30px 20px", height: '50vh', width: 320, margin: "110px auto" }
+  const avatarStyle = { backgroundColor: '#f57c00' }
+  const btnStyle = { margin: '40px 0'}
 
   return (
+    
     <Grid>
+      <Box sx={{ flexGrow: 1 }}> 
+      <AppBar position="static" style={{ background: '#f57c00' }}>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            href="/"
+            sx={{ mr: 2 }}
+          >
+            <HomeIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+              flexGrow: 1 
+            }}
+          >
+            INTELLIGENT DISCUSSION BOARD
+          </Typography>
+          <Button color="inherit" href="/login" >Login</Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
+
+
       <Layout />
       <Paper elevation={10} style={paperStyle}>
         <Grid align='center'>
@@ -85,14 +129,12 @@ function Login() {
           <TextField 
             id="standard-basic" 
             label="Email" 
-            placeholder='Enter email' 
             variant="standard" 
             fullWidth required 
             onChange={(e) => setEmail(e.target.value)}/>
           <TextField 
             id="standard-basic" 
             label="Password" 
-            placeholder='Enter password' 
             type='password' 
             variant="standard" 
             fullWidth required 
@@ -104,47 +146,9 @@ function Login() {
         <Link to="/register">Sign Up</Link>
       </Paper>
     </Grid>
-
-
-
-    
-    /*
-    <div> 
-      <Layout />
-      <body>
-        <div class="form-box">
-          <h2>Log In</h2>
-          <form onSubmit={handleSubmit}>
-            <div class="input-group">
-              <i class="fa-solid fa-user"></i>
-
-              <input
-                type="email"
-                id="LogE"
-                class="user"
-                placeholder="Your Email"
-                onChange = {(e) => setEmail(e.target.value)}
-              />
-              <span class="error"></span>
-              <input
-                type="password"
-                id="LogP"
-                class="pass"
-                placeholder="Password"
-                onChange = {(e) => setPassword(e.target.value)}
-              />
-              <span class="error"></span>
-              <p>{text}</p>
-            </div>
-            <button type="submit" class="LogButton">Login</button>
-          </form>
-          <Link to="/register">Sign Up</Link>
-        </div>
-      </body>
-    </div>
-    */
   )
 }
+
 
 
 export default Login
