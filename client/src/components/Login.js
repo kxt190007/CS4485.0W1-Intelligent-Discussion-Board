@@ -75,9 +75,10 @@ function Login() {
     }
   }
 
-  const paperStyle = { padding: "30px 20px", height: '60vh', width: 320, margin: "20px auto" }
-  const avatarStyle = { backgroundColor: 'orange' }
-  const btnStyle = { margin: '8px 0' }
+ 
+  const paperStyle = { padding: "30px 20px", height: '50vh', width: 320, margin: "110px auto" }
+  const avatarStyle = { backgroundColor: '#f57c00' }
+  const btnStyle = { margin: '40px 0'}
 
   return (
     
