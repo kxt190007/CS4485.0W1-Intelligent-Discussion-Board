@@ -67,6 +67,11 @@ def post():
         'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
         (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
+    newID = cursor.lastrowid
+    link = 'localhost:3000/board/' + str(classID) + '/post/' + str(newID)
+    print(link)
+    cursor.execute('UPDATE Posts SET PostLink = %s WHERE PostID = %s', (link,newID,))
+    mysql.connection.commit()
     vartemp = 0
     if len(postTitle) > 1:
         for postTitle2 in myresult:
@@ -188,9 +193,7 @@ def createClass():
         return {"status": "Failed", "message" : "Class already exists"}
     cursor.execute("INSERT INTO Class (ClassName) VALUES (%s)", (className,))
     mysql.connection.commit()
-    cursor.execute("SELECT * FROM Class WHERE ClassName = %s", (className,))
-    row = cursor.fetchone()
-    classID = row[0]
+    classID = cursor.lastrowid
     profList.append(email)
     for i in range(len(profList)):
         cursor.execute("SELECT * FROM Users WHERE Email = %s", (profList[i],))
