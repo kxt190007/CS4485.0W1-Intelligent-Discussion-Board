@@ -51,43 +51,46 @@ def getClasses():
         classList.append(classRow)
     return {"status": "Success", "classList": classList}
 
-
-@app.route("/post", methods=['POST'])
-def post():
+@app.route("/post1", methods=['POST'])
+def post1():
     userID = request.json.get('userID')
-    print(userID[0])
     postBody = request.json.get('postContent')
     postTitle = request.json.get('postTitle')
     postTag = request.json.get('postTag')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT PostTitle FROM Posts')
-    myresult = cursor.fetchall()
     cursor.execute(
         'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
         (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
-    vartemp = 0
+    cursor.close()
+    return {"status": "Success", "message": "message"}
+
+@app.route("/post", methods=['POST'])
+def post():
+    postTitle = request.json.get('postTitle')
+    classID = request.json.get('chosenclass')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT PostTitle FROM Posts')
+    myresult = cursor.fetchall()
     if len(postTitle) > 1:
         for postTitle2 in myresult:
             postTitle2 = postTitle2[0]
             similarity = text_similarity(postTitle, postTitle2)
             if similarity > .5:
-                cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
-                body = cursor.fetchall()
-                print(body[-1][0])
-                #insert
+                #cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
+                #body = cursor.fetchall()
+                #print(body[-1][0])
                 print("similar post found at: {}".format(postTitle2))
-                vartemp = 1
-                break
-        if vartemp == 0:
-            response = ask_question(postTitle, classID)
-            if response == "error":
-                print("question not on syllabus")
-            else:
-                print(response)
-                # insert
-                #cursor.execute('INSERT INTO POSTCOMMENTS >>>>>>>
+                cursor.close()
+                return {"status": "Success", "message": "{}".format(postTitle2)}
+        response = ask_question(postTitle, classID)
+        if response == "error":
+            cursor.close()
+            return {"status": "Success", "message": "message"}
+        else:
+            cursor.close()
+            return {"status": "Success", "message": "{}".format(response)}
     cursor.close()
     return {"status": "Success", "message": "message"}
 
