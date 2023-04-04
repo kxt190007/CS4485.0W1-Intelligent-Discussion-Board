@@ -46,27 +46,17 @@ def get_response(prompt):
     return response.choices[0].text
 
 
-def ask_question(question):
+def ask_question(question, classID):
     #os.system("cls" if os.name == "nt" else "clear")
 
-
-    #question will be pulled from the db -> maybe we can pass this in as a param
-
-
     #pdf will be taken from the tags -> see post class (tag?) -> pull syllabus from there
-    #syllabus = class + ".pdf" -> class pdf
-    syllabusText = extract_text("a.pdf")
-    #so new question will take the course syllabus
-    #something like this:
-
-    new_question = "given this text: " + syllabusText + "what is the answer to this question: " + question + " ?"
-
+    syllabus = classID + ".pdf"
+    syllabusText = extract_text(syllabus)
+    new_question = "given this text: " + syllabusText + "\n " + question + " ?"
     response = get_response(INSTRUCTIONS + new_question)
     response = response.lstrip()
     if response == "I do not think that is on the syllabus.":
-        print("error")
-        #do not pass response to DB
+        return "error"
     else:
         return response
-        #pass response to db??
 

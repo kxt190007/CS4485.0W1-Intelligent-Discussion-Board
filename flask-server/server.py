@@ -5,6 +5,8 @@ from array import *
 from helpbot import *
 from cosim import *
 
+
+
 app = Flask(__name__)
 mysql = MySQL(app)
 CORS(app)
@@ -59,14 +61,12 @@ def post():
     postTag = request.json.get('postTag')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor2 = mysql.connection.cursor()
-
+    cursor.execute('SELECT PostTitle FROM Posts')
+    myresult = cursor.fetchall()
     cursor.execute(
         'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
         (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
-    cursor.execute('SELECT PostTitle FROM Posts')
-    myresult = cursor.fetchall()
     vartemp = 0
     if len(postTitle) > 1:
         for postTitle2 in myresult:
@@ -81,9 +81,13 @@ def post():
                 vartemp = 1
                 break
         if vartemp == 0:
-            response = ask_question(postTitle)
-            print(response)
-            # insert
+            response = ask_question(postTitle, classID)
+            if response == "error":
+                print("question not on syllabus")
+            else:
+                print(response)
+                # insert
+                #cursor.execute('INSERT INTO POSTCOMMENTS >>>>>>>
     cursor.close()
     return {"status": "Success", "message": "message"}
 
@@ -92,7 +96,7 @@ def post():
 def getPosts():
     classID = request.json.get('classID')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM Posts WHERE ClassID = %s', classID)
+    cursor.execute('SELECT * FROM Posts WHERE ClassID = %s', (classID,))
     rows = cursor.fetchall()
     print(rows)
     postIDs = []
@@ -111,6 +115,25 @@ def getPosts():
     arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags]
     cursor.close()
     return arr
+
+@app.route("/getPostComments", methods = ['POST'])
+def getPostComments():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM PostComment WHERE PostID = %s', (postID,))
+    rows = cursor.fetchall()
+    userIDs = []
+    commentBodies = []
+    postTimes = []
+    for x in rows:
+        userIDs.append(x[1])
+        commentBodies.append(x[3])
+        postTimes.append(x[4])
+    arr = [userIDs, commentBodies, postTimes]
+
+    return arr
+
+
 
 @app.route("/createUser", methods = ['POST'])
 def createUser():
@@ -134,6 +157,17 @@ def createUser():
         return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
     return {"token" : ""}
 
+@app.route("/getCommentUser", methods = ['POST'])
+def getCommentUser():
+    userID = request.json.get('userID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT FirstName, LastName FROM Users WHERE UserID = %s', (userID,))
+    rows = cursor.fetchone()
+    cursor.close()
+    first = rows[0]
+    last = rows[1]
+    fullname = str(first + " " + last)
+    return {"name" : fullname}
 @app.route("/createClass", methods = ['POST'])
 def createClass():
     className = request.json.get('className')
