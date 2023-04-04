@@ -49,9 +49,7 @@ function Home() {
   }, []);
 
   const handleChange = (event) => {
-    sessionStorage.setItem('chosenClass', event.target.value)
-    console.log(sessionStorage.getItem('chosenClass'))
-    navigate("/board");
+    navigate("/board/" + event.target.value);
   }
 
   let listClasses = inputs.map((x) =>

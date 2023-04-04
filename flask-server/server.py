@@ -73,6 +73,11 @@ def post():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT PostTitle FROM Posts')
     myresult = cursor.fetchall()
+    newID = cursor.lastrowid
+    link = 'localhost:3000/board/' + str(classID) + '/post/' + str(newID)
+    print(link)
+    cursor.execute('UPDATE Posts SET PostLink = %s WHERE PostID = %s', (link,newID,))
+    mysql.connection.commit()
     if len(postTitle) > 1:
         for postTitle2 in myresult:
             postTitle2 = postTitle2[0]
@@ -191,9 +196,7 @@ def createClass():
         return {"status": "Failed", "message" : "Class already exists"}
     cursor.execute("INSERT INTO Class (ClassName) VALUES (%s)", (className,))
     mysql.connection.commit()
-    cursor.execute("SELECT * FROM Class WHERE ClassName = %s", (className,))
-    row = cursor.fetchone()
-    classID = row[0]
+    classID = cursor.lastrowid
     profList.append(email)
     for i in range(len(profList)):
         cursor.execute("SELECT * FROM Users WHERE Email = %s", (profList[i],))
@@ -307,5 +310,28 @@ def removeClass():
     mysql.connection.commit()
     return {"status":"Success"}
 
+@app.route("/removePost", methods = ['POST'])
+def removePost():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM Posts WHERE PostID = %s', (postID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    return {"status":"Success"}
+
+@app.route("/checkModerator", methods = ['POST'])
+def checkModerator():
+    classID = request.json.get('classID')
+    userID = request.json.get('userID')
+    print(classID)
+    print(userID)
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM ModeratorToClass WHERE UserID = %s AND ClassID = %s', (userID, classID,))
+    row = cursor.fetchone()
+    if row:
+        return {"status": "Success", "message": "yes"}
+    else: 
+        return {"status": "Success", "message": "no"}
 if __name__ == "__main__":
     app.run(debug=True)
