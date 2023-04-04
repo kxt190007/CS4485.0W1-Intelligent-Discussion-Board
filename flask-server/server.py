@@ -304,5 +304,28 @@ def removeClass():
     mysql.connection.commit()
     return {"status":"Success"}
 
+@app.route("/removePost", methods = ['POST'])
+def removePost():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM Posts WHERE PostID = %s', (postID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    return {"status":"Success"}
+
+@app.route("/checkModerator", methods = ['POST'])
+def checkModerator():
+    classID = request.json.get('classID')
+    userID = request.json.get('userID')
+    print(classID)
+    print(userID)
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM ModeratorToClass WHERE UserID = %s AND ClassID = %s', (userID, classID,))
+    row = cursor.fetchone()
+    if row:
+        return {"status": "Success", "message": "yes"}
+    else: 
+        return {"status": "Success", "message": "no"}
 if __name__ == "__main__":
     app.run(debug=True)

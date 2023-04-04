@@ -16,18 +16,16 @@ import { CardActionArea } from '@mui/material';
 
 
 export async function loader({ params }) {
-  console.log("Loader test: ")
-  console.log(params.classIDTEST)
+  console.log(params.classID)
   //const classInfo = await getClass(params.classID);
-  return params.classIDTEST
+  return params.classID
 }
 
 export function Board() {
 
   const navigate = useNavigate();
   const classList = JSON.parse(sessionStorage.getItem('classes'))
-  const classIDTEST = useLoaderData();
-  const classID = sessionStorage.getItem('chosenClass')
+  const classID = useLoaderData()
   //const [postJSON, setPostJSON] = useState([{}][{}]);
   const [postIDs, setPostIDs] = useState([]);
   const [userIDs, setUserIDs] = useState([]);
@@ -36,52 +34,101 @@ export function Board() {
   const [postTitles, setPostTitles] = useState([]);
   const [postTags, setPostTags] = useState([]);
   const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto" }
+  const [postArr, setPostArr] = useState([]);
   var className
-  for(let i = 0; i< classList.length; i++){
-    if(classList[i][0] == classID)
+  for (let i = 0; i < classList.length; i++) {
+    if (classList[i][0] == classID)
       className = classList[i][1]
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      //fetch post list as JSON
+  async function fetchData() {
+    //fetch post list as JSON
 
-      const postList = await getPosts({
-        classID: classID,
-      });
-      console.log(postList);
-      console.log("postlist at 1 1: ")
-      console.log(postList[1][1])
+    const postList = await getPosts({
+      classID: classID,
+    });
+    console.log(postList);
+    console.log("postlist at 1 1: ")
+    console.log(postList[1][1])
+    const moderator = await checkModerator({
+      userID: sessionStorage.getItem('token'),
+      classID,
+    })
+    // setPostJSON(postList);
+    // console.log(postJSON)
+    const postIDs = [];
+    const UserIDs = [];
+    const postStatus = [];
+    const postBodies = [];
+    const postTitles = [];
+    const postTags = [];
 
-      // setPostJSON(postList);
-      // console.log(postJSON)
-      const postIDs = [];
-      const UserIDs = [];
-      const postStatus = [];
-      const postBodies = [];
-      const postTitles = [];
-      const postTags = [];
-
-      for (let i = 0; i < postList[0].length; i++) {
-        postIDs[i] = postList[0][i]
-        UserIDs[i] = postList[1][i]
-        postStatus[i] = postList[2][i]
-        postBodies[i] = postList[3][i]
-        postTitles[i] = postList[4][i]
-        postTags[i] = postList[5][i]
-      }
-      setPostIDs(postIDs)
-      setUserIDs(UserIDs)
-      setPostStatus(postStatus)
-      setPostBodies(postBodies)
-      setPostTitles(postTitles)
-      setPostTags(postTags)
-
-      console.log({ postIDs })
-      console.log({ postBodies })
-
-
+    for (let i = 0; i < postList[0].length; i++) {
+      postIDs[i] = postList[0][i]
+      UserIDs[i] = postList[1][i]
+      postStatus[i] = postList[2][i]
+      postBodies[i] = postList[3][i]
+      postTitles[i] = postList[4][i]
+      postTags[i] = postList[5][i]
     }
+    setPostIDs(postIDs)
+    setUserIDs(UserIDs)
+    setPostStatus(postStatus)
+    setPostBodies(postBodies)
+    setPostTitles(postTitles)
+    setPostTags(postTags)
+
+    console.log({ postIDs })
+    console.log({ postBodies })
+    const temp = []
+    if (sessionStorage.getItem('accesslevel') == 5 || moderator.message == 'yes') {
+      for (let i = 0; i < postIDs.length; i++) {
+        temp.push(
+          <Card sx={{ maxWidth: 345, m: 2, maxHeight: 200 }}>
+            <CardActionArea onClick={(e) => handleChange(e)}>
+
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  <option value={i}>{postTitles[i]}</option>
+                </Typography>
+                <Divider />
+                <Typography variant="body2" color="text.secondary">
+                  {postBodies[i]}
+
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <Button onClick={() => removePost(postIDs[i])}>Delete</Button>
+          </Card>
+        )
+      }
+    }
+    else {
+      for (let i = 0; i < postIDs.length; i++) {
+        temp.push(
+          <Card sx={{ maxWidth: 345, m: 2, maxHeight: 200 }}>
+            <CardActionArea onClick={(e) => handleChange(e)}>
+
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  <option value={i}>{postTitles[i]}</option>
+                </Typography>
+                <Divider />
+                <Typography variant="body2" color="text.secondary">
+                  {postBodies[i]}
+
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        )
+      }
+    }
+    setPostArr(temp)
+  }
+
+  useEffect(() => {
+
     fetchData();
 
   }, []);
@@ -98,37 +145,53 @@ export function Board() {
         res => res.json()
       )
   }
-
-
-  var postArr = [];
-  for (let i = 0; i < postIDs.length; i++) {
-    postArr.push(
-      <Card sx={{ maxWidth: 345, m: 2, maxHeight: 200 }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
-
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              <option value={i}>{postTitles[i]}</option>
-            </Typography>
-            <Divider />
-            <Typography variant="body2" color="text.secondary">
-              {postBodies[i]}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    )
+  async function remove(credentials) {
+    return fetch("http://localhost:5000/removePost", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => {
+          res.json()
+          fetchData()
+        }
+      )
   }
+  async function checkModerator(credentials) {
+    return fetch("http://localhost:5000/checkModerator", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => 
+          res.json()
+      )
+  }
+  const removePost = async (index) => {
+    console.log(index)
+    await remove({
+      postID: index,
+    })
+
+
+  }
+
+
 
 
 
   const handleChange = (event) => {
     console.log(event.target.value)
-    sessionStorage.setItem('chosenPost', postIDs[event.target.value])
     sessionStorage.setItem('postTitle', postTitles[event.target.value])
     sessionStorage.setItem('postBody', postBodies[event.target.value])
     console.log(sessionStorage.getItem('chosenPost'))
-    navigate("/post");
+    navigate("post/" + postIDs[event.target.value]);
   }
 
 
