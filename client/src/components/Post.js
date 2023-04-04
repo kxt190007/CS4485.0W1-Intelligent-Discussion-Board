@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
-import { Link } from 'react-router-dom'
+import { useLoaderData } from "react-router-dom";
 import Layout from './Layout'
 import { List,ListItem, ListItemText, ListItemButton, Divider, Accordion, Paper, Grid} from '@mui/material'
 import Box from '@mui/material/Box';
@@ -10,9 +10,16 @@ import { CardActionArea } from '@mui/material';
 import Card from '@mui/material/Card';
 
 
-function Post(){
+export async function loader({ params }) {
+  console.log(params.postID)
+  //const classInfo = await getClass(params.classID);
+  return [params.postID, params.classID]
+}
 
-    const postID = sessionStorage.getItem('chosenPost')
+function Post(){
+    const loaderData = useLoaderData()
+    const postID = loaderData[0]
+    const classID = loaderData[1]
     const title = sessionStorage.getItem('postTitle')
     const body = sessionStorage.getItem('postBody')
     const [userIDs, setUserIDs] = useState([]);

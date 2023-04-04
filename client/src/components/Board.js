@@ -16,18 +16,16 @@ import { CardActionArea } from '@mui/material';
 
 
 export async function loader({ params }) {
-  console.log("Loader test: ")
-  console.log(params.classIDTEST)
+  console.log(params.classID)
   //const classInfo = await getClass(params.classID);
-  return params.classIDTEST
+  return params.classID
 }
 
 export function Board() {
 
   const navigate = useNavigate();
   const classList = JSON.parse(sessionStorage.getItem('classes'))
-  const classIDTEST = useLoaderData();
-  const classID = sessionStorage.getItem('chosenClass')
+  const classID = useLoaderData()
   //const [postJSON, setPostJSON] = useState([{}][{}]);
   const [postIDs, setPostIDs] = useState([]);
   const [userIDs, setUserIDs] = useState([]);
@@ -124,11 +122,10 @@ export function Board() {
 
   const handleChange = (event) => {
     console.log(event.target.value)
-    sessionStorage.setItem('chosenPost', postIDs[event.target.value])
     sessionStorage.setItem('postTitle', postTitles[event.target.value])
     sessionStorage.setItem('postBody', postBodies[event.target.value])
     console.log(sessionStorage.getItem('chosenPost'))
-    navigate("/post");
+    navigate("post/" + postIDs[event.target.value]);
   }
 
 
