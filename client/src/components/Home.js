@@ -3,13 +3,17 @@ import Button from '@mui/material/Button'
 import { Link, Navigate } from 'react-router-dom'
 import Layout from './Layout'
 import { useNavigate } from "react-router-dom";
-import { List, ListItem, ListItemText, ListItemButton, Paper, Divider } from '@mui/material'
+import { ListItemText, ListItemButton, Paper, Divider } from '@mui/material'
 import Box from '@mui/material/Box';
 import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListDivider from '@mui/joy/ListDivider';
 import Stack from '@mui/joy/Stack';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import HomeIcon from '@mui/icons-material/Home';
 
 
 function Home() {
@@ -27,10 +31,9 @@ function Home() {
       setClasses(classList);
       console.log(classes);
       const temp = [];
-      for(let k in classList){
-        console.log(k);
+      for(let i = 0; i<classList.length; i++){
         temp.push(
-          <option value = {k}>{classList[k]}</option>
+          <option value = {classList[i][0]}>{classList[i][1]}</option>
         );
         setInputs(temp);
         console.log("inputs:");
@@ -45,10 +48,8 @@ function Home() {
 
   }, []);
 
-  const handleChange = (index) => {
-    sessionStorage.setItem('chosenClass', classes[index][0])
-    console.log(sessionStorage.getItem('chosenClass'))
-    navigate("/board");
+  const handleChange = (event) => {
+    navigate("/board/" + event.target.value);
   }
 
   let listClasses = inputs.map((x) =>
@@ -63,14 +64,53 @@ function Home() {
   );
 
 
-  if (!sessionStorage.getItem('token')) {
+  if(!sessionStorage.getItem('token')){
     return (
-      <div>
-        <Link to="/login">Login</Link>
-        <p>Please login to view class discussion boards.</p>
-      </div>
+      <Grid>
+      <Box sx={{ flexGrow: 1}} > 
+      <AppBar position="static" style={{ background: '#f57c00' }}>
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <HomeIcon 
+            href="/login"/>
+          </IconButton>
+
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+              flexGrow: 1 
+            }}
+          >
+            INTELLIGENT DISCUSSION BOARD
+          </Typography>
+          
+          <Button color="inherit" href="/login">Login</Button>
+        </Toolbar>
+      </AppBar>
+    </Box>
+    <Typography variant="h2" align="center">
+    Welcome to Intelligent Discussion Board
+
+    </Typography>
+    </Grid>
     )
   }
+
   return (
     
     <Stack

@@ -5,8 +5,12 @@ import Create from './components/Create'
 import Home from './components/Home.js'
 import Register from './components/Register'
 import Logout from "./components/Logout"
-import Board from "./components/Board"
-import Post from "./components/Post"
+import Board, {
+  loader as boardLoader,
+} from "./components/Board"
+import Post, {
+  loader as postLoader,
+} from "./components/Post"
 import Classes from "./components/Classes"
 import CreateClass from "./components/CreateClass"
 import {
@@ -41,12 +45,16 @@ const router = createBrowserRouter([
         element: <Logout />
       },
       {
-        path: "board",
-        element: <Board />
+        path: "board/:classID",
+        element: <Board />,
+        loader: boardLoader
       },
       {
-        path: "post",
+        path: "board/:classID/post/:postID",
         element: <Post />,
+        loader: postLoader
+      },
+      {
         path: "classes",
         element: <Classes />
       },
