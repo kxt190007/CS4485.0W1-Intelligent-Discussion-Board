@@ -123,7 +123,7 @@ function Create() {
     )
   }
 
-  const paperStyle = { padding: "30px 20px", height: '70vh', width: '97%', margin: "40px auto" }
+  const paperStyle = { padding: "30px 20px", height: '71vh', width: '97%', margin: "40px auto" }
   const btnStyle = { margin: '40px 0' }
 
   return (
@@ -137,7 +137,7 @@ function Create() {
             if this doesnt answer your question click me to post:
           <input type="submit" value={message}></input>
          </form>
-
+         <br />
       <form onSubmit={handleSubmit}>
        
           
@@ -168,7 +168,7 @@ function Create() {
           required
           rowsMin={6}
           onChange={(e) => setPostContent(e.target.value)}
-          style={{ width: '100%', height: '400px' }}
+          style={{ width: '100%', height: '360px' }}
         />
 
         

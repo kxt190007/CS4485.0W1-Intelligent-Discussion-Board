@@ -107,14 +107,14 @@ function Layout(){
   if(sessionStorage.getItem('accesslevel') == 5){
     return (
       <>
-        <nav>
+       {/* <nav>
           <ul>
             <li>
               <Link to="/">Home</Link>
             </li>
-            {/* <li>
+             <li>
               <Link to="/login">Login</Link>
-            </li> */}
+            </li> 
             <li>
               <Link to="/create">Create Post</Link>
             </li>
@@ -125,8 +125,45 @@ function Layout(){
               <Link to="/logout">Log out</Link>
             </li>
           </ul>
-        </nav>
-
+        </nav> */}
+              <Grid>
+            <Grid>
+            <Box display="flex" sx={{ flexGrow: 1 }}> 
+            <AppBar position="static" style={{ background: '#ef6c00' }} sx={{ mr: 215}} >
+              <Toolbar style={{ justifyContent: 'space-between' }} >
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  href="/"
+                  sx={{ mr: 2.5 }}
+                >
+                  <HomeIcon />
+                </IconButton>
+              <Button  color="inherit" >
+              <Link to="/logout">Log out</Link>
+              </Button>
+              </Toolbar>
+            </AppBar>
+          </Box>
+          </Grid>
+          
+          <Grid>
+          <Box display="flex" sx={{ flexGrow: 1 }} style={{ height: '100%' }}> 
+          <AppBar position="static" style={{ background: '#f57c00' }} >
+            <Toolbar>
+            <Button color="inherit"> 
+            <Link to="/classes">Classes</Link>
+            </Button>
+            <Button color="inherit"> 
+            <Link to="/create">Create Post</Link>
+            </Button>
+            </Toolbar>
+          </AppBar>
+        </Box>
+        </Grid>
+        </Grid>
         <Outlet />
       </>
     )
