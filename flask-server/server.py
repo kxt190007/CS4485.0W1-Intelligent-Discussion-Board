@@ -63,6 +63,11 @@ def post1():
         'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
         (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
+    newID = cursor.lastrowid
+    link = 'localhost:3000/board/' + str(classID) + '/post/' + str(newID)
+    print(link)
+    cursor.execute('UPDATE Posts SET PostLink = %s WHERE PostID = %s', (link,newID,))
+    mysql.connection.commit()
     cursor.close()
     return {"status": "Success", "message": "message"}
 
@@ -73,11 +78,6 @@ def post():
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT PostTitle FROM Posts')
     myresult = cursor.fetchall()
-    newID = cursor.lastrowid
-    link = 'localhost:3000/board/' + str(classID) + '/post/' + str(newID)
-    print(link)
-    cursor.execute('UPDATE Posts SET PostLink = %s WHERE PostID = %s', (link,newID,))
-    mysql.connection.commit()
     if len(postTitle) > 1:
         for postTitle2 in myresult:
             postTitle2 = postTitle2[0]
