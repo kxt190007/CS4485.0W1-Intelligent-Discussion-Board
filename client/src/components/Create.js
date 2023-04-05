@@ -28,7 +28,7 @@ function Create() {
       const temp = [];
       for (let k in classList) {
         temp.push(
-          <option value={classList[k][0]}>{classList[k][1]}</option>
+          <MenuItem value={classList[k][0]}>{classList[k][1]}</MenuItem>
         );
         setInputs(temp);
         console.log(inputs);
@@ -142,7 +142,7 @@ function Create() {
        
           
           <Select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
-            <option value="Select a Class">Select a Class</option>
+            <MenuItem value="Select a Class">Select a Class</MenuItem>
             {inputs}
           </Select>
         <br />
