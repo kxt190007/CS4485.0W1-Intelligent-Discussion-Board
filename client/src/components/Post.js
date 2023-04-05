@@ -34,6 +34,7 @@ function Post(){
 
 
 
+
     useEffect(() =>{
         console.log(title)
 
@@ -143,17 +144,20 @@ function Post(){
     var comments = [];
     for(let i = 0; i < userIDs.length; i++){
         comments.push(
-          <Card sx={{ maxWidth: "100%", m: 1, maxHeight: 200}}>
+
+          <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200 ,marginLeft: 'auto', marginRight: 'auto'}}>
           <CardActionArea onClick = {(e) => handleChange(e)}>
             
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
+            <CardContent >
+              
+              <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {commentBodies[i] }
               </Typography>
-              <Divider/>
-              <Typography variant="body2" color="text.secondary">
+              
+              <Typography variant="caption text" color="text.secondary">
               {userNames[i]} commented at {postTimes[i]}
               </Typography>
+
             </CardContent>
           </CardActionArea>
         </Card>
@@ -293,6 +297,7 @@ function Post(){
       )
     }
     
+
 }
 
 
