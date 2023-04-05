@@ -84,7 +84,7 @@ export function Board() {
     if (sessionStorage.getItem('accesslevel') == 5 || moderator.message == 'yes') {
       for (let i = 0; i < postIDs.length; i++) {
         temp.push(
-          <Card sx={{ maxWidth: 345, m: 2, maxHeight: 200 }}>
+          <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
             <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
               <CardContent>
@@ -106,7 +106,7 @@ export function Board() {
     else {
       for (let i = 0; i < postIDs.length; i++) {
         temp.push(
-          <Card sx={{ maxWidth: 345, m: 2, maxHeight: 200 }}>
+          <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
             <CardActionArea onClick={(e) => handleChange(e)}>
 
               <CardContent>
@@ -198,34 +198,27 @@ export function Board() {
 
 
   return (
-    <Grid>
-      <Layout />
+    <nav>
+     <Layout />
+    <Grid sx={{
+              display: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'flex-start',
+              flexWrap: 'wrap',
+              p: 1,
+              m: 0,
+              bgcolor: 'background.paper',
+              maxWidth: "100%",
+              borderRadius: 1,
+            }}>
+      
       <Paper style={paperStyle} elevation={10}>
         <h2>Discussion Board for {className}</h2>
-        <Divider />
-
-        <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
-          <nav>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                flexWrap: 'wrap',
-                p: 1,
-                m: 1,
-                bgcolor: 'background.paper',
-                maxWidth: "100%",
-                borderRadius: 1,
-              }}
-            >
-              {postArr}
-            </Box>
-          </nav>
-
-        </Box>
+        <Divider />   
+      {postArr}
       </Paper>
-    </Grid>
+    </Grid> 
+    </nav>
   )
 }
 

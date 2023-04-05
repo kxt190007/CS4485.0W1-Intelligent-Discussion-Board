@@ -51,6 +51,18 @@ def getClasses():
         classList.append(classRow)
     return {"status": "Success", "classList": classList}
 
+@app.route("/createComment", methods=['POST'])
+def createComment():
+    userID = request.json.get('userID')
+    postID = request.json.get('postID')
+    comment = request.json.get('comment')
+    date = request.json.get('date')
+    cursor = mysql.connection.cursor()
+    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime) VALUES (%s, %s, %s, %s)',
+                    (postID, userID, comment, date))
+    mysql.connection.commit()
+    cursor.close()
+    return
 
 @app.route("/post", methods=['POST'])
 def post():
