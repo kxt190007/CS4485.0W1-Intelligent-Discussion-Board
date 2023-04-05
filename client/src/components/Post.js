@@ -20,8 +20,8 @@ function Post(){
     const loaderData = useLoaderData()
     const postID = loaderData[0]
     const classID = loaderData[1]
-    const title = sessionStorage.getItem('postTitle')
-    const body = sessionStorage.getItem('postBody')
+    const [title, setTitle] = useState("");
+    const [body, setBody] = useState("");
     const [userIDs, setUserIDs] = useState([]);
     const [commentBodies, setCommentBodies] = useState([]);
     const [postTimes, setPostTimes] = useState([]);
@@ -42,9 +42,16 @@ function Post(){
             });
             console.log("comment list: ")
             console.log(commentList);
-  
-           // setPostJSON(postList);
-           // console.log(postJSON)
+            
+           const postInfo = await getPostTitleBody({
+              postID: postID
+           });
+           console.log("postinfo: ")
+           console.log(postInfo);
+           console.log(postInfo["title"]);
+
+           setTitle(postInfo["title"])
+           setBody(postInfo["body"])
            const userIDs = []
            const commentBodies = []
            const postTimes = []
@@ -78,8 +85,20 @@ function Post(){
     
       }, []);
 
-    async function getPostComments(credentials){
+      async function getPostComments(credentials){
         return fetch("http://localhost:5000/getPostComments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        })
+        .then(
+          res=>res.json()
+        )
+      }
+      async function getPostTitleBody(credentials){
+        return fetch("http://localhost:5000/getPostTitleBody", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

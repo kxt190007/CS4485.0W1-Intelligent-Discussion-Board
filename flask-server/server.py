@@ -96,6 +96,17 @@ def post():
     cursor.close()
     return {"status": "Success", "message": "message"}
 
+@app.route("/getPostTitleBody", methods=['POST'])
+def getPostTitleBody():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT PostBody, PostTitle FROM Posts WHERE PostID = %s', (postID,))
+    rows = cursor.fetchone()
+    cursor.close()
+    body = rows[0]
+    title = rows[1]
+    return {"title" : title, "body": body}
+
 
 @app.route("/getPosts", methods=['POST'])
 def getPosts():
