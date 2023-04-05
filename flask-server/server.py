@@ -51,6 +51,19 @@ def getClasses():
         classList.append(classRow)
     return {"status": "Success", "classList": classList}
 
+@app.route("/createComment", methods=['POST'])
+def createComment():
+    userID = request.json.get('userID')
+    postID = request.json.get('postID')
+    comment = request.json.get('comment')
+    date = request.json.get('date')
+    cursor = mysql.connection.cursor()
+    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime) VALUES (%s, %s, %s, %s)',
+                    (postID, userID, comment, date))
+    mysql.connection.commit()
+    cursor.close()
+    return
+    
 @app.route("/post1", methods=['POST'])
 def post1():
     userID = request.json.get('userID')
@@ -98,6 +111,17 @@ def post():
             return {"status": "Success", "message": "{}".format(response)}
     cursor.close()
     return {"status": "Success", "message": "message"}
+
+@app.route("/getPostTitleBody", methods=['POST'])
+def getPostTitleBody():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT PostBody, PostTitle FROM Posts WHERE PostID = %s', (postID,))
+    rows = cursor.fetchone()
+    cursor.close()
+    body = rows[0]
+    title = rows[1]
+    return {"title" : title, "body": body}
 
 
 @app.route("/getPosts", methods=['POST'])
