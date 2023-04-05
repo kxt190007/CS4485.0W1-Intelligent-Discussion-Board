@@ -168,13 +168,13 @@ function Post(){
 
       ev.preventDefault();
       let date_create = moment().format("YYYY-MM-DD hh:mm:ss")
-      // await createComment({
-      //   userID: sessionStorage.getItem('token'),
-      //   postID,
-      //   comment: newComment,
-      //   date: date_create
-      // });
-      refreshPage(10000)
+      await createComment({
+        userID: sessionStorage.getItem('token'),
+        postID,
+        comment: newComment,
+        date: date_create
+      });
+      // refreshPage(10000)
 
 
     }
