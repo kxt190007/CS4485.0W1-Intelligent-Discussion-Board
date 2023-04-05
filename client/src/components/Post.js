@@ -30,7 +30,7 @@ function Post(){
     const [commentBodies, setCommentBodies] = useState([]);
     const [postTimes, setPostTimes] = useState([]);
     const [userNames, setUserNames] = useState([]);
-    const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto"}
+    const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto"}
 
 
 
@@ -168,13 +168,13 @@ function Post(){
 
       ev.preventDefault();
       let date_create = moment().format("YYYY-MM-DD hh:mm:ss")
-      // await createComment({
-      //   userID: sessionStorage.getItem('token'),
-      //   postID,
-      //   comment: newComment,
-      //   date: date_create
-      // });
-      refreshPage(10000)
+      await createComment({
+        userID: sessionStorage.getItem('token'),
+        postID,
+        comment: newComment,
+        date: date_create
+      });
+      //refreshPage()
 
 
     }

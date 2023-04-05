@@ -22,7 +22,7 @@ function Home() {
   const [classes, setClasses] = useState([]);
   const [inputs, setInputs] = useState([]);
   const [userName, setUserName] = useState("");
-  const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto"}
+  const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto"}
 
   useEffect(() => {
     async function fetchData() {
@@ -112,7 +112,9 @@ function Home() {
   }
 
   return (
-    
+    <div>
+    <Layout/>
+
     <Stack
       direction="column"
       justifyContent="flex-start"
@@ -121,7 +123,6 @@ function Home() {
     >
 
       
-      <Layout/>
       <Paper style = {paperStyle}>
 
       <h2>{userName}'s Classes</h2>
@@ -135,7 +136,7 @@ function Home() {
     </Box>
     </Paper>
     </Stack>
-
+    </div>
   )
 }
 

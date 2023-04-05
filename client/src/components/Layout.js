@@ -39,10 +39,12 @@ function Layout(){
 
   if(sessionStorage.getItem('accesslevel') == 0){
     return (
+      <Grid sx={{ 
+        maxWidth: "100%",
+      }}>
       <Grid>
-      <Grid>
-      <Box display="flex" sx={{ flexGrow: 1 }}> 
-      <AppBar position="static" style={{ background: '#ef6c00' }} sx={{ mr: 215}} >
+      <Box display="flex" sx={{ flexGrow: 1}}> 
+      <AppBar position="relative" style={{ background: '#ef6c00' }} sx={{ mr: 215}} >
         <Toolbar style={{ justifyContent: 'space-between' }} >
           <IconButton
             size="large"

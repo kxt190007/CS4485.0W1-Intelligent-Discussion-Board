@@ -33,7 +33,7 @@ export function Board() {
   const [postBodies, setPostBodies] = useState([]);
   const [postTitles, setPostTitles] = useState([]);
   const [postTags, setPostTags] = useState([]);
-  const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto" }
+  const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto" }
   const [postArr, setPostArr] = useState([]);
   var className
   for (let i = 0; i < classList.length; i++) {
@@ -212,7 +212,7 @@ export function Board() {
               borderRadius: 1,
             }}>
       
-      <Paper style={paperStyle} elevation={10}>
+      <Paper style={paperStyle} >
         <h2>Discussion Board for {className}</h2>
         <Divider />   
       {postArr}
