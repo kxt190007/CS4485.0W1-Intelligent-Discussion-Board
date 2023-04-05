@@ -51,43 +51,77 @@ def getClasses():
         classList.append(classRow)
     return {"status": "Success", "classList": classList}
 
-
-@app.route("/post", methods=['POST'])
-def post():
+@app.route("/createComment", methods=['POST'])
+def createComment():
     userID = request.json.get('userID')
-    print(userID[0])
+    postID = request.json.get('postID')
+    comment = request.json.get('comment')
+    date = request.json.get('date')
+    cursor = mysql.connection.cursor()
+    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime) VALUES (%s, %s, %s, %s)',
+                    (postID, userID, comment, date))
+    mysql.connection.commit()
+    cursor.close()
+    return
+    
+@app.route("/post1", methods=['POST'])
+def post1():
+    userID = request.json.get('userID')
     postBody = request.json.get('postContent')
     postTitle = request.json.get('postTitle')
     postTag = request.json.get('postTag')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor2 = mysql.connection.cursor()
-
     cursor.execute(
         'INSERT INTO Posts (UserID, PostStatus, PostBody, PostTitle, PostTag, ClassID) VALUES (%s, 1, %s, %s, %s, %s)',
         (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
+    newID = cursor.lastrowid
+    link = 'localhost:3000/board/' + str(classID) + '/post/' + str(newID)
+    print(link)
+    cursor.execute('UPDATE Posts SET PostLink = %s WHERE PostID = %s', (link,newID,))
+    mysql.connection.commit()
+    cursor.close()
+    return {"status": "Success", "message": "message"}
+
+@app.route("/post", methods=['POST'])
+def post():
+    postTitle = request.json.get('postTitle')
+    classID = request.json.get('chosenclass')
+    cursor = mysql.connection.cursor()
     cursor.execute('SELECT PostTitle FROM Posts')
     myresult = cursor.fetchall()
-    vartemp = 0
     if len(postTitle) > 1:
         for postTitle2 in myresult:
             postTitle2 = postTitle2[0]
             similarity = text_similarity(postTitle, postTitle2)
             if similarity > .5:
-                cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
-                body = cursor.fetchall()
-                print(body[-1][0])
-                #insert
+                #cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
+                #body = cursor.fetchall()
+                #print(body[-1][0])
                 print("similar post found at: {}".format(postTitle2))
-                vartemp = 1
-                break
-        if vartemp == 0:
-            response = ask_question(postTitle)
-            print(response)
-            # insert
+                cursor.close()
+                return {"status": "Success", "message": "{}".format(postTitle2)}
+        response = ask_question(postTitle, classID)
+        if response == "error":
+            cursor.close()
+            return {"status": "Success", "message": "message"}
+        else:
+            cursor.close()
+            return {"status": "Success", "message": "{}".format(response)}
     cursor.close()
     return {"status": "Success", "message": "message"}
+
+@app.route("/getPostTitleBody", methods=['POST'])
+def getPostTitleBody():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT PostBody, PostTitle FROM Posts WHERE PostID = %s', (postID,))
+    rows = cursor.fetchone()
+    cursor.close()
+    body = rows[0]
+    title = rows[1]
+    return {"title" : title, "body": body}
 
 
 @app.route("/getPosts", methods=['POST'])
@@ -186,9 +220,7 @@ def createClass():
         return {"status": "Failed", "message" : "Class already exists"}
     cursor.execute("INSERT INTO Class (ClassName) VALUES (%s)", (className,))
     mysql.connection.commit()
-    cursor.execute("SELECT * FROM Class WHERE ClassName = %s", (className,))
-    row = cursor.fetchone()
-    classID = row[0]
+    classID = cursor.lastrowid
     profList.append(email)
     for i in range(len(profList)):
         cursor.execute("SELECT * FROM Users WHERE Email = %s", (profList[i],))
@@ -302,5 +334,28 @@ def removeClass():
     mysql.connection.commit()
     return {"status":"Success"}
 
+@app.route("/removePost", methods = ['POST'])
+def removePost():
+    postID = request.json.get('postID')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM Posts WHERE PostID = %s', (postID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    return {"status":"Success"}
+
+@app.route("/checkModerator", methods = ['POST'])
+def checkModerator():
+    classID = request.json.get('classID')
+    userID = request.json.get('userID')
+    print(classID)
+    print(userID)
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM ModeratorToClass WHERE UserID = %s AND ClassID = %s', (userID, classID,))
+    row = cursor.fetchone()
+    if row:
+        return {"status": "Success", "message": "yes"}
+    else: 
+        return {"status": "Success", "message": "no"}
 if __name__ == "__main__":
     app.run(debug=True)

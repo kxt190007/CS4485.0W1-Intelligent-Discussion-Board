@@ -9,6 +9,7 @@ import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material
 
 
 function Create() {
+  const [message, setMessage] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
   const [postTag, setPostTag] = useState("");
@@ -18,6 +19,7 @@ function Create() {
   const [errorText, setErrorText] = useState("");
   const [inputs, setInputs] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchData() {
       //fetch classes list
@@ -26,7 +28,7 @@ function Create() {
       const temp = [];
       for (let k in classList) {
         temp.push(
-          <option value={classList[k][0]}>{classList[k][1]}</option>
+          <MenuItem value={classList[k][0]}>{classList[k][1]}</MenuItem>
         );
         setInputs(temp);
         console.log(inputs);
@@ -48,6 +50,19 @@ function Create() {
       )
   }
 
+  async function createPost1(credentials) {
+    return fetch("http://localhost:5000/post1", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => res.json()
+      )
+  }
+
   const handleSubmit = async e => {
     console.log(inputs)
     e.preventDefault();
@@ -55,7 +70,32 @@ function Create() {
       setErrorText("Please select a class.")
       return;
     }
-    await createPost({
+    const token = await createPost({
+      userID: sessionStorage.getItem('token'),
+      postContent,
+      postTitle,
+      postTag,
+      chosenclass
+    });
+    console.log(token.message)
+    setMessage(token.message)
+    if(token.message == "message") {
+        await createPost1({
+          userID: sessionStorage.getItem('token'),
+          postContent,
+          postTitle,
+          postTag,
+          chosenclass
+        });
+    }
+    else {
+        //pop up
+    }
+  }
+
+  const handlePop = async e => {
+    console.log(inputs)
+    await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
       postTitle,
@@ -64,6 +104,8 @@ function Create() {
     });
     navigate("/")
   }
+
+
   const handleChange = (event) => {
     setchosenclass(event.target.value);
   }
@@ -91,11 +133,16 @@ function Create() {
       <Layout />
       <Paper elevation={10} style={paperStyle}>
 
+        <form id = "onSubmit1" onSubmit1={handlePop}>
+            if this doesnt answer your question click me to post:
+          <input type="submit" value={message}></input>
+         </form>
+
       <form onSubmit={handleSubmit}>
        
           
           <Select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
-            <option value="Select a Class">Select a Class</option>
+            <MenuItem value="Select a Class">Select a Class</MenuItem>
             {inputs}
           </Select>
         <br />
