@@ -4,6 +4,8 @@ from flask_mysqldb import MySQL
 from array import *
 from helpbot import *
 from cosim import *
+import string
+import random
 
 
 
@@ -209,6 +211,7 @@ def createClass():
     email = request.json.get('email')
     lastName = request.json.get('lastName')
     profList = request.json.get('profList')
+   
     if profList:
         className = className + " - Multiple Instructors"
     else:
@@ -218,7 +221,14 @@ def createClass():
     row = cursor.fetchone()
     if row:
         return {"status": "Failed", "message" : "Class already exists"}
-    cursor.execute("INSERT INTO Class (ClassName) VALUES (%s)", (className,))
+    classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+    cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+    row = cursor.fetchone()
+    while row:
+        classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+        cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+        row = cursor.fetchone()
+    cursor.execute("INSERT INTO Class (ClassName, ClassString) VALUES (%s, %s)", (className, classString,))
     mysql.connection.commit()
     classID = cursor.lastrowid
     profList.append(email)
@@ -249,7 +259,10 @@ def getStudents():
     print(classID)
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (classID,))
-    className = cursor.fetchone()[1]
+    row = cursor.fetchone()
+    className = row[1]
+    classString = row[2]
+    
     cursor.execute('SELECT UserID FROM UserToClass WHERE ClassID = %s', (classID,))
     rows = cursor.fetchall()
     print(rows)
@@ -272,7 +285,7 @@ def getStudents():
             students.append(student)
         elif student[5] == 5:
             instructors.append(student)
-    return {"status":"Success", "students": students, "moderators":moderators,"instructors":instructors, "classname":className}
+    return {"status":"Success", "students": students, "moderators":moderators,"instructors":instructors, "classname":className, "classstring": classString}
 
 @app.route("/demote", methods = ['POST'])
 def demote():
@@ -357,5 +370,20 @@ def checkModerator():
         return {"status": "Success", "message": "yes"}
     else: 
         return {"status": "Success", "message": "no"}
+    
+@app.route("/generateNewString", methods = ['POST'])
+def generateNewString():
+    classID = request.json.get('classID')
+    classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+    row = cursor.fetchone()
+    while row:
+        classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+        cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+        row = cursor.fetchone()
+    cursor.execute('UPDATE Class SET ClassString = %s WHERE ClassID = %s', (classString,classID,))
+    mysql.connection.commit()
+    return {"status":"success", "classstring":classString}
 if __name__ == "__main__":
     app.run(debug=True)
