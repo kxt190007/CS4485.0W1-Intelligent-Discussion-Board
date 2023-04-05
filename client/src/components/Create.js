@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
 import Layout from './Layout.js'
+import { ListItemText, ListItemButton, Paper, Divider, TextareaAutosize, Chip, Input } from '@mui/material'
+import Box from '@mui/material/Box';
+import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
 
 
 function Create() {
@@ -118,10 +122,16 @@ function Create() {
       //TODO: Change Link to profile page OR whatever page to sign up for classes.
     )
   }
+
+  const paperStyle = { padding: "30px 20px", height: '70vh', width: '97%', margin: "40px auto" }
+  const btnStyle = { margin: '40px 0' }
+
   return (
-    <div>
+    
+    <Grid>
+    
       <Layout />
-      <h1>Create Post</h1>
+      <Paper elevation={10} style={paperStyle}>
 
         <form id = "onSubmit1" onSubmit1={handlePop}>
             if this doesnt answer your question click me to post:
@@ -129,44 +139,76 @@ function Create() {
          </form>
 
       <form onSubmit={handleSubmit}>
-        <label>
-          Select a class:
-          <select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
+       
+          
+          <Select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
             <option value="Select a Class">Select a Class</option>
             {inputs}
-          </select>
-        </label> <br />
-        <input
+          </Select>
+        <br />
+        <br />
+        <TextField 
           name="posttitle"
           type="text"
-          id="posttitle"
+          id="standard-basic"
           class="input-box"
           placeholder="Post Title"
           required="required"
+          variant="standard"
           onChange={(e) => setPostTitle(e.target.value)}
-        ></input><br />
-        <textarea
+        ></TextField>
+       
+        
+        <br />
+        <TextareaAutosize
           name="postcontent"
           id="postcontent"
           class="input-box"
-          placeholder="Post content"
-          required="required"
+          placeholder="Please enter post content"
+          required
+          rowsMin={6}
           onChange={(e) => setPostContent(e.target.value)}
-        ></textarea> <br />
-        <label for="tag">Tag (Optional):</label>
-        <input list="tagpresets" id="tag" name="tag" onChange={(e) => setPostTag(e.target.value)}></input>
+          style={{ width: '100%', height: '400px' }}
+        />
 
-        <datalist id="tagpresets">
-          <option value="Homework"></option>
-          <option value="Exam"></option>
-          <option value="Project"></option>
-          <option value="General"></option>
-        </datalist> <br />
-        <input type="submit" value="Create Post"></input>
+        
+        <FormControl sx={{ m: 1, minWidth: 150 }} size="small">
+          <InputLabel htmlFor="tag-select">Tag (Optional)</InputLabel>
+          <Select
+            labelId="tag-select"
+            id="tag-select"
+            value={postTag}
+            onChange={(e) => setPostTag(e.target.value)}
+            input={<Input id="tag" />}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value="General">General</MenuItem>
+            <MenuItem value="Homework">Homework</MenuItem>
+            <MenuItem value="Exam">Exam</MenuItem>
+            <MenuItem value="Project">Project</MenuItem>
+            
+          </Select>
+        </FormControl>
+
+
+        
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+        <Button type = 'submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle}>Create Post</Button>
+        </Box>
       </form>
       <p>{errorText}</p>
-    </div>
+    
+      
+      </Paper>
+      
+    </Grid>
+
+    
+      
   )
+  
 }
 
 export default Create

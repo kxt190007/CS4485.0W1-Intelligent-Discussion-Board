@@ -68,7 +68,7 @@ function Home() {
     return (
       <Grid>
       <Box sx={{ flexGrow: 1}} > 
-      <AppBar position="static" style={{ background: '#f57c00' }}>
+      <AppBar position="static" style={{ background: '#ef6c00' }}>
         <Toolbar>
           <IconButton
             size="large"
