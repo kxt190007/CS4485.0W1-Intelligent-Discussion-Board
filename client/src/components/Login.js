@@ -77,14 +77,14 @@ function Login() {
 
  
   const paperStyle = { padding: "30px 20px", height: '50vh', width: 320, margin: "110px auto" }
-  const avatarStyle = { backgroundColor: '#f57c00' }
+  const avatarStyle = { backgroundColor: '#ef6c00' }
   const btnStyle = { margin: '40px 0'}
 
   return (
     
     <Grid>
       <Box sx={{ flexGrow: 1 }}> 
-      <AppBar position="static" style={{ background: '#f57c00' }}>
+      <AppBar position="static" style={{ background: '#ef6c00' }}>
         <Toolbar>
           <IconButton
             size="large"
