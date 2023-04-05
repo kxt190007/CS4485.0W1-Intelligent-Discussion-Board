@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { Link } from "react-router-dom";
 import Layout from './Layout.js'
+import { ListItemText, ListItemButton, Paper, Divider, TextareaAutosize, Chip, Input } from '@mui/material'
+import Box from '@mui/material/Box';
+import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
 
 
 function Create() {
+  const [message, setMessage] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
   const [postTag, setPostTag] = useState("");
@@ -14,6 +19,7 @@ function Create() {
   const [errorText, setErrorText] = useState("");
   const [inputs, setInputs] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchData() {
       //fetch classes list
@@ -22,7 +28,7 @@ function Create() {
       const temp = [];
       for (let k in classList) {
         temp.push(
-          <option value={classList[k][0]}>{classList[k][1]}</option>
+          <MenuItem value={classList[k][0]}>{classList[k][1]}</MenuItem>
         );
         setInputs(temp);
         console.log(inputs);
@@ -44,6 +50,19 @@ function Create() {
       )
   }
 
+  async function createPost1(credentials) {
+    return fetch("http://localhost:5000/post1", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => res.json()
+      )
+  }
+
   const handleSubmit = async e => {
     console.log(inputs)
     e.preventDefault();
@@ -51,7 +70,32 @@ function Create() {
       setErrorText("Please select a class.")
       return;
     }
-    await createPost({
+    const token = await createPost({
+      userID: sessionStorage.getItem('token'),
+      postContent,
+      postTitle,
+      postTag,
+      chosenclass
+    });
+    console.log(token.message)
+    setMessage(token.message)
+    if(token.message == "message") {
+        await createPost1({
+          userID: sessionStorage.getItem('token'),
+          postContent,
+          postTitle,
+          postTag,
+          chosenclass
+        });
+    }
+    else {
+        //pop up
+    }
+  }
+
+  const handlePop = async e => {
+    console.log(inputs)
+    await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
       postTitle,
@@ -60,6 +104,8 @@ function Create() {
     });
     navigate("/")
   }
+
+
   const handleChange = (event) => {
     setchosenclass(event.target.value);
   }
@@ -76,50 +122,93 @@ function Create() {
       //TODO: Change Link to profile page OR whatever page to sign up for classes.
     )
   }
+
+  const paperStyle = { padding: "30px 20px", height: '70vh', width: '97%', margin: "40px auto" }
+  const btnStyle = { margin: '40px 0' }
+
   return (
-    <div>
+    
+    <Grid>
+    
       <Layout />
-      <h1>Create Post</h1>
+      <Paper elevation={10} style={paperStyle}>
+
+        <form id = "onSubmit1" onSubmit1={handlePop}>
+            if this doesnt answer your question click me to post:
+          <input type="submit" value={message}></input>
+         </form>
 
       <form onSubmit={handleSubmit}>
-        <label>
-          Select a class:
-          <select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
-            <option value="Select a Class">Select a Class</option>
+       
+          
+          <Select defaultValue="Select a Class" required={true} chosenclass={chosenclass} onChange={handleChange}>
+            <MenuItem value="Select a Class">Select a Class</MenuItem>
             {inputs}
-          </select>
-        </label> <br />
-        <input
+          </Select>
+        <br />
+        <br />
+        <TextField 
           name="posttitle"
           type="text"
-          id="posttitle"
+          id="standard-basic"
           class="input-box"
           placeholder="Post Title"
           required="required"
+          variant="standard"
           onChange={(e) => setPostTitle(e.target.value)}
-        ></input><br />
-        <textarea
+        ></TextField>
+       
+        
+        <br />
+        <TextareaAutosize
           name="postcontent"
           id="postcontent"
           class="input-box"
-          placeholder="Post content"
-          required="required"
+          placeholder="Please enter post content"
+          required
+          rowsMin={6}
           onChange={(e) => setPostContent(e.target.value)}
-        ></textarea> <br />
-        <label for="tag">Tag (Optional):</label>
-        <input list="tagpresets" id="tag" name="tag" onChange={(e) => setPostTag(e.target.value)}></input>
+          style={{ width: '100%', height: '400px' }}
+        />
 
-        <datalist id="tagpresets">
-          <option value="Homework"></option>
-          <option value="Exam"></option>
-          <option value="Project"></option>
-          <option value="General"></option>
-        </datalist> <br />
-        <input type="submit" value="Create Post"></input>
+        
+        <FormControl sx={{ m: 1, minWidth: 150 }} size="small">
+          <InputLabel htmlFor="tag-select">Tag (Optional)</InputLabel>
+          <Select
+            labelId="tag-select"
+            id="tag-select"
+            value={postTag}
+            onChange={(e) => setPostTag(e.target.value)}
+            input={<Input id="tag" />}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value="General">General</MenuItem>
+            <MenuItem value="Homework">Homework</MenuItem>
+            <MenuItem value="Exam">Exam</MenuItem>
+            <MenuItem value="Project">Project</MenuItem>
+            
+          </Select>
+        </FormControl>
+
+
+        
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+        <Button type = 'submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle}>Create Post</Button>
+        </Box>
       </form>
       <p>{errorText}</p>
-    </div>
+    
+      
+      </Paper>
+      
+    </Grid>
+
+    
+      
   )
+  
 }
 
 export default Create
