@@ -383,6 +383,7 @@ def generateNewString():
         cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
         row = cursor.fetchone()
     cursor.execute('UPDATE Class SET ClassString = %s WHERE ClassID = %s', (classString,classID,))
+    mysql.connection.commit()
     return {"status":"success", "classstring":classString}
 if __name__ == "__main__":
     app.run(debug=True)
