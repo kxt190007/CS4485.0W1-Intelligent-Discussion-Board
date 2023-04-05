@@ -21,6 +21,7 @@ export function ClassList() {
     const [errMessage, setErrMessage] = useState("")
     const classID = useLoaderData();
     const navigate = useNavigate()
+    const [classString, setClassString] = useState("")
     async function getStudents(credentials) {
         return fetch("http://localhost:5000/getStudents", {
             method: "POST",
@@ -81,11 +82,24 @@ export function ClassList() {
                 res => res.json()
             )
     }
+    async function generate(credentials) {
+        return fetch("http://localhost:5000/generateNewString", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(credentials),
+        })
+            .then(
+                res => res.json()
+            )
+    }
     useEffect(() => {
         async function fetchData() {
             const token = await getStudents({
                 classID,
             });
+            
             console.log(token.instructors)
             console.log(sessionStorage.getItem('token'))
             var found = 0
@@ -96,6 +110,7 @@ export function ClassList() {
             }
             if (found === 1) {
                 setClassName(token.classname)
+                setClassString(token.classstring)
                 const temp = [...token.instructors]
                 setInstructorList(temp)
                 const temp1 = [...token.students]
@@ -112,6 +127,12 @@ export function ClassList() {
         }
         fetchData();
     }, []);
+    const generateNewString = async () => {
+        const token = await generate({
+            classID,
+        })
+        setClassString(token.classstring)
+    }
     const demoteStudent = async (index) => {
         const token = await demote({
             studentID: moderatorList[index][0],
@@ -218,6 +239,9 @@ export function ClassList() {
                 </div>
             ))}</p>
             <p>Add Students</p>
+            Invite Code: {classString}
+            <button onClick = {() => generateNewString()}>Generate New</button>
+            <br></br>
             <label for="addstudent">Student Email: </label>
             <input
                 name="addstudent"
