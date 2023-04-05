@@ -50,13 +50,19 @@ def ask_question(question, classID):
     #os.system("cls" if os.name == "nt" else "clear")
 
     #pdf will be taken from the tags -> see post class (tag?) -> pull syllabus from there
-    syllabus = classID + ".pdf"
-    syllabusText = extract_text(syllabus)
-    new_question = "given this text: " + syllabusText + "\n " + question + " ?"
-    response = get_response(INSTRUCTIONS + new_question)
-    response = response.lstrip()
-    if response == "I do not think that is on the syllabus.":
-        return "error"
+    syllabus = str(classID) + ".pdf"
+    try:
+        syllabusText = extract_text(syllabus)
+        new_question = "given this text: " + syllabusText + "\n " + question + " ?"
+        response = get_response(INSTRUCTIONS + new_question)
+        response = response.lstrip()
+        if response == "I do not think that is on the syllabus.":
+            return "error"
+        else:
+            return response
+    except FileNotFoundError:
+        print("fail")
     else:
-        return response
+        pass
+    return "error"
 
