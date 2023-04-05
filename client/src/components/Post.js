@@ -30,7 +30,8 @@ function Post(){
     const [commentBodies, setCommentBodies] = useState([]);
     const [postTimes, setPostTimes] = useState([]);
     const [userNames, setUserNames] = useState([]);
-    const paperStyle = { padding: "30px 20px", height: '90%', width: '90%', margin: "20px auto"}
+    const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto"}
+
 
 
 
@@ -74,7 +75,6 @@ function Post(){
               names[i] = n.name
             } 
             setUserNames(names)
-  
           }
           fetchData();
 
@@ -144,6 +144,7 @@ function Post(){
     var comments = [];
     for(let i = 0; i < userIDs.length; i++){
         comments.push(
+
           <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200 ,marginLeft: 'auto', marginRight: 'auto'}}>
           <CardActionArea onClick = {(e) => handleChange(e)}>
             
@@ -176,70 +177,127 @@ function Post(){
         comment: newComment,
         date: date_create
       });
-      // refreshPage(10000)
-
 
     }
 
-    return (
-      <nav>
-        <Layout/>
-        <Grid sx={{
-          display: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          flexWrap: 'wrap',
-          p: 1,
-          m: 0,
-          bgcolor: 'background.paper',
-          maxWidth: "100%",
-          borderRadius: 1,
-        }}>
-          
-          <Paper style = {paperStyle} elevation={3}>
-          <Typography gutterBottom variant="h4" component="div">
-            {title}
-          </Typography>
-          <Divider/>
-          <br />
-          <Typography variant="body1" color="text.secondary">
-            {body}
-          </Typography> 
+    if(commentBodies.length != 0){
+      return (
+        <nav>
+          <Layout/>
+          <Grid sx={{
+            display: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            flexWrap: 'wrap',
+            p: 1,
+            m: 0,
+            bgcolor: 'background.paper',
+            maxWidth: "100%",
+            borderRadius: 1,
+          }}>
+            
+            <Paper style = {paperStyle}>
+            <Typography gutterBottom variant="h4" component="div">
+              {title}
+            </Typography>
+            <Divider/>
+            <Typography variant="body1" color="text.secondary">
+              {body}
+            </Typography> 
+            {comments}
+  
+            <Divider/>
+            <Box sx={{m:2}}>
+              <form
+              onSubmit={handleSubmit}
+            >
+              <Textarea
+                placeholder="Add a comment here..."
+                required
+                sx={{ mt: 1 }}
+                id="inputComment"
+                onChange={(v) => setNewComment(v.target.value)}
+                value = {newComment}
+              />
+              <Button type="submit">Submit</Button>
+              <Typography variant="body2" color="text.secondary">
+              Click submit and refresh the page to see your comment
+              </Typography>
+            </form>
+            </Box>
+            
+            
+            
           </Paper>
-          <br />
-          <br />
+          </Grid>
+          </nav>
+      )
+    }
+    else{
+      return (
+        <nav>
+          <Layout/>
+          <Grid sx={{
+            display: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            flexWrap: 'wrap',
+            p: 1,
+            m: 0,
+            bgcolor: 'background.paper',
+            maxWidth: "100%",
+            borderRadius: 1,
+          }}>
+            
+            <Paper style = {paperStyle}>
+            <Typography gutterBottom variant="h4" component="div">
+              {title}
+            </Typography>
+            <Divider/>
+            <Typography variant="body1" color="text.secondary">
+              {body}
+            </Typography> 
+              <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200}}>
+                  <CardActionArea onClick = {(e) => handleChange(e)}>
+                  
+                  <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                    It's quiet here... Be the first to comment!
+                    </Typography>
+                    <Divider/>
+                  
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            <Divider/>
+            <Box sx={{m:2}}>
+              <form
+              onSubmit={handleSubmit}
+            >
+              <Textarea
+                placeholder="Add a comment here..."
+                required
+                sx={{ mt: 1 }}
+                id="inputComment"
+                onChange={(v) => setNewComment(v.target.value)}
+                value = {newComment}
+              />
+              <Button type="submit">Submit</Button>
+              <Typography variant="body2" color="text.secondary">
+              Click submit and refresh the page to see your comment
+              </Typography>
+            </form>
+            </Box>
+            
+  
+            
+          </Paper>
+          </Grid>
+          </nav>
+      )
+    }
+    
 
-          
-         
-          <Typography gutterBottom variant="h5" component="div">
-            <Box pl={6} pr={2} ml={13}>Comments</Box>
-          </Typography>
-          <Divider/>
-
-          
-          {comments}
-          
-          <Divider/>
-          <Box sx={{m:2}}>
-            <form
-            onSubmit={handleSubmit}
-          >
-
-
-            <Textarea
-              placeholder="Add a comment here..."
-              required
-              sx={{ mt: 1, width:'86.5%', marginLeft: 'auto', marginRight: 'auto', display: 'block'}}
-              id="inputComment"
-              onChange={(v) => setNewComment(v.target.value)}
-              value = {newComment}
-            />
-            <Button type="submit" variant="contained" sx={{ marginLeft: 16 , marginTop: 2 }}>Submit</Button>
-          </form>
-          </Box>
-        </Grid>
-        </nav>
-    )
 }
 
 

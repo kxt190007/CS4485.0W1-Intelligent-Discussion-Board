@@ -33,7 +33,7 @@ export function Board() {
   const [postBodies, setPostBodies] = useState([]);
   const [postTitles, setPostTitles] = useState([]);
   const [postTags, setPostTags] = useState([]);
-  const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto" }
+  const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto" }
   const [postArr, setPostArr] = useState([]);
   var className
   for (let i = 0; i < classList.length; i++) {
@@ -196,30 +196,59 @@ export function Board() {
 
 
 
-
-  return (
-    <nav>
-     <Layout />
-    <Grid sx={{
-              display: 'column',
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
-              flexWrap: 'wrap',
-              p: 1,
-              m: 0,
-              bgcolor: 'background.paper',
-              maxWidth: "100%",
-              borderRadius: 1,
-            }}>
-      
-      <Paper style={paperStyle} elevation={10}>
-        <h2>Discussion Board for {className}</h2>
-        <Divider />   
-      {postArr}
-      </Paper>
-    </Grid> 
-    </nav>
-  )
+  if(postTitles.length == 0){
+    return(
+      <nav>
+       <Layout />
+      <Grid sx={{
+                display: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                flexWrap: 'wrap',
+                p: 1,
+                m: 0,
+                bgcolor: 'background.paper',
+                maxWidth: "100%",
+                borderRadius: 1,
+              }}>
+        
+        <Paper style={paperStyle} >
+          <h2>There are no posts for {className}</h2>
+          <Divider />   
+          <Typography gutterBottom variant="h6" component="div">
+                    Click CREATE POST to be the first to post!
+          </Typography>
+        </Paper>
+      </Grid> 
+      </nav>
+    )
+  }
+  else{
+    return (
+      <nav>
+       <Layout />
+      <Grid sx={{
+                display: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                flexWrap: 'wrap',
+                p: 1,
+                m: 0,
+                bgcolor: 'background.paper',
+                maxWidth: "100%",
+                borderRadius: 1,
+              }}>
+        
+        <Paper style={paperStyle} >
+          <h2>Discussion Board for {className}</h2>
+          <Divider />   
+        {postArr}
+        </Paper>
+      </Grid> 
+      </nav>
+    )
+  }
+  
 }
 
 
