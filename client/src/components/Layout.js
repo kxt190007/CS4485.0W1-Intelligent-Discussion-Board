@@ -58,6 +58,23 @@ function Layout(){
           >
             <HomeIcon />
           </IconButton>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+              flexGrow: 1 
+            }}
+          >
+            INTELLIGENT DISCUSSION BOARD
+          </Typography>
         <Button  color="inherit" >
          <Link to="/logout">Log out</Link>
         </Button>
@@ -145,6 +162,23 @@ function Layout(){
                 >
                   <HomeIcon />
                 </IconButton>
+                <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+              flexGrow: 1 
+            }}
+          >
+            INTELLIGENT DISCUSSION BOARD
+          </Typography>
               <Button  color="inherit" >
               <Link to="/logout">Log out</Link>
               </Button>
