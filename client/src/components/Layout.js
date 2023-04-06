@@ -75,6 +75,7 @@ function Layout(){
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
+          <Button color="inherit" href="/profile">Profile</Button>
         <Button  color="inherit" >
          <Link to="/logout">Log out</Link>
         </Button>
