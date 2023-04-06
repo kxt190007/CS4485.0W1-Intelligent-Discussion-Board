@@ -107,7 +107,7 @@ export function Board() {
       for (let i = 0; i < postIDs.length; i++) {
         temp.push(
           <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
-            <CardActionArea onClick={(e) => handleChange(e)}>
+            <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
@@ -190,7 +190,7 @@ export function Board() {
     // console.log(event.target.value)
     // sessionStorage.setItem('postTitle', postTitles[event.target.value])
     // sessionStorage.setItem('postBody', postBodies[event.target.value])
-    console.log(sessionStorage.getItem('chosenPost'))
+    console.log(postID)
     navigate("post/" + postID);
   }
 
