@@ -22,6 +22,8 @@ export function ClassList() {
     const classID = useLoaderData();
     const navigate = useNavigate()
     const [classString, setClassString] = useState("")
+    const [selectedFile, setSelectedFile] = useState()
+    const [isFilePicked, setIsFilePicked] = useState(false)
     async function getStudents(credentials) {
         return fetch("http://localhost:5000/getStudents", {
             method: "POST",
@@ -205,6 +207,20 @@ export function ClassList() {
             }
         }
     }
+    const fileChange = (event) =>{
+        setSelectedFile(event.target.files[0])
+        setIsFilePicked(true)
+    }
+    const addFile = () =>{
+        var data = new FormData()
+        data.append('file',selectedFile)
+        data.append('user', sessionStorage.getItem('token'))
+        console.log(data)
+        fetch('http://localhost:5000/file',{
+            method: 'POST',
+            body: data
+        })
+    }
     if (sessionStorage.getItem('accesslevel') != 5) {
         return <Navigate replace to="/" />
     }
@@ -251,6 +267,22 @@ export function ClassList() {
             ></input>
             <button onClick={(e) => addStudentClass(e)}>Add</button><br />
             {errMessage}
+            <p>Files</p>
+            <input type="file" name="file" onChange ={fileChange}/>
+            <button onClick={() => addFile()}>Add</button>
+            {isFilePicked && selectedFile ? (
+                <div>
+                <p>Filename: {selectedFile.name}</p>
+                <p>Filetype: {selectedFile.type}</p>
+                <p>Size in bytes: {selectedFile.size}</p>
+                <p>
+                    lastModifiedDate:{' '}
+                    {selectedFile.lastModifiedDate.toLocaleDateString()}
+                </p>
+                </div>
+            ) : (<div>
+                <p>Select a file to add</p>
+                </div>)}
         </div>
     )
 }
