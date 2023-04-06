@@ -91,14 +91,14 @@ def post():
     postTitle = request.json.get('postTitle')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT PostTitle FROM Posts')
+    cursor.execute('SELECT PostTitle FROM Posts WHERE classID = "{}"'.format(classID))
     myresult = cursor.fetchall()
     if len(postTitle) > 1:
         for postTitle2 in myresult:
             postTitle2 = postTitle2[0]
             similarity = text_similarity(postTitle, postTitle2)
             if similarity > .5:
-                cursor.execute('Select postLink FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
+                cursor.execute('Select postLink FROM Posts WHERE postTitle = "{}" AND classID = "{}"'.format(postTitle2, classID))
                 link = cursor.fetchall()[-1][0]
                 #print(link)
                 print("similar post found at: {}".format(link))
