@@ -211,12 +211,12 @@ export function ClassList() {
         setSelectedFile(event.target.files[0])
         setIsFilePicked(true)
     }
-    const addFile = () =>{
+    const addFile = async () =>{
         var data = new FormData()
         data.append('file',selectedFile)
         data.append('user', sessionStorage.getItem('token'))
         console.log(data)
-        fetch('http://localhost:5000/file',{
+        await fetch('http://localhost:5000/file',{
             method: 'POST',
             body: data
         })
