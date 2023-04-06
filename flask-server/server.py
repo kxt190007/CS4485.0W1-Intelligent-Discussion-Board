@@ -99,7 +99,10 @@ def post():
             similarity = text_similarity(postTitle, postTitle2)
             if similarity > .5:
                 cursor.execute('Select postLink FROM Posts WHERE postTitle = "{}" AND classID = "{}"'.format(postTitle2, classID))
-                link = cursor.fetchall()[-1][0]
+                link = cursor.fetchall()
+                print(link)
+                link = link[-1][0]
+                link = "http://" + link
                 #print(link)
                 print("similar post found at: {}".format(link))
                 cursor.close()
