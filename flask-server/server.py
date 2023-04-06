@@ -98,12 +98,12 @@ def post():
             postTitle2 = postTitle2[0]
             similarity = text_similarity(postTitle, postTitle2)
             if similarity > .5:
-                #cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
-                #body = cursor.fetchall()
-                #print(body[-1][0])
-                print("similar post found at: {}".format(postTitle2))
+                cursor.execute('Select postLink FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
+                link = cursor.fetchall()[-1][0]
+                #print(link)
+                print("similar post found at: {}".format(link))
                 cursor.close()
-                return {"status": "Success", "message": "{}".format(postTitle2)}
+                return {"status": "Success", "message": "{}".format(link)}
         response = ask_question(postTitle, classID)
         if response == "error":
             cursor.close()
