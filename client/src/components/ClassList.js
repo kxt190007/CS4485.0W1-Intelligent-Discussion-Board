@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Layout from './Layout'
 import { Link, Navigate } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
+import Button from '@mui/material/Button'
 export async function loader({ params }) {
     console.log(params.classID)
     //const classInfo = await getClass(params.classID);
@@ -24,6 +25,9 @@ export function ClassList() {
     const [classString, setClassString] = useState("")
     const [selectedFile, setSelectedFile] = useState()
     const [isFilePicked, setIsFilePicked] = useState(false)
+    const [errMessage1, setErrMessage1] = useState("")
+    const [fileName, setFileName] = useState("")
+    const [fileList, setFileList] = useState([])
     async function getStudents(credentials) {
         return fetch("http://localhost:5000/getStudents", {
             method: "POST",
@@ -101,7 +105,7 @@ export function ClassList() {
             const token = await getStudents({
                 classID,
             });
-            
+
             console.log(token.instructors)
             console.log(sessionStorage.getItem('token'))
             var found = 0
@@ -126,6 +130,7 @@ export function ClassList() {
             else {
                 navigate("/")
             }
+            getFiles()
         }
         fetchData();
     }, []);
@@ -190,36 +195,93 @@ export function ClassList() {
                 found = 1
             }
         }
-        if (found==1) {
+        if (found == 1) {
             setErrMessage("Student already in class")
         }
-        else{
+        else {
             const token = await addToClass({
                 email: addStudent,
                 classID,
             })
-            if(token.status === "Failed"){
+            if (token.status === "Failed") {
                 setErrMessage(token.message)
             }
-            else{
+            else {
                 const temp = [...studentList, token.student]
                 setStudentList(temp)
             }
         }
     }
-    const fileChange = (event) =>{
+    const fileChange = (event) => {
         setSelectedFile(event.target.files[0])
         setIsFilePicked(true)
+        if (event.target.files[0]) {
+            setFileName(event.target.files[0].name)
+        }
     }
-    const addFile = async () =>{
+    const addFile = async (e) => {
+        e.preventDefault()
+        setErrMessage1("")
         var data = new FormData()
-        data.append('file',selectedFile)
-        data.append('user', sessionStorage.getItem('token'))
-        console.log(data)
-        await fetch('http://localhost:5000/file',{
+        data.append('file', selectedFile)
+        data.append('filename', fileName)
+        data.append('classid', classID)
+        const token = await fetch('http://localhost:5000/file', {
             method: 'POST',
             body: data
-        })
+        }).then((response) => response.json()
+        .then((responseData => {
+            getFiles()
+            if (responseData.status == "Failed") {
+            
+                setErrMessage1(responseData.message)
+            }
+            else {
+                setFileName("")
+            }
+        })))
+        
+
+    }
+    const getFiles = async () => {
+        const token = await fetch('http://localhost:5000/getFiles', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                classID,
+            })
+        }).then((response) => response.json()
+        )
+        const resources = token.Resource
+        const temp = []
+        for (let i = 0; i < resources.length; i++) {
+            var newPath = resources[i][3].replace('../client/public', '')
+            console.log(newPath)
+            temp.push(
+                <p>
+                    <Link to={newPath} target="_blank">{resources[i][1]}</Link>
+                    <Button onClick={() => deleteFile(resources[i][0], resources[i][3])}>Delete</Button>
+                </p>
+            )
+        }
+        setFileList(temp)
+    }
+    const deleteFile = async (fileID, filePath) => {
+        await fetch('http://localhost:5000/deleteFile', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                fileID,
+                filePath,
+            })
+        }).then((response) => response.json()
+            .then((responseData => {
+                getFiles()
+            })))
     }
     if (sessionStorage.getItem('accesslevel') != 5) {
         return <Navigate replace to="/" />
@@ -256,7 +318,7 @@ export function ClassList() {
             ))}</p>
             <p>Add Students</p>
             Invite Code: {classString}
-            <button onClick = {() => generateNewString()}>Generate New</button>
+            <button onClick={() => generateNewString()}>Generate New</button>
             <br></br>
             <label for="addstudent">Student Email: </label>
             <input
@@ -268,21 +330,18 @@ export function ClassList() {
             <button onClick={(e) => addStudentClass(e)}>Add</button><br />
             {errMessage}
             <p>Files</p>
-            <input type="file" name="file" onChange ={fileChange}/>
-            <button onClick={() => addFile()}>Add</button>
+            <p>{fileList}</p>
+            <input type="file" name="file" onChange={fileChange} />
+            <button onClick={(e) => addFile(e)}>Add</button>
             {isFilePicked && selectedFile ? (
                 <div>
-                <p>Filename: {selectedFile.name}</p>
-                <p>Filetype: {selectedFile.type}</p>
-                <p>Size in bytes: {selectedFile.size}</p>
-                <p>
-                    lastModifiedDate:{' '}
-                    {selectedFile.lastModifiedDate.toLocaleDateString()}
-                </p>
+                    <p>Filename:<input value={fileName} onChange={(e) => setFileName(e.target.value)} /></p>
+
                 </div>
             ) : (<div>
                 <p>Select a file to add</p>
-                </div>)}
+            </div>)}
+            {errMessage1}
         </div>
     )
 }

@@ -20,6 +20,7 @@ import {
 import ClassList, {
   loader as classListLoader,
 } from "./components/ClassList"
+
 const router = createBrowserRouter([
   {
     path: "/",

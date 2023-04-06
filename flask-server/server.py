@@ -6,7 +6,7 @@ from helpbot import *
 from cosim import *
 import string
 import random
-
+import os
 
 
 app = Flask(__name__)
@@ -388,8 +388,47 @@ def generateNewString():
 
 @app.route("/file", methods = ['POST'])
 def file():
-    print(request.files['file'])
-    return {"status":"success"}
+    fileName = request.form['filename']
+    classID = request.form['classid']
+    path = "../client/public/files/" + classID + "/"
+    # if not os.path.exists(path):
+    #     os.makedirs(path)
+    path1 = path + fileName
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Resource WHERE FilePath = %s", (path1,))
+    row = cursor.fetchone()
+    if row:
+        return {"status":"Failed", "message":"File already exists"}
+    cursor.execute("INSERT INTO Resource(FileName, ClassID, FilePath) VALUES(%s, %s, %s)", (fileName, classID, path1,))
+    mysql.connection.commit()
+    if not os.path.exists(path):
+        os.makedirs(path)    
+    file = request.files['file']
+    file.save(path1)
+    return {"status":"Success"}
+    
+@app.route("/getFiles", methods = ['POST'])    
+def getFiles():
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Resource WHERE ClassID = %s", (classID,))
+    rows = cursor.fetchall()
+    print(rows)
+    return {"status":"Success", "Resource": rows}
+
+@app.route("/deleteFile", methods = ['POST'])
+def deleteFile():
+    fileID = request.json.get('fileID')
+    filePath = request.json.get('filePath')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM Resource WHERE ResourceID = %s', (fileID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    # if os.path.exists(filePath):
+    #     os.chmod(filePath, 0o777)
+    #     os.remove(filePath)
+    return {"status":"Success"}
 
 if __name__ == "__main__":
     app.run(debug=True)
