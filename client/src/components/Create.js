@@ -133,7 +133,7 @@ function Create() {
       <Layout />
       <Paper elevation={10} style={paperStyle}>
 
-        <form id = "onSubmit1" onSubmit1={handlePop}>
+        <form id = "onSubmit1" onSubmit={handlePop}>
             if this doesnt answer your question click me to post:
           <input type="submit" value={message}></input>
          </form>
