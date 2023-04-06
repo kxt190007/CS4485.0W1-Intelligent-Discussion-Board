@@ -213,7 +213,19 @@ export function Board() {
               }}>
         
         <Paper style={paperStyle} >
-          <h2>There are no posts for {className}</h2>
+          <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            }}>
+            <h2>There are no posts for {className}</h2>
+          <Button  color="inherit" >
+              <Link to="/">Back to classes</Link>
+              </Button>
+              </Grid>
           <Divider />   
           <Typography gutterBottom variant="h6" component="div">
                     Click CREATE POST to be the first to post!
@@ -240,7 +252,20 @@ export function Board() {
               }}>
         
         <Paper style={paperStyle} >
-          <h2>Discussion Board for {className}</h2>
+        <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            }}>
+            <h2>Discussion Board for {className}</h2>
+          <Button  color="inherit" >
+              <Link to="/">Back to classes</Link>
+              </Button>
+              </Grid>
+          
           <Divider />   
         {postArr}
         </Paper>

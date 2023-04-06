@@ -11,6 +11,7 @@ import Card from '@mui/material/Card';
 import Textarea from '@mui/joy/Textarea';
 import Moment from 'react-moment';
 import moment from 'moment';
+import { Link } from 'react-router-dom'
 
 
 export async function loader({ params }) {
@@ -197,13 +198,27 @@ function Post(){
           }}>
             
             <Paper style = {paperStyle}>
+              <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            }}>
             <Typography gutterBottom variant="h4" component="div">
               {title}
             </Typography>
+            <Button  color="inherit" >
+              <Link to={"/Board/"+classID}>Back</Link>
+              </Button>
+              </Grid>
             <Divider/>
             <Typography variant="body1" color="text.secondary">
               {body}
             </Typography> 
+            
+          <Divider />
             {comments}
   
             <Divider/>
