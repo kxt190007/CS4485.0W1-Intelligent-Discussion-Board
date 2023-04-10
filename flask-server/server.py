@@ -4,6 +4,8 @@ from flask_mysqldb import MySQL
 from array import *
 from helpbot import *
 from cosim import *
+import string
+import random
 
 
 
@@ -89,19 +91,22 @@ def post():
     postTitle = request.json.get('postTitle')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT PostTitle FROM Posts')
+    cursor.execute('SELECT PostTitle FROM Posts WHERE classID = "{}"'.format(classID))
     myresult = cursor.fetchall()
     if len(postTitle) > 1:
         for postTitle2 in myresult:
             postTitle2 = postTitle2[0]
             similarity = text_similarity(postTitle, postTitle2)
             if similarity > .5:
-                #cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
-                #body = cursor.fetchall()
-                #print(body[-1][0])
-                print("similar post found at: {}".format(postTitle2))
+                cursor.execute('Select postLink FROM Posts WHERE postTitle = "{}" AND classID = "{}"'.format(postTitle2, classID))
+                link = cursor.fetchall()
+                print(link)
+                link = link[-1][0]
+                link = "http://" + link
+                #print(link)
+                print("similar post found at: {}".format(link))
                 cursor.close()
-                return {"status": "Success", "message": "{}".format(postTitle2)}
+                return {"status": "Success", "message": "{}".format(link)}
         response = ask_question(postTitle, classID)
         if response == "error":
             cursor.close()
@@ -209,6 +214,7 @@ def createClass():
     email = request.json.get('email')
     lastName = request.json.get('lastName')
     profList = request.json.get('profList')
+   
     if profList:
         className = className + " - Multiple Instructors"
     else:
@@ -218,7 +224,14 @@ def createClass():
     row = cursor.fetchone()
     if row:
         return {"status": "Failed", "message" : "Class already exists"}
-    cursor.execute("INSERT INTO Class (ClassName) VALUES (%s)", (className,))
+    classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+    cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+    row = cursor.fetchone()
+    while row:
+        classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+        cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+        row = cursor.fetchone()
+    cursor.execute("INSERT INTO Class (ClassName, ClassString) VALUES (%s, %s)", (className, classString,))
     mysql.connection.commit()
     classID = cursor.lastrowid
     profList.append(email)
@@ -249,7 +262,10 @@ def getStudents():
     print(classID)
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (classID,))
-    className = cursor.fetchone()[1]
+    row = cursor.fetchone()
+    className = row[1]
+    classString = row[2]
+    
     cursor.execute('SELECT UserID FROM UserToClass WHERE ClassID = %s', (classID,))
     rows = cursor.fetchall()
     print(rows)
@@ -272,7 +288,7 @@ def getStudents():
             students.append(student)
         elif student[5] == 5:
             instructors.append(student)
-    return {"status":"Success", "students": students, "moderators":moderators,"instructors":instructors, "classname":className}
+    return {"status":"Success", "students": students, "moderators":moderators,"instructors":instructors, "classname":className, "classstring": classString}
 
 @app.route("/demote", methods = ['POST'])
 def demote():
@@ -357,5 +373,20 @@ def checkModerator():
         return {"status": "Success", "message": "yes"}
     else: 
         return {"status": "Success", "message": "no"}
+    
+@app.route("/generateNewString", methods = ['POST'])
+def generateNewString():
+    classID = request.json.get('classID')
+    classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+    row = cursor.fetchone()
+    while row:
+        classString = ' '.join(random.choices(string.ascii_uppercase, k=20)).replace(" ", "")
+        cursor.execute("SELECT * FROM Class WHERE ClassString = %s", (classString,))
+        row = cursor.fetchone()
+    cursor.execute('UPDATE Class SET ClassString = %s WHERE ClassID = %s', (classString,classID,))
+    mysql.connection.commit()
+    return {"status":"success", "classstring":classString}
 if __name__ == "__main__":
     app.run(debug=True)

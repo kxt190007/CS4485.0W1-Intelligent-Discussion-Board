@@ -117,9 +117,6 @@ function Login() {
         </Toolbar>
       </AppBar>
     </Box>
-
-
-      <Layout />
       <Paper elevation={10} style={paperStyle}>
         <Grid align='center'>
           <Avatar style={avatarStyle}><AccountBoxIcon /></Avatar>

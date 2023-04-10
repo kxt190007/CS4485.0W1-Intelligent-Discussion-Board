@@ -33,7 +33,7 @@ export function Board() {
   const [postBodies, setPostBodies] = useState([]);
   const [postTitles, setPostTitles] = useState([]);
   const [postTags, setPostTags] = useState([]);
-  const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto" }
+  const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto" }
   const [postArr, setPostArr] = useState([]);
   var className
   for (let i = 0; i < classList.length; i++) {
@@ -107,7 +107,7 @@ export function Board() {
       for (let i = 0; i < postIDs.length; i++) {
         temp.push(
           <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
-            <CardActionArea onClick={(e) => handleChange(e)}>
+            <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
@@ -190,36 +190,90 @@ export function Board() {
     // console.log(event.target.value)
     // sessionStorage.setItem('postTitle', postTitles[event.target.value])
     // sessionStorage.setItem('postBody', postBodies[event.target.value])
-    console.log(sessionStorage.getItem('chosenPost'))
+    console.log(postID)
     navigate("post/" + postID);
   }
 
 
 
-
-  return (
-    <nav>
-     <Layout />
-    <Grid sx={{
-              display: 'column',
-              alignItems: 'flex-start',
-              justifyContent: 'flex-start',
-              flexWrap: 'wrap',
-              p: 1,
-              m: 0,
-              bgcolor: 'background.paper',
-              maxWidth: "100%",
-              borderRadius: 1,
+  if(postTitles.length == 0){
+    return(
+      <nav>
+       <Layout />
+      <Grid sx={{
+                display: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                flexWrap: 'wrap',
+                p: 1,
+                m: 0,
+                bgcolor: 'background.paper',
+                maxWidth: "100%",
+                borderRadius: 1,
+              }}>
+        
+        <Paper style={paperStyle} >
+          <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
             }}>
-      
-      <Paper style={paperStyle} elevation={10}>
-        <h2>Discussion Board for {className}</h2>
-        <Divider />   
-      {postArr}
-      </Paper>
-    </Grid> 
-    </nav>
-  )
+            <h2>There are no posts for {className}</h2>
+          <Button  color="inherit" >
+              <Link to="/">Back to classes</Link>
+              </Button>
+              </Grid>
+          <Divider />   
+          <Typography gutterBottom variant="h6" component="div">
+                    Click CREATE POST to be the first to post!
+          </Typography>
+        </Paper>
+      </Grid> 
+      </nav>
+    )
+  }
+  else{
+    return (
+      <nav>
+       <Layout />
+      <Grid sx={{
+                display: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'flex-start',
+                flexWrap: 'wrap',
+                p: 1,
+                m: 0,
+                bgcolor: 'background.paper',
+                maxWidth: "100%",
+                borderRadius: 1,
+              }}>
+        
+        <Paper style={paperStyle} >
+        <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            }}>
+            <h2>Discussion Board for {className}</h2>
+          <Button  color="inherit" >
+              <Link to="/">Back to classes</Link>
+              </Button>
+              </Grid>
+          
+          <Divider />   
+        {postArr}
+        </Paper>
+      </Grid> 
+      </nav>
+    )
+  }
+  
 }
 
 
