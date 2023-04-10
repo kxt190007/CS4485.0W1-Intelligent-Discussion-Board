@@ -5,6 +5,7 @@ import Layout from './Layout'
 import { useNavigate } from "react-router-dom";
 import { List, ListItem, ListItemText, ListItemButton } from '@mui/material'
 import Box from '@mui/material/Box';
+import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
 
 function CreateClass() {
 
@@ -96,6 +97,79 @@ function CreateClass() {
         return <Navigate replace to="/" />
     }
     return (
+        <Grid>
+        <Layout />
+
+        <Box sx={{ width: '100%', maxWidth: 1000, bgcolor: 'background.paper', marginLeft: 1, marginTop: 10}}>
+          
+          <Typography variant="h5" component="h1">
+            Create Class
+          </Typography>
+          
+          <form onSubmit={handleSubmit}>
+            <TextField
+              id="classname"
+              label="Class Name"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              placeholder="eg. CS4348"
+              required
+              value={className}
+              onChange={(e) => setClassName(e.target.value)}
+            />
+            <TextField
+              id="classsection"
+              label="Class Section"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              placeholder="eg. 001"
+              required
+              value={classSection}
+              onChange={(e) => setClassSection(e.target.value)}
+            />
+            
+            {error && <Typography color="error">{error}</Typography>}
+            
+            <Button variant="contained" type="submit">
+              Create Class
+            </Button>
+          </form>
+          <Box mt={4}>
+            <Typography variant="subtitle1">
+              Other Instructor's UTD Email:
+            </Typography>
+            <TextField
+              id="additionalprofessor"
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              placeholder="Enter email here"
+              value={additionalEmail}
+              onChange={(e) => setAdditionalEmail(e.target.value)}
+            />
+            <Button variant="contained" onClick={handleChange}>
+              Add
+            </Button>
+            {errMessage && (
+              <Typography color="error" mt={2}>
+                {errMessage}
+              </Typography>
+            )}
+            {profList.map((prof, index) => (
+              <Box key={index} display="flex" alignItems="center" mt={2}>
+                <Typography>{prof}</Typography>
+                <Button variant="outlined" onClick={() => removeItem(index)}>
+                  Remove
+                </Button>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+        </Grid>
+      );
+    /* return (
         <div>
             <Layout />
             <p>Create Class</p>
@@ -139,6 +213,6 @@ function CreateClass() {
 
             ))}
         </div>
-    )
+    )*/
 }
 export default CreateClass

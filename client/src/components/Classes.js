@@ -74,7 +74,6 @@ function Classes() {
         <div>
             <Layout />
             <p>Classes</p>
-            <Link to="/create-class">Create Class</Link>
             <h2>{userName}'s Classes</h2>
             <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                 <nav aria-label="main mailbox folders">
