@@ -244,8 +244,10 @@ function Post(){
                 onChange={(v) => setNewComment(v.target.value)}
                 value = {newComment}
               />
-              <Button type="submit" variant="contained" sx={{ marginLeft: 16 , marginTop: 2 }}>Submit</Button>
+              <Button type="submit" variant="contained" sx={{ marginLeft: 14 , marginTop: 2 }}>Submit</Button>
               <Typography variant="body2" color="text.secondary">
+              <br />
+
               Click submit and refresh the page to see your comment
               </Typography>
             </form>
@@ -307,8 +309,10 @@ function Post(){
                 onChange={(v) => setNewComment(v.target.value)}
                 value = {newComment}
               />
-              <Button type="submit" variant="contained" sx={{ marginLeft: 16 , marginTop: 2 }}>Submit</Button>
+              <Button type="submit" variant="contained" sx={{ marginLeft: 14 , marginTop: 2 }}>Submit</Button>
               <Typography variant="body2" color="text.secondary">
+              <br />
+
               Click submit and refresh the page to see your comment
               </Typography>
             </form>
