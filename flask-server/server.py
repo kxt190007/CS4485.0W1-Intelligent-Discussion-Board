@@ -8,6 +8,7 @@ import string
 import random
 import os
 import base64
+import shutil
 
 
 app = Flask(__name__)
@@ -349,6 +350,11 @@ def removeClass():
     cursor.execute('DELETE FROM UserToClass WHERE ClassID = %s',(classID,))
     cursor.execute('SET SQL_SAFE_UPDATES = 1')
     mysql.connection.commit()
+    path = "../flask-server/files/" + str(classID) + "/"
+    try:
+        shutil.rmtree(path)
+    except OSError as e:
+        print("Directory does not exist")
     return {"status":"Success"}
 
 @app.route("/removePost", methods = ['POST'])
