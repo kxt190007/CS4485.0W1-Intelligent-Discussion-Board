@@ -9,6 +9,7 @@ import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material
 
 
 function Create() {
+  const [link, setLink] = useState("");
   const [message, setMessage] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
@@ -78,7 +79,12 @@ function Create() {
       chosenclass
     });
     console.log(token.message)
-    setMessage(token.message)
+    if(token.message.includes("localhost")) {
+      setLink(token.message)
+    }
+    else {
+      setMessage(token.message)
+    }
     if(token.message == "message") {
         await createPost1({
           userID: sessionStorage.getItem('token'),
@@ -123,7 +129,7 @@ function Create() {
     )
   }
 
-  const paperStyle = { padding: "30px 20px", height: '70vh', width: '97%', margin: "40px auto" }
+  const paperStyle = { padding: "30px 20px", height: '71vh', width: '97%', margin: "40px auto" }
   const btnStyle = { margin: '40px 0' }
 
   return (
@@ -133,11 +139,13 @@ function Create() {
       <Layout />
       <Paper elevation={10} style={paperStyle}>
 
-        <form id = "onSubmit1" onSubmit1={handlePop}>
+        <form id = "onSubmit1" onSubmit={handlePop}>
             if this doesnt answer your question click me to post:
-          <input type="submit" value={message}></input>
+            <a href={link}> {link} </a>
+            {message}
+          <input type="submit" value="yes"></input>
          </form>
-
+         <br />
       <form onSubmit={handleSubmit}>
        
           
@@ -168,7 +176,7 @@ function Create() {
           required
           rowsMin={6}
           onChange={(e) => setPostContent(e.target.value)}
-          style={{ width: '100%', height: '400px' }}
+          style={{ width: '100%', height: '360px' }}
         />
 
         

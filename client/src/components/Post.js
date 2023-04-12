@@ -11,6 +11,7 @@ import Card from '@mui/material/Card';
 import Textarea from '@mui/joy/Textarea';
 import Moment from 'react-moment';
 import moment from 'moment';
+import { Link } from 'react-router-dom'
 
 
 export async function loader({ params }) {
@@ -30,7 +31,8 @@ function Post(){
     const [commentBodies, setCommentBodies] = useState([]);
     const [postTimes, setPostTimes] = useState([]);
     const [userNames, setUserNames] = useState([]);
-    const paperStyle = { padding: "30px 20px", height: '90%', width: '93%', margin: "20px auto"}
+    const paperStyle = { padding: "30px 20px", height: '90%', width: '90%', margin: "20px auto"}
+
 
 
 
@@ -74,7 +76,6 @@ function Post(){
               names[i] = n.name
             } 
             setUserNames(names)
-  
           }
           fetchData();
 
@@ -144,17 +145,20 @@ function Post(){
     var comments = [];
     for(let i = 0; i < userIDs.length; i++){
         comments.push(
-          <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200}}>
+
+          <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200 ,marginLeft: 'auto', marginRight: 'auto'}}>
           <CardActionArea onClick = {(e) => handleChange(e)}>
             
-            <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
+            <CardContent >
+              
+              <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {commentBodies[i] }
               </Typography>
-              <Divider/>
-              <Typography variant="body2" color="text.secondary">
+              
+              <Typography variant="caption text" color="text.secondary">
               {userNames[i]} commented at {postTimes[i]}
               </Typography>
+
             </CardContent>
           </CardActionArea>
         </Card>
@@ -168,65 +172,161 @@ function Post(){
 
       ev.preventDefault();
       let date_create = moment().format("YYYY-MM-DD hh:mm:ss")
-      // await createComment({
-      //   userID: sessionStorage.getItem('token'),
-      //   postID,
-      //   comment: newComment,
-      //   date: date_create
-      // });
-      refreshPage(10000)
-
+      await createComment({
+        userID: sessionStorage.getItem('token'),
+        postID,
+        comment: newComment,
+        date: date_create
+      });
 
     }
 
-    return (
-      <nav>
-        <Layout/>
-        <Grid sx={{
-          display: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          flexWrap: 'wrap',
-          p: 1,
-          m: 0,
-          bgcolor: 'background.paper',
-          maxWidth: "100%",
-          borderRadius: 1,
-        }}>
-          
-          <Paper style = {paperStyle}>
-          <Typography gutterBottom variant="h4" component="div">
-            {title}
+    if(commentBodies.length != 0){
+      return (
+        <nav>
+          <Layout/>
+          <Grid sx={{
+            display: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            flexWrap: 'wrap',
+            p: 1,
+            m: 0,
+            bgcolor: 'background.paper',
+            maxWidth: "100%",
+            borderRadius: 1,
+          }}>
+            
+            <Paper style = {paperStyle} elevation={3}>
+              <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            }}>
+            <Typography gutterBottom variant="h4" component="div">
+              {title}
+            </Typography>
+            <Button  color="inherit" >
+              <Link to={"/Board/"+classID}>Back</Link>
+              </Button>
+              </Grid>
+            <Divider/>
+            <Typography variant="body1" color="text.secondary">
+              {body}
+            </Typography> 
+            <br />
+          <br />
+
+
+
+          <Typography gutterBottom variant="h5" component="div">
+            <Box pl={6} pr={2} ml={13}>Comments</Box>
           </Typography>
           <Divider/>
-          <Typography variant="body1" color="text.secondary">
-            {body}
-          </Typography> 
+
+
           {comments}
-
-          <Divider/>
-          <Box sx={{m:2}}>
-            <form
-            onSubmit={handleSubmit}
-          >
-            <Textarea
-              placeholder="Add a comment here..."
-              required
-              sx={{ mt: 1 }}
-              id="inputComment"
-              onChange={(v) => setNewComment(v.target.value)}
-              value = {newComment}
-            />
-            <Button type="submit">Submit</Button>
-          </form>
-          </Box>
           
+  
+            <Divider/>
+            <Box sx={{m:2}}>
+              <form
+              onSubmit={handleSubmit}
+            >
+              <Textarea
+                placeholder="Add a comment here..."
+                required
+                sx={{ mt: 1, width:'86.5%', marginLeft: 'auto', marginRight: 'auto', display: 'block'}}
+                id="inputComment"
+                onChange={(v) => setNewComment(v.target.value)}
+                value = {newComment}
+              />
+              <Button type="submit" variant="contained" sx={{ marginLeft: 14 , marginTop: 2 }}>Submit</Button>
+              <Typography variant="body2" color="text.secondary">
+              <br />
 
-          
-        </Paper>
-        </Grid>
-        </nav>
-    )
+              Click submit and refresh the page to see your comment
+              </Typography>
+            </form>
+            </Box>
+            
+            
+            
+          </Paper>
+          </Grid>
+          </nav>
+      )
+    }
+    else{
+      return (
+        <nav>
+          <Layout/>
+          <Grid sx={{
+            display: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'flex-start',
+            flexWrap: 'wrap',
+            p: 1,
+            m: 0,
+            bgcolor: 'background.paper',
+            maxWidth: "100%",
+            borderRadius: 1,
+          }}>
+            
+            <Paper style = {paperStyle} elevation={3}>
+            <Typography gutterBottom variant="h4" component="div">
+              {title}
+            </Typography>
+            <Divider/>
+            <Typography variant="body1" color="text.secondary">
+              {body}
+            </Typography> 
+              <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200}}>
+                  <CardActionArea onClick = {(e) => handleChange(e)}>
+                  
+                  <CardContent>
+                    <Typography gutterBottom variant="h6" component="div">
+                    It's quiet here... Be the first to comment!
+                    </Typography>
+                    <Divider/>
+                  
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            <Divider/>
+            <Box sx={{m:2}}>
+              <form
+              onSubmit={handleSubmit}
+            >
+              <Textarea
+                placeholder="Add a comment here..."
+                required
+                sx={{ mt: 1, width:'86.5%', marginLeft: 'auto', marginRight: 'auto', display: 'block'}}
+                id="inputComment"
+                onChange={(v) => setNewComment(v.target.value)}
+                value = {newComment}
+              />
+              <Button type="submit" variant="contained" sx={{ marginLeft: 14 , marginTop: 2 }}>Submit</Button>
+              <Typography variant="body2" color="text.secondary">
+              <br />
+
+              Click submit and refresh the page to see your comment
+              </Typography>
+            </form>
+            </Box>
+            
+  
+            
+          </Paper>
+          </Grid>
+          </nav>
+      )
+    }
+    
+
 }
 
 

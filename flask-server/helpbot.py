@@ -53,9 +53,10 @@ def ask_question(question, classID):
     syllabus = str(classID) + ".pdf"
     try:
         syllabusText = extract_text(syllabus)
-        new_question = "given this text: " + syllabusText + "\n " + question + " ?"
+        new_question = "given this text: " + syllabusText + "\n end of text \n" + "answer the following question: " + question + " ?"
         response = get_response(INSTRUCTIONS + new_question)
         response = response.lstrip()
+        print(response)
         if response == "I do not think that is on the syllabus.":
             return "error"
         else:
