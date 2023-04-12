@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+.Button{
+}
+.Button:disabled {
+  color: #2196f3;
+  display: flex;
+  font-size: large;
+}
