@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 from array import *
@@ -6,7 +6,8 @@ from helpbot import *
 from cosim import *
 import string
 import random
-
+import os
+import base64
 
 
 app = Flask(__name__)
@@ -388,5 +389,76 @@ def generateNewString():
     cursor.execute('UPDATE Class SET ClassString = %s WHERE ClassID = %s', (classString,classID,))
     mysql.connection.commit()
     return {"status":"success", "classstring":classString}
+
+@app.route("/file", methods = ['POST'])
+def file():
+    fileName = request.form['filename']
+    classID = request.form['classid']
+    file = request.files['file']
+    path = "../flask-server/files/" + classID + "/"
+    if not os.path.exists(path):
+        os.makedirs(path)
+    path = path + fileName
+    print(path)
+    if os.path.exists(path):
+        print(":fail;")
+        return {"status":"Failed", "message":"File already exists"}
+    file.save(path)
+    print(path)
+    blob = file.read()
+    blob = base64.b64encode(blob)
+    cursor = mysql.connection.cursor()
+    cursor.execute("INSERT INTO Resource(FileName, ClassID, FilePath, ResourceFile) VALUES(%s, %s, %s, %s)",(fileName, classID, path, blob))
+    mysql.connection.commit()
+    # path = "../client/public/files/" + classID + "/"
+    # # if not os.path.exists(path):
+    # #     os.makedirs(path)
+    # path1 = path + fileName
+    # cursor = mysql.connection.cursor()
+    # cursor.execute("SELECT * FROM Resource WHERE FilePath = %s", (path1,))
+    # row = cursor.fetchone()
+    # if row:
+    #     return {"status":"Failed", "message":"File already exists"}
+    # cursor.execute("INSERT INTO Resource(FileName, ClassID, FilePath) VALUES(%s, %s, %s)", (fileName, classID, path1,))
+    # mysql.connection.commit()
+    # if not os.path.exists(path):
+    #     os.makedirs(path)    
+    # file = request.files['file']
+    # file.save(path1)
+    return {"status":"Success"}
+    
+@app.route("/getFiles", methods = ['POST'])    
+def getFiles():
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT ResourceID, FileName, ClassID, FilePath FROM Resource WHERE ClassID = %s", (classID,))
+    rows = cursor.fetchall()
+    # for row in rows:
+    #     blob = row[4]
+    #     blob = base64.b64decode(blob)
+    #     fileName.append(row[1])
+    #     resource.append(blob)
+    return {"status":"Success", "Resource": rows}
+
+@app.route("/getFile", methods = ['POST'])
+def getFile():
+    filePath = request.json.get("filePath")
+    return send_file(filePath)
+
+
+@app.route("/deleteFile", methods = ['POST'])
+def deleteFile():
+    fileID = request.json.get('fileID')
+    filePath = request.json.get('filePath')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM Resource WHERE ResourceID = %s', (fileID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    if os.path.exists(filePath):
+        os.chmod(filePath, 0o777)
+        os.remove(filePath)
+    return {"status":"Success"}
+
 if __name__ == "__main__":
     app.run(debug=True)
