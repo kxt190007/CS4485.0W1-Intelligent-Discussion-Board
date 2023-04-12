@@ -198,7 +198,7 @@ function Post(){
           }}>
             
             <Paper style = {paperStyle} elevation={3}>
-              <Grid sx={{
+            <Grid sx={{
             display: 'flex',
             justifyContent: 'space-between',
             p: 0,
@@ -206,9 +206,11 @@ function Post(){
             bgcolor: 'background.paper',
             borderRadius: 1,
             }}>
+              <div>
             <Typography gutterBottom variant="h4" component="div">
               {title}
             </Typography>
+            </div>
             <Button  color="inherit" >
               <Link to={"/Board/"+classID}>Back</Link>
               </Button>
@@ -277,6 +279,15 @@ function Post(){
           }}>
             
             <Paper style = {paperStyle} elevation={3}>
+            <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            }}>
+              <div>
             <Typography gutterBottom variant="h4" component="div">
               {title}
             </Typography>
@@ -284,6 +295,11 @@ function Post(){
             <Typography variant="body1" color="text.secondary">
               {body}
             </Typography> 
+            </div>
+            <Button  color="inherit" >
+              <Link to={"/Board/"+classID}>Back</Link>
+              </Button>
+              </Grid>
               <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200}}>
                   <CardActionArea onClick = {(e) => handleChange(e)}>
                   
