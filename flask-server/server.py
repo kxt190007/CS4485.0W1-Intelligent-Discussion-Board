@@ -102,7 +102,7 @@ def post():
                 cursor.execute('Select postLink FROM Posts WHERE postTitle = "{}" AND classID = "{}"'.format(postTitle2, classID))
                 link = cursor.fetchall()
                 print(link)
-                link = link[-1][0]
+                link = str(link[-1][0])
                 link = "http://" + link
                 #print(link)
                 print("similar post found at: {}".format(link))
