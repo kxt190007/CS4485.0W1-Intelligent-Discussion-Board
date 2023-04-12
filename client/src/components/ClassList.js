@@ -28,6 +28,7 @@ export function ClassList() {
     const [errMessage1, setErrMessage1] = useState("")
     const [fileName, setFileName] = useState("")
     const [fileList, setFileList] = useState([])
+    const [objectURL, setObjectURL] = useState("")
     async function getStudents(credentials) {
         return fetch("http://localhost:5000/getStudents", {
             method: "POST",
@@ -238,6 +239,9 @@ export function ClassList() {
             }
             else {
                 setFileName("")
+                setIsFilePicked(false)
+                setSelectedFile(null)
+                document.getElementById("file").value = null
             }
         })))
         
@@ -257,16 +261,32 @@ export function ClassList() {
         const resources = token.Resource
         const temp = []
         for (let i = 0; i < resources.length; i++) {
-            var newPath = resources[i][3].replace('../client/public', '')
-            console.log(newPath)
             temp.push(
                 <p>
-                    <Link to={newPath} target="_blank">{resources[i][1]}</Link>
+                    <Button onClick={() => getFile(resources[i][3])}>{resources[i][1]}</Button>
                     <Button onClick={() => deleteFile(resources[i][0], resources[i][3])}>Delete</Button>
                 </p>
             )
         }
         setFileList(temp)
+    }
+    const getFile = async(filePath) =>{
+        await fetch('http://localhost:5000/getFile', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                filePath,
+            })
+        }).then((response) => response.blob())
+        .then((blob) =>{
+            console.log(blob)
+            const objURL = URL.createObjectURL(blob)
+            console.log(objURL)
+            setObjectURL(objURL)
+        })
+
     }
     const deleteFile = async (fileID, filePath) => {
         await fetch('http://localhost:5000/deleteFile', {
@@ -331,17 +351,26 @@ export function ClassList() {
             {errMessage}
             <p>Files</p>
             <p>{fileList}</p>
-            <input type="file" name="file" onChange={fileChange} />
+            <input type="file" id = "file" name="file" onChange={fileChange} />
             <button onClick={(e) => addFile(e)}>Add</button>
             {isFilePicked && selectedFile ? (
                 <div>
                     <p>Filename:<input value={fileName} onChange={(e) => setFileName(e.target.value)} /></p>
-
+                    {errMessage1}
                 </div>
             ) : (<div>
                 <p>Select a file to add</p>
             </div>)}
-            {errMessage1}
+
+
+            {objectURL != "" ? (
+                <div>
+                Preview <br></br>
+                <a href={objectURL} target="_blank">Open in New Page</a>
+                <object data = {objectURL} type = "application/pdf" width="100%" height="500px"></object><br></br>
+                </div>
+            ) : (<a></a>)}
+            
         </div>
     )
 }
