@@ -6,9 +6,12 @@ import { ListItemText, ListItemButton, Paper, Divider, TextareaAutosize, Chip, I
 import Box from '@mui/material/Box';
 import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
 import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
+import "./Create.css";
 
 
 function Create() {
+  const [popup, setpopup] = useState(false);
+  const [link, setLink] = useState("");
   const [message, setMessage] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setPostContent] = useState("");
@@ -19,6 +22,20 @@ function Create() {
   const [errorText, setErrorText] = useState("");
   const [inputs, setInputs] = useState([]);
   const navigate = useNavigate();
+
+  async function navHome() {
+  navigate("/")
+  }
+
+  const togglepopup = () => {
+    setpopup(!popup);
+  };
+
+  if(popup) {
+    document.body.classList.add('popup')
+  } else {
+    document.body.classList.remove('popup')
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -78,7 +95,6 @@ function Create() {
       chosenclass
     });
     console.log(token.message)
-    setMessage(token.message)
     if(token.message == "message") {
         await createPost1({
           userID: sessionStorage.getItem('token'),
@@ -87,14 +103,20 @@ function Create() {
           postTag,
           chosenclass
         });
+    navigate('/')
+    }
+    if(token.message.includes("localhost")) {
+      setLink(token.message)
     }
     else {
-        //pop up
+      setMessage(token.message)
     }
+    togglepopup();
   }
 
   const handlePop = async e => {
     console.log(inputs)
+    console.log("a")
     await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
@@ -102,6 +124,7 @@ function Create() {
       postTag,
       chosenclass
     });
+    console.log("a")
     navigate("/")
   }
 
@@ -133,10 +156,27 @@ function Create() {
       <Layout />
       <Paper elevation={10} style={paperStyle}>
 
-        <form id = "onSubmit1" onSubmit1={handlePop}>
-            if this doesnt answer your question click me to post:
-          <input type="submit" value={message}></input>
+        <>
+      {popup && (
+        <div className="popup">
+          <div onClick={togglepopup} className="overlay"></div>
+          <div className="popup-content">
+            <h2>Our intelligent discussion board has suggested an answer</h2>
+           <form id = "onSubmit1" onSubmit={handlePop}>
+            <a href={link}> {link} </a>
+            {message}
+            <p> did that answer your question? </p>
+            <p> (pressing yes will NOT post your question) </p>
+          <input type="submit" value="no"></input>
+          <button onClick={navHome} > yes </button>
          </form>
+          </div>
+        </div>
+      )}
+    </>
+
+
+
          <br />
       <form onSubmit={handleSubmit}>
        

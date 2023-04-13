@@ -31,7 +31,7 @@ function Post(){
     const [commentBodies, setCommentBodies] = useState([]);
     const [postTimes, setPostTimes] = useState([]);
     const [userNames, setUserNames] = useState([]);
-    const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto"}
+    const paperStyle = { padding: "30px 20px", height: '90%', width: '90%', margin: "20px auto"}
 
 
 
@@ -197,8 +197,8 @@ function Post(){
             borderRadius: 1,
           }}>
             
-            <Paper style = {paperStyle}>
-              <Grid sx={{
+            <Paper style = {paperStyle} elevation={3}>
+            <Grid sx={{
             display: 'flex',
             justifyContent: 'space-between',
             p: 0,
@@ -206,9 +206,11 @@ function Post(){
             bgcolor: 'background.paper',
             borderRadius: 1,
             }}>
+              <div>
             <Typography gutterBottom variant="h4" component="div">
               {title}
             </Typography>
+            </div>
             <Button  color="inherit" >
               <Link to={"/Board/"+classID}>Back</Link>
               </Button>
@@ -217,9 +219,19 @@ function Post(){
             <Typography variant="body1" color="text.secondary">
               {body}
             </Typography> 
-            
-          <Divider />
-            {comments}
+            <br />
+          <br />
+
+
+
+          <Typography gutterBottom variant="h5" component="div">
+            <Box pl={6} pr={2} ml={13}>Comments</Box>
+          </Typography>
+          <Divider/>
+
+
+          {comments}
+          
   
             <Divider/>
             <Box sx={{m:2}}>
@@ -229,13 +241,15 @@ function Post(){
               <Textarea
                 placeholder="Add a comment here..."
                 required
-                sx={{ mt: 1 }}
+                sx={{ mt: 1, width:'86.5%', marginLeft: 'auto', marginRight: 'auto', display: 'block'}}
                 id="inputComment"
                 onChange={(v) => setNewComment(v.target.value)}
                 value = {newComment}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" variant="contained" sx={{ marginLeft: 14 , marginTop: 2 }}>Submit</Button>
               <Typography variant="body2" color="text.secondary">
+              <br />
+
               Click submit and refresh the page to see your comment
               </Typography>
             </form>
@@ -264,7 +278,16 @@ function Post(){
             borderRadius: 1,
           }}>
             
-            <Paper style = {paperStyle}>
+            <Paper style = {paperStyle} elevation={3}>
+            <Grid sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            p: 0,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            }}>
+              <div>
             <Typography gutterBottom variant="h4" component="div">
               {title}
             </Typography>
@@ -272,6 +295,11 @@ function Post(){
             <Typography variant="body1" color="text.secondary">
               {body}
             </Typography> 
+            </div>
+            <Button  color="inherit" >
+              <Link to={"/Board/"+classID}>Back</Link>
+              </Button>
+              </Grid>
               <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200}}>
                   <CardActionArea onClick = {(e) => handleChange(e)}>
                   
@@ -292,13 +320,15 @@ function Post(){
               <Textarea
                 placeholder="Add a comment here..."
                 required
-                sx={{ mt: 1 }}
+                sx={{ mt: 1, width:'86.5%', marginLeft: 'auto', marginRight: 'auto', display: 'block'}}
                 id="inputComment"
                 onChange={(v) => setNewComment(v.target.value)}
                 value = {newComment}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" variant="contained" sx={{ marginLeft: 14 , marginTop: 2 }}>Submit</Button>
               <Typography variant="body2" color="text.secondary">
+              <br />
+
               Click submit and refresh the page to see your comment
               </Typography>
             </form>

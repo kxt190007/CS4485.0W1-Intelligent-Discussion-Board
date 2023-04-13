@@ -88,8 +88,8 @@ function Layout(){
     <Box display="flex" sx={{ flexGrow: 1 }} style={{ height: '100%' }}> 
     <AppBar position="static" style={{ background: '#f57c00' }} >
       <Toolbar>
-      <Button color="inherit" disabled={false} label="create post button"> 
-      <Link to="/create">Create Post</Link>
+      <Button color="inherit" disabled={false} label="create post button" href="/create" size="large"> 
+      Create Post
       </Button>
       </Toolbar>
     </AppBar>
@@ -99,55 +99,11 @@ function Layout(){
     )
   }
 
-      /*
-      <div>
-        <Breadcrumbs size = "md" separator="" align= "center">
-        <Button size="md"  variant="plain" color="primary">
-        <Link to="/logout">Log out</Link>
-        </Button>
-          
-        <Button size="md"  variant="plain" color="primary">
-          <Link to="/">Home</Link>
-        </Button>
-
-        <Button size="md"  variant="plain" color="primary">
-        <Link to="/create">Create Post</Link>
-
-        </Button>
-        </Breadcrumbs>
-
-        <Outlet />
-      </div>
-      */
-      
-
-
-
-
-
 
   if(sessionStorage.getItem('accesslevel') == 5){
     return (
       <>
-       {/* <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-             <li>
-              <Link to="/login">Login</Link>
-            </li> 
-            <li>
-              <Link to="/create">Create Post</Link>
-            </li>
-            <li>
-              <Link to="/classes">Classes</Link>
-            </li>
-            <li>
-              <Link to="/logout">Log out</Link>
-            </li>
-          </ul>
-        </nav> */}
+    
               <Grid>
             <Grid>
             <Box display="flex" sx={{ flexGrow: 1 }}> 
@@ -180,9 +136,9 @@ function Layout(){
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-              <Button  color="inherit" >
-              <Link to="/logout">Log out</Link>
-              </Button>
+          <Button  variant="secondary" href="/logout" size="large">
+              Log out
+             </Button>
               </Toolbar>
             </AppBar>
           </Box>
@@ -192,11 +148,15 @@ function Layout(){
           <Box display="flex" sx={{ flexGrow: 1 }} style={{ height: '100%' }}> 
           <AppBar position="static" style={{ background: '#f57c00' }} >
             <Toolbar>
-            <Button color="inherit"> 
-            <Link to="/classes">Classes</Link>
+            
+            <Button color="inherit" href="/classes" size="large"> 
+              Classes
             </Button>
-            <Button color="inherit"> 
-            <Link to="/create">Create Post</Link>
+            <Button color="inherit" href="/create-class" size="large"> 
+              Create Class
+            </Button>
+            <Button color="inherit" href="/create" size="large"> 
+              Create Post
             </Button>
             </Toolbar>
           </AppBar>

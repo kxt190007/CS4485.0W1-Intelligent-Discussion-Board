@@ -76,7 +76,7 @@ function Login() {
   }
 
  
-  const paperStyle = { padding: "30px 20px", height: '50vh', width: 320, margin: "110px auto" }
+  const paperStyle = { padding: "70px 20px", height: '40vh', width: 320, margin: "110px auto" }
   const avatarStyle = { backgroundColor: '#ef6c00' }
   const btnStyle = { margin: '40px 0'}
 
@@ -113,7 +113,7 @@ function Login() {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/login" >Login</Button>
+          <Button color="inherit" href="/login" size="large">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
@@ -140,7 +140,13 @@ function Login() {
           <Button type = 'submit' variant="contained" style={btnStyle} fullWidth>Login</Button>
           <p>{text}</p>
         </form>
-        <Link to="/register">Sign Up</Link>
+        <Typography variant="caption" display="block" gutterBottom sx={{ ml: 1 }}>
+        Not a user yet?
+      </Typography>
+        <Button color="secondary" href="/register">
+          Sign up here!
+          </Button>
+        
       </Paper>
     </Grid>
   )

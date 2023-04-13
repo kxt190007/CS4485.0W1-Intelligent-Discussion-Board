@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_file
 from flask_cors import CORS
 from flask_mysqldb import MySQL
 from array import *
@@ -6,7 +6,9 @@ from helpbot import *
 from cosim import *
 import string
 import random
-
+import os
+import base64
+import shutil
 
 
 app = Flask(__name__)
@@ -91,19 +93,22 @@ def post():
     postTitle = request.json.get('postTitle')
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT PostTitle FROM Posts')
+    cursor.execute('SELECT PostTitle FROM Posts WHERE classID = "{}"'.format(classID))
     myresult = cursor.fetchall()
     if len(postTitle) > 1:
         for postTitle2 in myresult:
             postTitle2 = postTitle2[0]
             similarity = text_similarity(postTitle, postTitle2)
             if similarity > .5:
-                #cursor.execute('Select postBody FROM Posts WHERE postTitle = "{}"'.format(postTitle2))
-                #body = cursor.fetchall()
-                #print(body[-1][0])
-                print("similar post found at: {}".format(postTitle2))
+                cursor.execute('Select postLink FROM Posts WHERE postTitle = "{}" AND classID = "{}"'.format(postTitle2, classID))
+                link = cursor.fetchall()
+                print(link)
+                link = str(link[-1][0])
+                link = "http://" + link
+                #print(link)
+                print("similar post found at: {}".format(link))
                 cursor.close()
-                return {"status": "Success", "message": "{}".format(postTitle2)}
+                return {"status": "Success", "message": "{}".format(link)}
         response = ask_question(postTitle, classID)
         if response == "error":
             cursor.close()
@@ -345,6 +350,11 @@ def removeClass():
     cursor.execute('DELETE FROM UserToClass WHERE ClassID = %s',(classID,))
     cursor.execute('SET SQL_SAFE_UPDATES = 1')
     mysql.connection.commit()
+    path = "../flask-server/files/" + str(classID) + "/"
+    try:
+        shutil.rmtree(path)
+    except OSError as e:
+        print("Directory does not exist")
     return {"status":"Success"}
 
 @app.route("/removePost", methods = ['POST'])
@@ -385,5 +395,110 @@ def generateNewString():
     cursor.execute('UPDATE Class SET ClassString = %s WHERE ClassID = %s', (classString,classID,))
     mysql.connection.commit()
     return {"status":"success", "classstring":classString}
+
+@app.route("/file", methods = ['POST'])
+def file():
+    fileName = request.form['filename']
+    classID = request.form['classid']
+    file = request.files['file']
+    path = "../flask-server/files/" + classID + "/"
+    if not os.path.exists(path):
+        os.makedirs(path)
+    path = path + fileName
+    print(path)
+    if os.path.exists(path):
+        print(":fail;")
+        return {"status":"Failed", "message":"File already exists"}
+    file.save(path)
+    print(path)
+    blob = file.read()
+    blob = base64.b64encode(blob)
+    cursor = mysql.connection.cursor()
+    cursor.execute("INSERT INTO Resource(FileName, ClassID, FilePath, ResourceFile) VALUES(%s, %s, %s, %s)",(fileName, classID, path, blob))
+    mysql.connection.commit()
+    # path = "../client/public/files/" + classID + "/"
+    # # if not os.path.exists(path):
+    # #     os.makedirs(path)
+    # path1 = path + fileName
+    # cursor = mysql.connection.cursor()
+    # cursor.execute("SELECT * FROM Resource WHERE FilePath = %s", (path1,))
+    # row = cursor.fetchone()
+    # if row:
+    #     return {"status":"Failed", "message":"File already exists"}
+    # cursor.execute("INSERT INTO Resource(FileName, ClassID, FilePath) VALUES(%s, %s, %s)", (fileName, classID, path1,))
+    # mysql.connection.commit()
+    # if not os.path.exists(path):
+    #     os.makedirs(path)    
+    # file = request.files['file']
+    # file.save(path1)
+    return {"status":"Success"}
+    
+@app.route("/getFiles", methods = ['POST'])    
+def getFiles():
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT ResourceID, FileName, ClassID, FilePath FROM Resource WHERE ClassID = %s", (classID,))
+    rows = cursor.fetchall()
+    # for row in rows:
+    #     blob = row[4]
+    #     blob = base64.b64decode(blob)
+    #     fileName.append(row[1])
+    #     resource.append(blob)
+    return {"status":"Success", "Resource": rows}
+
+@app.route("/getFile", methods = ['POST'])
+def getFile():
+    filePath = request.json.get("filePath")
+    return send_file(filePath)
+
+
+@app.route("/deleteFile", methods = ['POST'])
+def deleteFile():
+    fileID = request.json.get('fileID')
+    filePath = request.json.get('filePath')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM Resource WHERE ResourceID = %s', (fileID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    if os.path.exists(filePath):
+        os.chmod(filePath, 0o777)
+        os.remove(filePath)
+    return {"status":"Success"}
+
+@app.route("/addToClass1", methods = ['POST'])
+def addToClass1():
+    userID = request.json.get('userID')
+    classCode = request.json.get('classCode')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM Class WHERE ClassString = %s', (classCode,))
+    row = cursor.fetchone()
+    if not row:
+        return {"status":"Failed", "message":"Class code does not exist"}
+    classID = row[0]
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s AND ClassID = %s', (userID, classID,))
+    row = cursor.fetchone()
+    if row:
+        return {"status":"Failed", "message":"Already enrolled in class"}
+    cursor.execute('INSERT INTO UserToClass(UserID, ClassID) VALUES (%s, %s)', (userID, row[0]))
+    mysql.connection.commit()
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID,))
+    rows = cursor.fetchall()
+    classList = []
+    for x in rows:
+        cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (x[1],))
+        classRow = cursor.fetchone()
+        classList.append(classRow)
+    return {"status": "Success", "classList": classList}
+
+@app.route("/changePassword", methods = ['POST'])
+def changePassword():
+    userID = request.json.get('userID')
+    password = request.json.get('password')
+    cursor = mysql.connection.cursor()
+    cursor.execute('UPDATE Users SET Password = %s WHERE UserID = %s', (password, userID,))
+    mysql.connection.commit()
+    return {"status":"Success"}
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,8 +3,9 @@ import Button from '@mui/material/Button'
 import { Link, Navigate } from 'react-router-dom'
 import Layout from './Layout'
 import { useNavigate } from "react-router-dom";
-import { List, ListItem, ListItemText, ListItemButton } from '@mui/material'
+import { Divider, Grid, Typography, List, ListItem, ListItemText, ListItemButton, capitalize } from '@mui/material'
 import Box from '@mui/material/Box';
+import '../App.css'
 
 function Classes() {
 
@@ -71,22 +72,49 @@ function Classes() {
         return <Navigate replace to="/" />
     }
     return (
-        <div>
+        <Grid>
             <Layout />
-            <p>Classes</p>
-            <Link to="/create-class">Create Class</Link>
-            <h2>{userName}'s Classes</h2>
-            <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+
+            <Box sx={{ width: '100%', maxWidth: 1000, bgcolor: 'background.paper', marginLeft: 1, marginTop: 10}}>
+        
+          <Typography variant="h5" component="h1">
+          {userName}'s Classes (Admin)
+          </Typography>
+
+          <Box sx={{ width: '100%', maxWidth: 650, bgcolor: 'background.paper' }}>
                 <nav aria-label="main mailbox folders">
                 <p>{classes.map((classInfo, index) => (
-                <div>
-                    <button onClick={() => handleChange(index)}>{classInfo[1]}</button>
-                    <button onClick={() => removeItem(index)}>Delete</button>
+                    <div>
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    py: 1,
+                    my: 1,
+                    bgcolor: 'background.paper',
+                    borderRadius: 1,
+                  }}>
+                    <Typography sx= {{width: "65%", mt: 1, textTransform: 'uppercase'}} 
+                    fontSize="large">
+                    {classInfo[1]}
+                    </Typography>
+                    <Button variant="contained" onClick={() => handleChange(index)}>
+                        Manage
+                    </Button>
+                    <Button variant="contained" color="error" onClick={() => removeItem(index)}>
+                        Delete
+                    </Button>
+                    
+                </Box>
+                <Divider/>
                 </div>
             ))}</p>
                 </nav>
             </Box>
-        </div>
+
+
+          </Box>
+        </Grid>
+        
     )
 }
 
