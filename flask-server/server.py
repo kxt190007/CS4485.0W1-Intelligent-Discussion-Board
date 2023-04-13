@@ -466,5 +466,39 @@ def deleteFile():
         os.remove(filePath)
     return {"status":"Success"}
 
+@app.route("/addToClass1", methods = ['POST'])
+def addToClass1():
+    userID = request.json.get('userID')
+    classCode = request.json.get('classCode')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM Class WHERE ClassString = %s', (classCode,))
+    row = cursor.fetchone()
+    if not row:
+        return {"status":"Failed", "message":"Class code does not exist"}
+    classID = row[0]
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s AND ClassID = %s', (userID, classID,))
+    row = cursor.fetchone()
+    if row:
+        return {"status":"Failed", "message":"Already enrolled in class"}
+    cursor.execute('INSERT INTO UserToClass(UserID, ClassID) VALUES (%s, %s)', (userID, row[0]))
+    mysql.connection.commit()
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID,))
+    rows = cursor.fetchall()
+    classList = []
+    for x in rows:
+        cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (x[1],))
+        classRow = cursor.fetchone()
+        classList.append(classRow)
+    return {"status": "Success", "classList": classList}
+
+@app.route("/changePassword", methods = ['POST'])
+def changePassword():
+    userID = request.json.get('userID')
+    password = request.json.get('password')
+    cursor = mysql.connection.cursor()
+    cursor.execute('UPDATE Users SET Password = %s WHERE UserID = %s', (password, userID,))
+    mysql.connection.commit()
+    return {"status":"Success"}
+
 if __name__ == "__main__":
     app.run(debug=True)
