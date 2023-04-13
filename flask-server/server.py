@@ -91,6 +91,8 @@ def post1():
 @app.route("/post", methods=['POST'])
 def post():
     postTitle = request.json.get('postTitle')
+    postBody = request.json.get('postContent')
+    pdfName = ""
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT PostTitle FROM Posts WHERE classID = "{}"'.format(classID))
@@ -105,11 +107,15 @@ def post():
                 print(link)
                 link = str(link[-1][0])
                 link = "http://" + link
-                #print(link)
                 print("similar post found at: {}".format(link))
                 cursor.close()
                 return {"status": "Success", "message": "{}".format(link)}
-        response = ask_question(postTitle, classID)
+        cursor.execute('Select FileName FROM Resource WHERE classID = "{}"'.format(classID))
+        pdfName = cursor.fetchone()
+        pdfName = pdfName
+        print(pdfName)
+        print(classID)
+        response = ask_question(postTitle, postBody, classID, pdfName)
         if response == "error":
             cursor.close()
             return {"status": "Success", "message": "message"}
