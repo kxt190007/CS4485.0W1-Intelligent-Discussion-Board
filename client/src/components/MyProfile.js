@@ -83,6 +83,10 @@ export function MyProfile() {
                 userID:sessionStorage.getItem('token'),
                 password,
             })
+
+            setErrMessage1("Password changed")
+            document.getElementById("pass").value = ""
+            document.getElementById("pass1").value = ""
         }
     }
     if (!sessionStorage.getItem('accesslevel')) {
@@ -96,9 +100,9 @@ export function MyProfile() {
             Last Name: {sessionStorage.getItem('lastname')} <br></br>
             Change Password: <br></br>
             New Password: 
-            <TextField onChange = {(e) => setPassword(e.target.value)} type = 'password'/> <br></br>
+            <TextField id = "pass" onChange = {(e) => setPassword(e.target.value)} type = 'password'/> <br></br>
             Confirm New Password: 
-            <TextField onChange = {(e) => setPasswordConf(e.target.value)} type = 'password'/> <br></br>
+            <TextField id = "pass1" onChange = {(e) => setPasswordConf(e.target.value)} type = 'password'/> <br></br>
             <Button onClick={() => changePassword()}>Change</Button><br></br>
             {errMessage1!=""? (
                 <div>
