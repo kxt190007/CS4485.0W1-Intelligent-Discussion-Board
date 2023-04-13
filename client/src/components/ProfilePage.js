@@ -16,16 +16,94 @@ import Box from '@mui/material/Box';
 function ProfilePage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [data, setData] = useState([{}])
-    const [text, setText] = useState("");
     const navigate = useNavigate();
     const [classes, setClasses] = useState([[]]);
     const [userName, setUserName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [classCode, setClassCode] = useState("")
+    const [errMessage, setErrMessage] = useState("")
+    const [passwordConf, setPasswordConf] = useState("")
+    const [errMessage1, setErrMessage1] = useState("")
 
-  const handleChange = (index) => {
+    async function getClass(credentials) {
+      return fetch("http://localhost:5000/getClasses", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(credentials),
+      })
+          .then(
+              res => res.json()
+          )
+    }
+    async function addClass(credentials) {
+      return fetch("http://localhost:5000/addToClass1", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(credentials),
+      })
+          .then(
+              res => res.json()
+          )
+    }
+    async function changePass(credentials){
+      return fetch("http://localhost:5000/changePassword", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(credentials),
+      })
+          .then(
+              res => res.json()
+          )
+    }
+    useEffect(() => {
+      async function fetchData() {
+          const token = await getClass({
+              userID: sessionStorage.getItem('token'),
+          })
+          const temp = token.classList
+          setClasses(temp)
+      }
+      fetchData()
+    }, [])
+    const addToClass = async e =>{
+      console.log("test")
+      const token = await addClass({
+          userID:sessionStorage.getItem('token'),
+          classCode,
+      })
+      if(token.status == "Failed"){
+          setErrMessage(token.message)
+      }
+      else{
+          const temp = token.classList
+          setClasses(temp)
+      }
+    }
+    const changePassword = async e =>{
+      if(password != passwordConf){
+          setErrMessage1("Passwords do not match")
+      }
+      else{
+          const token = await changePass({
+              userID:sessionStorage.getItem('token'),
+              password,
+          })
+
+          setErrMessage1("Password changed")
+          document.getElementById("pass").value = ""
+          document.getElementById("pass1").value = ""
+      }
+   }
+
+    const handleChange = (index) => {
       navigate("/classlist/" + classes[index][0]);
-  }
+    }
 
     useEffect(() => {
         async function fetchData() {
@@ -106,9 +184,7 @@ function ProfilePage() {
           </Toolbar>
         </AppBar>
       </Box>
-        <Paper elevation={10} style={paperStyle}>
-          <Grid align='center' style={{ width: "100%", height: "200px"}}>
-            <Avatar style={avatarStyle} size><AccountBoxIcon /></Avatar>
+          <Grid align='left' style={{ width: "100%", height: "200px"}}>
             <h2>{userName}'s Profile Page</h2> 
             <h3>E-Mail: {email}</h3>
 
@@ -120,27 +196,39 @@ function ProfilePage() {
                 defaultValue=""
                 size="large"
                 variant="outlined"
-                align='center'
-                style={{ width: "100%", height: "200px"}}
+                align='left'
+                style={{ width: "15%", height: "200px"}}
             />
               <div>
-              <h2>Enrolled Courses</h2>
+              <h2>Enrolled Classes</h2>
               <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
               <nav aria-label="main mailbox folders">
-              <p>{classes.map((classInfo, index) => (
-              <div>
-
-              </div>
-              ))}</p>
+              
+              {classes.map((classInfo) => (
+                <div>{classInfo[1]}
+                </div>
+              ))}
+            <h2>Add a Class</h2>
+            <TextField onChange = {(e) => setClassCode(e.target.value)}/>
+            <Button onClick={() => addToClass()}>Add</Button>
+            {errMessage} <br></br>
+            <h2>Change Password:</h2> <br></br>
+            New Password:<br></br>
+            <TextField id = "pass" onChange = {(e) => setPassword(e.target.value)} type = 'password'/> <br></br>
+            Confirm New Password: <br></br>
+            <TextField id = "pass1" onChange = {(e) => setPasswordConf(e.target.value)} type = 'password'/> <br></br>
+            <Button onClick={() => changePassword()}>Change</Button><br></br>
+            {errMessage1!=""? (
+                <div>
+                {errMessage1}<br></br>
+                </div>
+            ) : ""}
               </nav>
               </Box>
-              </div>
+            </div>
           </Grid>
-        </Paper>
       </Grid>
     )
   }
   
   export default ProfilePage
-
-
