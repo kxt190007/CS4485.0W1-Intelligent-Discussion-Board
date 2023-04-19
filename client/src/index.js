@@ -20,6 +20,8 @@ import {
 import ClassList, {
   loader as classListLoader,
 } from "./components/ClassList"
+import ProfilePage from "./components/ProfilePage";
+import MyProfile from "./components/MyProfile"
 
 const router = createBrowserRouter([
   {
@@ -67,6 +69,11 @@ const router = createBrowserRouter([
         path: "classlist/:classID",
         element: <ClassList />,
         loader: classListLoader,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
+        // element: <MyProfile />
       }
     ]
   },

@@ -23,17 +23,31 @@ function Home() {
   const [inputs, setInputs] = useState([]);
   const [userName, setUserName] = useState("");
   const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto"}
+  const [fetchDone, setFetchDone] = useState(false)
 
   useEffect(() => {
     async function fetchData() {
       //fetch classes list
-      const classList = JSON.parse(sessionStorage.getItem('classes'))
-      setClasses(classList);
-      console.log(classes);
+      const token = await fetch("http://localhost:5000/getClasses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userID: sessionStorage.getItem('token')
+      }),
+    })
+      .then((response) => response.json())
+      const classList = token.classList
+      setClasses(classList)
       const temp = [];
       for(let i = 0; i<classList.length; i++){
         temp.push(
-          <option value = {classList[i][0]}>{classList[i][1]}</option>
+          <ListItem disablePadding onClick = {() => handleChange(classList[i][0])}>
+            <ListItemButton >
+              <ListItemText primary={classList[i][1]}/>
+            </ListItemButton>
+          </ListItem>
         );
         setInputs(temp);
         console.log("inputs:");
@@ -44,28 +58,29 @@ function Home() {
       setUserName(userData);
       console.log("classlist length:")
       console.log(inputs.length)
+      setFetchDone(true)
     }
     fetchData();
 
   }, []);
 
-  const handleChange = (event) => {
-    navigate("/board/" + event.target.value);
+  const handleChange = (classID) => {
+    navigate("/board/" + classID);
   }
 
-  let listClasses = inputs.map((x) =>
-    <>
-    <ListItem disablePadding onClick = {(e) => handleChange(e)}>
-            <ListItemButton >
-              <ListItemText primary={x}/>
-            </ListItemButton>
-    </ListItem>
+  // let listClasses = inputs.map((x, index) =>
+  //   <>
+  //   <ListItem disablePadding onClick = {() => handleChange(e)}>
+  //           <ListItemButton >
+  //             <ListItemText primary={x}/>
+  //           </ListItemButton>
+  //   </ListItem>
 
-    </>
-  );
+  //   </>
+  // );
 
 
-  if(!sessionStorage.getItem('token')){
+  if(!sessionStorage.getItem('token') && fetchDone){
     return (
       <Grid>
       <Box sx={{ flexGrow: 1}} > 
@@ -111,7 +126,7 @@ function Home() {
     </Grid>
     )
   }
-  else if(inputs.length == 0){
+  else if(inputs.length == 0 && fetchDone){
     return(
       <div>
         
@@ -140,7 +155,7 @@ function Home() {
     )
 
   }
-  else{
+  else if(fetchDone){
     return (
       <div>
       <Layout/>
@@ -160,7 +175,7 @@ function Home() {
         <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
         <nav aria-label="enrolled classes">
           <List>
-            {listClasses}
+            {inputs}
           </List>
         </nav>
       </Box>
@@ -169,7 +184,9 @@ function Home() {
       </div>
     )
   }
-  
+  else{
+    return (<nav><Layout/></nav>)
+  }
 }
 
 export default Home
