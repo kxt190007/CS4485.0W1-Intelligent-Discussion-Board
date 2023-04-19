@@ -4,7 +4,7 @@ import Layout from './Layout'
 import { Link, Navigate } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button'
-import { Divider, Grid, Typography, Box, InputLabel, TextField, Paper } from '@mui/material'
+import { Divider, Grid, Typography, Box, InputLabel, TextField, CircularProgress } from '@mui/material'
 
 export async function loader({ params }) {
     console.log(params.classID)
@@ -490,7 +490,14 @@ export function ClassList() {
         )
     }
     else{
-        return <Layout/>
+        return (
+            <Grid >
+            <Layout/>
+            <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+            <CircularProgress color="success" size={80}/>
+            </Box>
+            </Grid>
+            )
     }
 }
 export default ClassList

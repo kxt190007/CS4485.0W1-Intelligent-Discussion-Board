@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import { Link, Navigate } from 'react-router-dom'
 import Layout from './Layout'
 import { useNavigate } from "react-router-dom";
-import { Divider, Grid, Typography, List, ListItem, ListItemText, ListItemButton, capitalize } from '@mui/material'
+import { Divider, Grid, Typography, CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box';
 import '../App.css'
 
@@ -120,7 +120,14 @@ function Classes() {
         )
     }
     else{
-        return <Layout/>
+        return (
+            <Grid >
+            <Layout/>
+            <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+            <CircularProgress color="success" size={80}/>
+            </Box>
+            </Grid>
+            )
     }
 }
 

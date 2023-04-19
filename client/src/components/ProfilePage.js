@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import UserProfile from './UserProfile.js'
 import Layout from './Layout.js'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Typography } from '@mui/material'
+import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Typography, CircularProgress } from '@mui/material'
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -204,7 +204,14 @@ function ProfilePage() {
     )
   }
   else{
-    return <Layout/>
+    return (
+      <Grid >
+      <Layout/>
+      <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+      <CircularProgress color="success" size={80}/>
+      </Box>
+      </Grid>
+      )
   }
 }
 
