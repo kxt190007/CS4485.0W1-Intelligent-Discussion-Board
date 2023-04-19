@@ -486,7 +486,7 @@ def addToClass1():
     row = cursor.fetchone()
     if row:
         return {"status":"Failed", "message":"Already enrolled in class"}
-    cursor.execute('INSERT INTO UserToClass(UserID, ClassID) VALUES (%s, %s)', (userID, row[0]))
+    cursor.execute('INSERT INTO UserToClass(UserID, ClassID) VALUES (%s, %s)', (userID, classID))
     mysql.connection.commit()
     cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID,))
     rows = cursor.fetchall()
@@ -505,6 +505,16 @@ def changePassword():
     cursor.execute('UPDATE Users SET Password = %s WHERE UserID = %s', (password, userID,))
     mysql.connection.commit()
     return {"status":"Success"}
+
+@app.route("/getClassName", methods = ["POST"])
+def getClassName():
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Class WHERE ClassID = %s", (classID,))
+    row = cursor.fetchone()
+    if not row:
+        return {"status":"Fail"}
+    return {"status":"Success", "name":row[1]}
 
 if __name__ == "__main__":
     app.run(debug=True)
