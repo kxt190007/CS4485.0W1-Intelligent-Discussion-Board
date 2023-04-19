@@ -66,7 +66,7 @@ const Register = () => {
     }
   }
 
-  const paperStyle = { padding: "70px 20px", height: '40vh', width: 320, margin: "100px auto" }
+  const paperStyle = { padding: "70px 20px", height: '40vh', width: 450, margin: "100px auto" }
   const avatarStyle = { backgroundColor: '#ef6c00' }
   const btnStyle = { margin: '40px 0' }
 

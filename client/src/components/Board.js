@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import Button from '@mui/material/Button'
 import Layout from './Layout'
 import { useNavigate } from "react-router-dom";
-import { List, ListItem, ListItemText, ListItemButton, Divider, Paper, Grid } from '@mui/material'
+import { List, ListItem, ListItemText, ListItemButton, Divider, Paper, Grid, CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -13,7 +13,6 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { Link, Navigate } from 'react-router-dom'
-
 
 export async function loader({ params }) {
   console.log(params.classID)
@@ -33,7 +32,7 @@ export function Board() {
   const [postBodies, setPostBodies] = useState([]);
   const [postTitles, setPostTitles] = useState([]);
   const [postTags, setPostTags] = useState([]);
-  const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto" }
+  const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto"}
   const [postArr, setPostArr] = useState([]);
   const [className, setClassName] = useState("");
   const [fetchDone, setFetchDone] = useState(false)
@@ -249,7 +248,6 @@ export function Board() {
   }
 
 
-
   if (postTitles.length == 0 && fetchDone) {
     return (
       <nav>
@@ -264,6 +262,10 @@ export function Board() {
           bgcolor: 'background.paper',
           maxWidth: "100%",
           borderRadius: 1,
+          backgroundImage: "url('/client/src/Image/utd.jpg')",
+          backgroundSize: 'cover',
+          minHeight: '100vh',
+          
         }}>
 
           <Paper style={paperStyle} >
@@ -306,6 +308,7 @@ export function Board() {
           bgcolor: 'background.paper',
           maxWidth: "100%",
           borderRadius: 1,
+          
         }}>
 
           <Paper style={paperStyle} >
@@ -329,7 +332,14 @@ export function Board() {
     )
   }
   else{
-    return (<nav><Layout/></nav>)
+    return (
+      <Grid >
+      <Layout/>
+      <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+      <CircularProgress color="success" size={80}/>
+      </Box>
+      </Grid>
+      )
   }
 }
 

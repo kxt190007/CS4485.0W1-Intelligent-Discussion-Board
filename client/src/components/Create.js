@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Layout from './Layout.js'
 import { ListItemText, ListItemButton, Paper, Divider, TextareaAutosize, Chip, Input } from '@mui/material'
 import Box from '@mui/material/Box';
-import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography } from '@mui/material'
+import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography, CircularProgress } from '@mui/material'
 import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
 import "./Create.css";
 
@@ -261,7 +261,14 @@ function Create() {
     )
   }
   else{
-    return <Layout/>
+    return (
+    <Grid >
+    <Layout/>
+    <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+    <CircularProgress color="success" size={80}/>
+    </Box>
+    </Grid>
+    )
   }
 }
 
