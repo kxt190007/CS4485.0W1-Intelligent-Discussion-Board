@@ -62,6 +62,7 @@ export function MyProfile() {
     }, [])
     const addToClass = async e =>{
         console.log("test")
+        setErrMessage("")
         const token = await addClass({
             userID:sessionStorage.getItem('token'),
             classCode,
@@ -89,7 +90,7 @@ export function MyProfile() {
             document.getElementById("pass1").value = ""
         }
     }
-    if (!sessionStorage.getItem('accesslevel')) {
+    if (!sessionStorage.getItem('token')) {
         return <Navigate replace to="/" />
     }
     return (

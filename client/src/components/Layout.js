@@ -77,7 +77,6 @@ function Layout(){
           </Typography>
           <Button color="inherit" href="/profile">Profile</Button>
       
-         <Link to="/logout">Log out</Link>
         <Button  variant="secondary" href="/logout" size="large">
          Log out
         </Button>
@@ -138,6 +137,7 @@ function Layout(){
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
+          <Button color="inherit" href="/profile">Profile</Button>
           <Button  variant="secondary" href="/logout" size="large">
               Log out
              </Button>

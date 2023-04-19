@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLoaderData } from "react-router-dom";
 import Button from '@mui/material/Button'
-import { Link } from 'react-router-dom'
 import Layout from './Layout'
 import { useNavigate } from "react-router-dom";
 import { List, ListItem, ListItemText, ListItemButton, Divider, Paper, Grid } from '@mui/material'
@@ -13,6 +12,7 @@ import Stack from '@mui/joy/Stack';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import { Link, Navigate } from 'react-router-dom'
 
 
 export async function loader({ params }) {
@@ -24,7 +24,7 @@ export async function loader({ params }) {
 export function Board() {
 
   const navigate = useNavigate();
-  const classList = JSON.parse(sessionStorage.getItem('classes'))
+  const [classList, setClassList] = useState([])
   const classID = useLoaderData()
   //const [postJSON, setPostJSON] = useState([{}][{}]);
   const [postIDs, setPostIDs] = useState([]);
@@ -35,13 +35,63 @@ export function Board() {
   const [postTags, setPostTags] = useState([]);
   const paperStyle = { padding: "30px 20px", height: '90%', width: '97%', margin: "20px auto" }
   const [postArr, setPostArr] = useState([]);
-  var className
-  for (let i = 0; i < classList.length; i++) {
-    if (classList[i][0] == classID)
-      className = classList[i][1]
+  const [className, setClassName] = useState("");
+  const [fetchDone, setFetchDone] = useState(false)
+
+  async function getClass(credentials) {
+    return fetch("http://localhost:5000/getClasses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => res.json()
+      )
+  }
+  async function getClassName(credentials) {
+    return fetch("http://localhost:5000/getClassName", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => res.json()
+      )
   }
 
   async function fetchData() {
+
+    const token = await fetch("http://localhost:5000/getClasses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userID: sessionStorage.getItem('token')
+      }),
+    })
+      .then((response) => response.json())
+      const temp1 = token.classList
+      setClassList(temp1)
+      var inClass = false
+      for (let i = 0; i < temp1.length; i++) {
+        if (temp1[i][0] == classID){
+          inClass = true
+        }
+      }
+      if (!inClass){
+        navigate("/")
+      }
+
+
+    const token1 = await getClassName({
+      classID,
+    })
+    setClassName(token1.name)
     //fetch post list as JSON
 
     const postList = await getPosts({
@@ -125,6 +175,7 @@ export function Board() {
       }
     }
     setPostArr(temp)
+    setFetchDone(true)
   }
 
   useEffect(() => {
@@ -169,7 +220,7 @@ export function Board() {
       body: JSON.stringify(credentials),
     })
       .then(
-        res => 
+        res =>
           res.json()
       )
   }
@@ -180,6 +231,9 @@ export function Board() {
     })
 
 
+  }
+  function goBack(){
+    navigate("/")
   }
 
 
@@ -196,84 +250,87 @@ export function Board() {
 
 
 
-  if(postTitles.length == 0){
-    return(
+  if (postTitles.length == 0 && fetchDone) {
+    return (
       <nav>
-       <Layout />
-      <Grid sx={{
-                display: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                flexWrap: 'wrap',
-                p: 1,
-                m: 0,
-                bgcolor: 'background.paper',
-                maxWidth: "100%",
-                borderRadius: 1,
-              }}>
-        
-        <Paper style={paperStyle} >
-          <Grid sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            p: 0,
-            m: 1,
-            bgcolor: 'background.paper',
-            borderRadius: 1,
+        <Layout />
+        <Grid sx={{
+          display: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          flexWrap: 'wrap',
+          p: 1,
+          m: 0,
+          bgcolor: 'background.paper',
+          maxWidth: "100%",
+          borderRadius: 1,
+        }}>
+
+          <Paper style={paperStyle} >
+            <Grid sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              p: 0,
+              m: 1,
+              bgcolor: 'background.paper',
+              borderRadius: 1,
             }}>
-            <h2>There are no posts for {className}</h2>
-          <Button  color="inherit" >
-              <Link to="/">Back to classes</Link>
+              <h2>There are no posts for {className}</h2>
+              <Button color="inherit" >
+                <Link to="/">Back to classes</Link>
               </Button>
-              </Grid>
-          <Divider />   
-          <Typography gutterBottom variant="h6" component="div">
-                    Click CREATE POST to be the first to post!
-          </Typography>
-        </Paper>
-      </Grid> 
+            </Grid>
+            <Divider />
+            <Typography gutterBottom variant="h6" component="div">
+              Click CREATE POST to be the first to post!
+            </Typography>
+          </Paper>
+        </Grid>
+      </nav>
+    )
+  }
+  else if (!sessionStorage.getItem("token")) {
+    return <Navigate replace to="/" />
+  }
+  else if(fetchDone){
+    return (
+      <nav>
+        <Layout />
+        <Grid sx={{
+          display: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          flexWrap: 'wrap',
+          p: 1,
+          m: 0,
+          bgcolor: 'background.paper',
+          maxWidth: "100%",
+          borderRadius: 1,
+        }}>
+
+          <Paper style={paperStyle} >
+            <Grid sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              p: 0,
+              m: 1,
+              bgcolor: 'background.paper',
+              borderRadius: 1,
+            }}>
+              <h2>Discussion Board for {className}</h2>
+              <Button color="inherit" onClick={() => goBack()}>Back to classes</Button>
+            </Grid>
+
+            <Divider />
+            {postArr}
+          </Paper>
+        </Grid>
       </nav>
     )
   }
   else{
-    return (
-      <nav>
-       <Layout />
-      <Grid sx={{
-                display: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                flexWrap: 'wrap',
-                p: 1,
-                m: 0,
-                bgcolor: 'background.paper',
-                maxWidth: "100%",
-                borderRadius: 1,
-              }}>
-        
-        <Paper style={paperStyle} >
-        <Grid sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            p: 0,
-            m: 1,
-            bgcolor: 'background.paper',
-            borderRadius: 1,
-            }}>
-            <h2>Discussion Board for {className}</h2>
-          <Button  color="inherit" >
-              <Link to="/">Back to classes</Link>
-              </Button>
-              </Grid>
-          
-          <Divider />   
-        {postArr}
-        </Paper>
-      </Grid> 
-      </nav>
-    )
+    return (<nav><Layout/></nav>)
   }
-  
 }
 
 
