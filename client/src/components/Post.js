@@ -28,6 +28,7 @@ function Post() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [newComment, setNewComment] = useState("");
+  const [commentIDs, setCommentIDs] = useState([]);
   const [userIDs, setUserIDs] = useState([]);
   const [commentBodies, setCommentBodies] = useState([]);
   const [postTimes, setPostTimes] = useState([]);
@@ -85,17 +86,20 @@ function Post() {
       setBody(postInfo["body"])
       const userIDs = []
       const commentBodies = []
+      const commentIDs = []
       const postTimes = []
       const names = []
       for (let i = 0; i < commentList[0].length; i++) {
         userIDs[i] = commentList[0][i]
-
         commentBodies[i] = commentList[1][i]
         postTimes[i] = commentList[2][i]
+        commentIDs[i] = commentList[3][i]
       }
       setUserIDs(userIDs)
       setCommentBodies(commentBodies)
       setPostTimes(postTimes)
+      setCommentIDs(commentIDs)
+
 
       for (let i = 0; i < commentList[0].length; i++) {
         let n = await getName({
@@ -115,6 +119,91 @@ function Post() {
 
 
   }, []);
+
+  async function fetchData() {
+      //fetch post list as JSON
+      const token = await fetch("http://localhost:5000/getClasses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userID: sessionStorage.getItem('token')
+        }),
+      })
+        .then((response) => response.json())
+      const temp1 = token.classList
+      setClassList(temp1)
+      console.log(temp1)
+      console.log(classID)
+      var inClass = false
+      for (let i = 0; i < temp1.length; i++) {
+        if (temp1[i][0] == classID) {
+          inClass = true
+        }
+      }
+      if (!inClass) {
+        console.log(token.classList)
+        console.log("Exiting")
+        navigate("/")
+      }
+      const commentList = await getPostComments({
+        postID: postID
+      });
+      console.log("comment list: ")
+      console.log(commentList);
+
+      const postInfo = await getPostTitleBody({
+        postID: postID
+      });
+
+      setTitle(postInfo["title"])
+      setBody(postInfo["body"])
+      const userIDs = []
+      const commentBodies = []
+      const commentIDs = []
+      const postTimes = []
+      const names = []
+      for (let i = 0; i < commentList[0].length; i++) {
+        userIDs[i] = commentList[0][i]
+        commentBodies[i] = commentList[1][i]
+        postTimes[i] = commentList[2][i]
+        commentIDs[i] = commentList[3][i]
+      }
+      setUserIDs(userIDs)
+      setCommentBodies(commentBodies)
+      setPostTimes(postTimes)
+      setCommentIDs(commentIDs)
+
+
+      for (let i = 0; i < commentList[0].length; i++) {
+        let n = await getName({
+          userID: userIDs[i]
+        });
+        names[i] = n.name
+      }
+      setUserNames(names)
+      setFetchDone(true)
+    }
+
+
+
+  async function remove(credentials) {
+    console.log("remove is called")
+    return fetch("http://localhost:5000/removeComment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => {
+          res.json()
+          fetchData()
+        }
+      )
+  }
 
   async function getPostComments(credentials) {
     return fetch("http://localhost:5000/getPostComments", {
@@ -188,6 +277,7 @@ function Post() {
               {userNames[i]} commented at {postTimes[i]}
             </Typography>
 
+             <Button onClick={() => removeComment({postID}, commentIDs[i])}>Delete</Button>
           </CardContent>
         </CardActionArea>
       </Card>
@@ -210,6 +300,17 @@ function Post() {
       comment: newComment,
       date: date_create
     });
+
+  }
+
+    const removeComment = async (index, commentIndex) => {
+    console.log(index)
+    console.log(commentIndex)
+    await remove({
+      postID: index,
+      commentID: commentIndex,
+    })
+
 
   }
 
