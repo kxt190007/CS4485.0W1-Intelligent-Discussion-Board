@@ -65,7 +65,7 @@ def createComment():
                     (postID, userID, comment, date))
     mysql.connection.commit()
     cursor.close()
-    return
+    return {"status": "Success"}
     
 @app.route("/post1", methods=['POST'])
 def post1():
@@ -167,13 +167,15 @@ def getPostComments():
     cursor.execute('SELECT * FROM PostComment WHERE PostID = %s', (postID,))
     rows = cursor.fetchall()
     userIDs = []
+    commentIDs = []
     commentBodies = []
     postTimes = []
     for x in rows:
         userIDs.append(x[1])
+        commentIDs.append(x[2])
         commentBodies.append(x[3])
         postTimes.append(x[4])
-    arr = [userIDs, commentBodies, postTimes]
+    arr = [userIDs, commentBodies, postTimes, commentIDs]
 
     return arr
 
@@ -363,6 +365,20 @@ def removePost():
     cursor = mysql.connection.cursor()
     cursor.execute('SET SQL_SAFE_UPDATES = 0')
     cursor.execute('DELETE FROM Posts WHERE PostID = %s', (postID,))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    return {"status":"Success"}
+
+@app.route("/removeComment", methods = ['POST'])
+def removeComment():
+    postID = request.json.get('postID')
+    postID = postID.get("postID")
+    commentID = request.json.get('commentID')
+    print("this is postid " + str(postID))
+    print("this is commentid  " + str(commentID))
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM PostComment WHERE PostID = "{}" AND CommentID = "{}"'.format(postID, commentID))
     cursor.execute('SET SQL_SAFE_UPDATES = 1')
     mysql.connection.commit()
     return {"status":"Success"}

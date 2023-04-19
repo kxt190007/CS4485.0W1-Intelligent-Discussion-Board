@@ -28,6 +28,7 @@ function Post(){
     const [body, setBody] = useState("");
     const [newComment, setNewComment] = useState("");
     const [userIDs, setUserIDs] = useState([]);
+    const [commentIDs, setCommentIDs] = useState([]);
     const [commentBodies, setCommentBodies] = useState([]);
     const [postTimes, setPostTimes] = useState([]);
     const [userNames, setUserNames] = useState([]);
@@ -55,19 +56,23 @@ function Post(){
 
            setTitle(postInfo["title"])
            setBody(postInfo["body"])
+
            const userIDs = []
            const commentBodies = []
            const postTimes = []
+           const commentIDs = []
            const names = []
             for(let i = 0; i < commentList[0].length; i++){
                 userIDs[i] = commentList[0][i]
-                
                 commentBodies[i] = commentList[1][i]
                 postTimes[i] = commentList[2][i]
+                commentIDs[i] = commentList[3][i]
+
             }
             setUserIDs(userIDs)
             setCommentBodies(commentBodies)
             setPostTimes(postTimes)
+            setCommentIDs(commentIDs)
 
             for(let i = 0; i < commentList[0].length; i++){
               let n = await getName({
@@ -85,7 +90,50 @@ function Post(){
 
 
     
-      }, []);
+    }, []);
+
+
+        async function fetchData(){
+            //fetch post list as JSON
+
+            const commentList = await getPostComments({
+                postID : postID
+            });
+            console.log("comment list: ")
+            console.log(commentList);
+
+           const postInfo = await getPostTitleBody({
+              postID: postID
+           });
+
+           setTitle(postInfo["title"])
+           setBody(postInfo["body"])
+           const userIDs = []
+           const commentBodies = []
+           const postTimes = []
+           const commentIDs = []
+           const names = []
+
+            for(let i = 0; i < commentList[0].length; i++){
+                userIDs[i] = commentList[0][i]
+                commentBodies[i] = commentList[1][i]
+                postTimes[i] = commentList[2][i]
+                commentIDs[i] = commentList[3][i]
+
+            }
+            setUserIDs(userIDs)
+            setCommentBodies(commentBodies)
+            setPostTimes(postTimes)
+            setCommentIDs(commentIDs)
+
+            for(let i = 0; i < commentList[0].length; i++){
+              let n = await getName({
+                userID : userIDs[i]
+                });
+              names[i] = n.name
+            }
+            setUserNames(names)
+          }
 
       async function getPostComments(credentials){
         return fetch("http://localhost:5000/getPostComments", {
@@ -99,6 +147,25 @@ function Post(){
           res=>res.json()
         )
       }
+
+  async function remove(credentials) {
+    console.log("remove is called")
+    return fetch("http://localhost:5000/removeComment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res => {
+          res.json()
+          fetchData()
+        }
+      )
+  }
+
+
       async function getPostTitleBody(credentials){
         return fetch("http://localhost:5000/getPostTitleBody", {
           method: "POST",
@@ -148,17 +215,17 @@ function Post(){
 
           <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200 ,marginLeft: 'auto', marginRight: 'auto'}}>
           <CardActionArea onClick = {(e) => handleChange(e)}>
-            
+
             <CardContent >
-              
+
               <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {commentBodies[i] }
               </Typography>
-              
+
               <Typography variant="caption text" color="text.secondary">
               {userNames[i]} commented at {postTimes[i]}
               </Typography>
-
+              <Button onClick={() => removeComment({postID}, commentIDs[i])}>Delete</Button>
             </CardContent>
           </CardActionArea>
         </Card>
@@ -180,6 +247,16 @@ function Post(){
       });
 
     }
+  const removeComment = async (index, commentIndex) => {
+    console.log(index)
+    console.log(commentIndex)
+    await remove({
+      postID: index,
+      commentID: commentIndex,
+    })
+
+
+  }
 
     if(commentBodies.length != 0){
       return (
