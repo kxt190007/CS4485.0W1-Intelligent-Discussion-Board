@@ -5,7 +5,7 @@ import Layout, {disableCreate} from './Layout'
 import { useNavigate } from "react-router-dom";
 import { ListItemText, ListItemButton, Paper, Divider } from '@mui/material'
 import Box from '@mui/material/Box';
-import { Avatar, Grid, TextField, Checkbox, FormControlLabel, Typography} from '@mui/material'
+import { Avatar, Grid, CircularProgress, Typography} from '@mui/material'
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListDivider from '@mui/joy/ListDivider';
@@ -68,21 +68,9 @@ function Home() {
     navigate("/board/" + classID);
   }
 
-  // let listClasses = inputs.map((x, index) =>
-  //   <>
-  //   <ListItem disablePadding onClick = {() => handleChange(e)}>
-  //           <ListItemButton >
-  //             <ListItemText primary={x}/>
-  //           </ListItemButton>
-  //   </ListItem>
-
-  //   </>
-  // );
-
-
   if(!sessionStorage.getItem('token') && fetchDone){
     return (
-      <Grid>
+      <Grid >
       <Box sx={{ flexGrow: 1}} > 
       <AppBar position="static" style={{ background: '#ef6c00' }}>
         <Toolbar>
@@ -96,7 +84,6 @@ function Home() {
             <HomeIcon 
             href="/login"/>
           </IconButton>
-
           <Typography
             variant="h6"
             noWrap
@@ -114,14 +101,12 @@ function Home() {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          
           <Button color="inherit" href="/login">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
-    <Typography variant="h2" align="center">
+    <Typography variant="h1" align="center" marginTop={40} sx={{ fontFamily: 'Segoe UI' }}>
     Welcome to Intelligent Discussion Board
-
     </Typography>
     </Grid>
     )
@@ -129,28 +114,21 @@ function Home() {
   else if(inputs.length == 0 && fetchDone){
     return(
       <div>
-        
       <Layout/>
-  
       <Stack
         direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
         spacing={2}
       >
-  
-        
         <Paper style = {paperStyle} label = "test">
-  
         <h2>Looks like you are not enrolled in any classes...</h2>
         <Typography variant="body1" color="text.secondary">
               Get a class link from your professor to enroll in their class.
             </Typography>
         <Divider/>
-        
       </Paper>
       </Stack>
-
       </div>
     )
 
@@ -166,10 +144,7 @@ function Home() {
         alignItems="flex-start"
         spacing={2}
       >
-  
-        
         <Paper style = {paperStyle}>
-  
         <h2>{userName}'s Classes</h2>
         <Divider/>
         <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -185,7 +160,14 @@ function Home() {
     )
   }
   else{
-    return (<nav><Layout/></nav>)
+    return (
+      <Grid >
+      <Layout/>
+      <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+      <CircularProgress color="success" size={80}/>
+      </Box>
+      </Grid>
+      )
   }
 }
 

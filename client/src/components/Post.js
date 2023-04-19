@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import { useLoaderData } from "react-router-dom";
 import Layout from './Layout'
-import { List, ListItem, ListItemText, ListItemButton, Divider, Accordion, Paper, Grid } from '@mui/material'
+import { List, ListItem, ListItemText, ListItemButton, Divider, Accordion, Paper, Grid, CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
@@ -474,7 +474,14 @@ function Post() {
     )
   }
   else{
-    return (<nav><Layout/></nav>)
+    return (
+      <Grid >
+      <Layout/>
+      <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+      <CircularProgress color="success" size={80}/>
+      </Box>
+      </Grid>
+      )
   }
 
 
