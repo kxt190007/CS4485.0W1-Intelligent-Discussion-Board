@@ -155,7 +155,7 @@ export function Board() {
     else {
       for (let i = 0; i < postIDs.length; i++) {
         temp.push(
-          <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
+          <Card sx={{ maxWidth: "100%", my: 2, maxHeight: 200 }}>
             <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
               <CardContent>
@@ -278,8 +278,8 @@ export function Board() {
               borderRadius: 1,
             }}>
               <h2>There are no posts for {className}</h2>
-              <Button color="inherit" >
-                <Link to="/">Back to classes</Link>
+              <Button variant="contained" color="primary" >
+                <Link to="/">Back</Link>
               </Button>
             </Grid>
             <Divider />
@@ -316,12 +316,12 @@ export function Board() {
               display: 'flex',
               justifyContent: 'space-between',
               p: 0,
-              m: 1,
+              my: 1,
               bgcolor: 'background.paper',
               borderRadius: 1,
             }}>
               <h2>Discussion Board for {className}</h2>
-              <Button color="inherit" onClick={() => goBack()}>Back to classes</Button>
+              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
             </Grid>
 
             <Divider />
