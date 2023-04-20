@@ -61,9 +61,10 @@ def createComment():
     postID = request.json.get('postID')
     comment = request.json.get('comment')
     date = request.json.get('date')
+    commentReply = request.json.get('commentReply')
     cursor = mysql.connection.cursor()
-    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime) VALUES (%s, %s, %s, %s)',
-                    (postID, userID, comment, date))
+    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime, ReplyCommentID) VALUES (%s, %s, %s, %s, %s)',
+                    (postID, userID, comment, date, commentReply))
     mysql.connection.commit()
     cursor.close()
     return {"status": "Success"}
@@ -171,14 +172,17 @@ def getPostComments():
     commentIDs = []
     commentBodies = []
     postTimes = []
+    commentReplies = []
     for x in rows:
         userIDs.append(x[1])
         commentIDs.append(x[2])
         commentBodies.append(x[3])
         postTimes.append(x[4])
-    arr = [userIDs, commentBodies, postTimes, commentIDs]
+        commentReplies.append(x[5])
 
-    return arr
+    arr = [userIDs, commentBodies, postTimes, commentIDs, commentReplies]
+
+    return {"status": "Success", "arr": arr, "rows": rows}
 
 
 
