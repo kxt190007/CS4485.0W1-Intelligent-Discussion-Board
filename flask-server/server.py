@@ -8,6 +8,7 @@ import string
 import random
 import os
 import base64
+import shutil
 
 
 app = Flask(__name__)
@@ -60,12 +61,13 @@ def createComment():
     postID = request.json.get('postID')
     comment = request.json.get('comment')
     date = request.json.get('date')
+    commentReply = request.json.get('commentReply')
     cursor = mysql.connection.cursor()
-    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime) VALUES (%s, %s, %s, %s)',
-                    (postID, userID, comment, date))
+    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime, ReplyCommentID) VALUES (%s, %s, %s, %s, %s)',
+                    (postID, userID, comment, date, commentReply))
     mysql.connection.commit()
     cursor.close()
-    return
+    return {"status": "Success"}
     
 @app.route("/post1", methods=['POST'])
 def post1():
@@ -90,6 +92,8 @@ def post1():
 @app.route("/post", methods=['POST'])
 def post():
     postTitle = request.json.get('postTitle')
+    postBody = request.json.get('postContent')
+    pdfName = ""
     classID = request.json.get('chosenclass')
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT PostTitle FROM Posts WHERE classID = "{}"'.format(classID))
@@ -104,11 +108,15 @@ def post():
                 print(link)
                 link = str(link[-1][0])
                 link = "http://" + link
-                #print(link)
                 print("similar post found at: {}".format(link))
                 cursor.close()
                 return {"status": "Success", "message": "{}".format(link)}
-        response = ask_question(postTitle, classID)
+        cursor.execute('Select FileName FROM Resource WHERE classID = "{}"'.format(classID))
+        pdfName = cursor.fetchone()
+        pdfName = pdfName
+        print(pdfName)
+        print(classID)
+        response = ask_question(postTitle, postBody, classID, pdfName)
         if response == "error":
             cursor.close()
             return {"status": "Success", "message": "message"}
@@ -161,15 +169,20 @@ def getPostComments():
     cursor.execute('SELECT * FROM PostComment WHERE PostID = %s', (postID,))
     rows = cursor.fetchall()
     userIDs = []
+    commentIDs = []
     commentBodies = []
     postTimes = []
+    commentReplies = []
     for x in rows:
         userIDs.append(x[1])
+        commentIDs.append(x[2])
         commentBodies.append(x[3])
         postTimes.append(x[4])
-    arr = [userIDs, commentBodies, postTimes]
+        commentReplies.append(x[5])
 
-    return arr
+    arr = [userIDs, commentBodies, postTimes, commentIDs, commentReplies]
+
+    return {"status": "Success", "arr": arr, "rows": rows}
 
 
 
@@ -349,6 +362,11 @@ def removeClass():
     cursor.execute('DELETE FROM UserToClass WHERE ClassID = %s',(classID,))
     cursor.execute('SET SQL_SAFE_UPDATES = 1')
     mysql.connection.commit()
+    path = "../flask-server/files/" + str(classID) + "/"
+    try:
+        shutil.rmtree(path)
+    except OSError as e:
+        print("Directory does not exist")
     return {"status":"Success"}
 
 @app.route("/removePost", methods = ['POST'])
@@ -360,6 +378,21 @@ def removePost():
     cursor.execute('SET SQL_SAFE_UPDATES = 1')
     mysql.connection.commit()
     return {"status":"Success"}
+
+@app.route("/removeComment", methods = ['POST'])
+def removeComment():
+    postID = request.json.get('postID')
+    postID = postID.get("postID")
+    commentID = request.json.get('commentID')
+    print("this is postid " + str(postID))
+    print("this is commentid  " + str(commentID))
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM PostComment WHERE PostID = "{}" AND CommentID = "{}"'.format(postID, commentID))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    return {"status":"Success"}
+
 
 @app.route("/checkModerator", methods = ['POST'])
 def checkModerator():
@@ -459,6 +492,50 @@ def deleteFile():
         os.chmod(filePath, 0o777)
         os.remove(filePath)
     return {"status":"Success"}
+
+@app.route("/addToClass1", methods = ['POST'])
+def addToClass1():
+    userID = request.json.get('userID')
+    classCode = request.json.get('classCode')
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM Class WHERE ClassString = %s', (classCode,))
+    row = cursor.fetchone()
+    if not row:
+        return {"status":"Failed", "message":"Class code does not exist"}
+    classID = row[0]
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s AND ClassID = %s', (userID, classID,))
+    row = cursor.fetchone()
+    if row:
+        return {"status":"Failed", "message":"Already enrolled in class"}
+    cursor.execute('INSERT INTO UserToClass(UserID, ClassID) VALUES (%s, %s)', (userID, classID))
+    mysql.connection.commit()
+    cursor.execute('SELECT * FROM UserToClass WHERE UserID = %s ', (userID,))
+    rows = cursor.fetchall()
+    classList = []
+    for x in rows:
+        cursor.execute('SELECT * FROM Class WHERE ClassID = %s', (x[1],))
+        classRow = cursor.fetchone()
+        classList.append(classRow)
+    return {"status": "Success", "classList": classList}
+
+@app.route("/changePassword", methods = ['POST'])
+def changePassword():
+    userID = request.json.get('userID')
+    password = request.json.get('password')
+    cursor = mysql.connection.cursor()
+    cursor.execute('UPDATE Users SET Password = %s WHERE UserID = %s', (password, userID,))
+    mysql.connection.commit()
+    return {"status":"Success"}
+
+@app.route("/getClassName", methods = ["POST"])
+def getClassName():
+    classID = request.json.get('classID')
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM Class WHERE ClassID = %s", (classID,))
+    row = cursor.fetchone()
+    if not row:
+        return {"status":"Fail"}
+    return {"status":"Success", "name":row[1]}
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,6 @@
+.reply-text{
+    display: block;
+}
+.reply-text-hidden{
+    display:none !important;
+}

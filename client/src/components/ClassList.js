@@ -4,6 +4,8 @@ import Layout from './Layout'
 import { Link, Navigate } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button'
+import { Divider, Grid, Typography, Box, InputLabel, TextField, CircularProgress } from '@mui/material'
+
 export async function loader({ params }) {
     console.log(params.classID)
     //const classInfo = await getClass(params.classID);
@@ -29,6 +31,7 @@ export function ClassList() {
     const [fileName, setFileName] = useState("")
     const [fileList, setFileList] = useState([])
     const [objectURL, setObjectURL] = useState("")
+    const [fetchDone, setFetchDone] = useState(false)
     async function getStudents(credentials) {
         return fetch("http://localhost:5000/getStudents", {
             method: "POST",
@@ -132,6 +135,7 @@ export function ClassList() {
                 navigate("/")
             }
             getFiles()
+            setFetchDone(true)
         }
         fetchData();
     }, []);
@@ -231,20 +235,20 @@ export function ClassList() {
             method: 'POST',
             body: data
         }).then((response) => response.json()
-        .then((responseData => {
-            getFiles()
-            if (responseData.status == "Failed") {
-            
-                setErrMessage1(responseData.message)
-            }
-            else {
-                setFileName("")
-                setIsFilePicked(false)
-                setSelectedFile(null)
-                document.getElementById("file").value = null
-            }
-        })))
-        
+            .then((responseData => {
+                getFiles()
+                if (responseData.status == "Failed") {
+
+                    setErrMessage1(responseData.message)
+                }
+                else {
+                    setFileName("")
+                    setIsFilePicked(false)
+                    setSelectedFile(null)
+                    document.getElementById("file").value = null
+                }
+            })))
+
 
     }
     const getFiles = async () => {
@@ -270,7 +274,7 @@ export function ClassList() {
         }
         setFileList(temp)
     }
-    const getFile = async(filePath) =>{
+    const getFile = async (filePath) => {
         await fetch('http://localhost:5000/getFile', {
             method: 'POST',
             headers: {
@@ -280,12 +284,12 @@ export function ClassList() {
                 filePath,
             })
         }).then((response) => response.blob())
-        .then((blob) =>{
-            console.log(blob)
-            const objURL = URL.createObjectURL(blob)
-            console.log(objURL)
-            setObjectURL(objURL)
-        })
+            .then((blob) => {
+                console.log(blob)
+                const objURL = URL.createObjectURL(blob)
+                console.log(objURL)
+                setObjectURL(objURL)
+            })
 
     }
     const deleteFile = async (fileID, filePath) => {
@@ -306,38 +310,83 @@ export function ClassList() {
     if (sessionStorage.getItem('accesslevel') != 5) {
         return <Navigate replace to="/" />
     }
-    return (
-        <div>
+    else if(fetchDone) {
+        return (
+            <div>
+                <Grid>
+                    <Layout />
 
-            <Layout />
-            <p>{className}</p>
-            <label>{instructorLabel}</label>
-            <p>{instructorList.map((prof, index) => (
-                <div>
+                    <Box sx={{ width: '100%', maxWidth: 1870, bgcolor: 'background.paper', marginLeft: 2, marginTop: 9 }}>
 
-                    {prof[3]}{" "}{prof[4]}
-                </div>
-            ))}</p>
-            <label>{moderatorLabel}</label>
-            <p>{moderatorList.map((moderator, index) => (
-                <div>
+                        <Typography variant="h4" fontWeight='bold'>
+                            {className}
 
-                    {moderator[3]}{" "}{moderator[4]}
-                    <button onClick={() => demoteStudent(index)}>Demote to student</button>
-                    <button onClick={() => removeClassM(index)}>Remove from class</button>
-                </div>
-            ))}</p>
-            <label>{studentLabel}</label>
-            <p>{studentList.map((student, index) => (
-                <div>
+                            <Button color="inherit" style={{ marginLeft: '1185px' }}>
+                                <Link to={"/classes/"}>Back to Classes</Link>
+                            </Button>
+                        </Typography>
 
-                    {student[3]}{" "}{student[4]}
-                    <button onClick={() => promoteStudent(index)}>Promote to moderator</button>
-                    <button onClick={() => removeClassS(index)}>Remove from class</button>
-                </div>
-            ))}</p>
-            <p>Add Students</p>
-            Invite Code: {classString}
+                        <br />
+                        <br />
+                        <Typography variant="h6" fontWeight='bold'>
+                            {instructorLabel}
+                        </Typography>
+
+                        {instructorList.map((prof, index) => (
+                            <Typography variant="body1" component="div" key={index}>
+                                {`${prof[3]} ${prof[4]}`}
+                            </Typography>
+                        ))}
+                        <br />
+
+                        <Typography variant="h6" fontWeight='bold'>
+                            {moderatorLabel}
+                        </Typography>
+
+                        {moderatorList.map((moderator, index) => (
+                            <div key={index}>
+                                <Typography variant="body1" component="div">
+                                    {`${moderator[3]} ${moderator[4]}`}
+                                </Typography>
+                                <Button variant="contained" color="primary" size="small" onClick={() => demoteStudent(index)}>
+                                    Demote to student
+                                </Button>
+                                <Button variant="contained" color="error" size="small" onClick={() => removeClassM(index)}>
+                                    Remove from class
+                                </Button>
+                            </div>
+                        ))}
+                        <br />
+
+                        <Typography variant="h6" fontWeight='bold'>
+                            {studentLabel}
+                        </Typography>
+
+                        {studentList.map((student, index) => (
+                            <div key={index}>
+                                <Typography variant="body1" component="div">
+                                    {`${student[3]} ${student[4]}`}
+
+                                    <Button variant="contained" color="primary" size="small" onClick={() => promoteStudent(index)}>
+                                        Promote to moderator
+                                    </Button>
+                                    <Button variant="contained" color="error" size="small" onClick={() => removeClassS(index)}>
+                                        Remove from class
+                                    </Button>
+                                </Typography>
+                                <br />
+                            </div>
+
+                        ))}
+                        <br />
+                        <Divider />
+                        <br />
+
+                        <Typography variant="h5" fontWeight='bold'>
+                            Add Students
+                        </Typography>
+
+                        {/*Invite Code: {classString}
             <button onClick={() => generateNewString()}>Generate New</button>
             <br></br>
             <label for="addstudent">Student Email: </label>
@@ -348,8 +397,41 @@ export function ClassList() {
                 onChange={(e) => setAddStudent(e.target.value)}
             ></input>
             <button onClick={(e) => addStudentClass(e)}>Add</button><br />
-            {errMessage}
-            <p>Files</p>
+            {errMessage} */}
+
+                        <Box display="flex" alignItems="center" mt={2}>
+                            <Typography variant="body1" component="div">
+                                Invite Code: {classString}
+                            </Typography>
+                            <Button variant="contained" color="primary" size="small" onClick={() => generateNewString()} style={{ marginLeft: '10px' }}>
+                                Generate New
+                            </Button>
+                        </Box>
+
+                        <Box display="flex" alignItems="center" mt={1}>
+                            <InputLabel htmlFor="addstudent" mr={2}>Student Email: </InputLabel>
+                            <TextField
+                                name="addstudent"
+                                id="addstudent"
+                                variant="outlined"
+                                size="small"
+                                onChange={(e) => setAddStudent(e.target.value)}
+                            />
+                            <Button variant="contained" color="primary" size="small" onClick={(e) => addStudentClass(e)} style={{ marginLeft: '8px' }}>
+                                Add
+                            </Button>
+                        </Box>
+                        {errMessage && (
+                            <Typography variant="body2" color="error" mt={2}>
+                                {errMessage}
+                            </Typography>
+                        )}
+
+                        <br />
+                        <Divider />
+                        <br />
+
+                        {/*<p>Files</p>
             <p>{fileList}</p>
             <input type="file" id = "file" name="file" onChange={fileChange} />
             <button onClick={(e) => addFile(e)}>Add</button>
@@ -369,9 +451,53 @@ export function ClassList() {
                 <a href={objectURL} target="_blank">Open in New Page</a>
                 <object data = {objectURL} type = "application/pdf" width="100%" height="500px"></object><br></br>
                 </div>
-            ) : (<a></a>)}
-            
-        </div>
-    )
+            ) : (<a></a>)}*/}
+
+
+
+                        <Typography variant="h5" fontWeight='bold'>Files</Typography>
+                        <br />
+                        <Typography>{fileList}</Typography>
+
+                        <input type="file" id="file" name="file" onChange={fileChange} />
+                        <Button variant="contained" color="primary" size="small" style={{ marginLeft: '13px' }} onClick={(e) => addFile(e)}>
+                            Add
+                        </Button>
+
+                        {isFilePicked && selectedFile ? (
+                            <Grid item xs={12}>
+                                <TextField label="Filename" value={fileName} fullWidth sx={{ maxWidth: 330, mt: 2 }} onChange={(e) => setFileName(e.target.value)} />
+                                {errMessage1}
+                            </Grid>
+
+                        ) : (
+
+                            <Typography>Select a file to add</Typography>
+                        )}
+
+                        {objectURL !== "" ? (
+                            <Grid item xs={12}>
+                                <Typography variant="h6">Preview</Typography>
+                                <a href={objectURL} target="_blank" rel="noreferrer">Open in new page</a>
+                                <object data={objectURL} type="application/pdf" width="100%" height="500px"></object>
+                            </Grid>
+                        ) : null}
+
+                    </Box>
+
+                </Grid>
+            </div>
+        )
+    }
+    else{
+        return (
+            <Grid >
+            <Layout/>
+            <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
+            <CircularProgress color="success" size={80}/>
+            </Box>
+            </Grid>
+            )
+    }
 }
 export default ClassList

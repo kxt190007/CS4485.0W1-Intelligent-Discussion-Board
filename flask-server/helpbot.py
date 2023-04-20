@@ -13,6 +13,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 INSTRUCTIONS = """You are an AI assistant who is an expert in the course syllabus.
+Students will ask questions on a discussion board using a title and a body.
 You can provide information on the class.
 If you're unable to provide the answer to a question, please respond with the phrase "I do not think that is on the syllabus."
 Do not use any external URLs in your answer. Do not refer to any blogs in your answer."""
@@ -46,15 +47,14 @@ def get_response(prompt):
     return response.choices[0].text
 
 
-def ask_question(question, classID):
-    #os.system("cls" if os.name == "nt" else "clear")
-
-    #pdf will be taken from the tags -> see post class (tag?) -> pull syllabus from there
+def ask_question(postTitle, postBody, classID, pdfName):
     syllabus = "files/" + str(classID) + ".pdf"
-    print(classID)
+    #syllabus = "files/" + classID + "/" + "pdfName"
+    #/ flask - server / files / classID / pdfname
     try:
         syllabusText = extract_text(syllabus)
-        new_question = "given this text: " + syllabusText + "\n end of text \n" + "answer the following question: " + question + " ?"
+        new_question = "A student has made a new question on a discussion board. \n given this syllabus: " + syllabusText + "\n end of syllabus \n" + \
+                       "answer the following question. Post Title: " + postTitle + "\n end Post Title \n Post Body: " + postBody + " ?"
         response = get_response(INSTRUCTIONS + new_question)
         response = response.lstrip()
         print(response)
