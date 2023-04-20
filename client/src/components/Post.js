@@ -493,7 +493,7 @@ function Post() {
                   {title}
                 </Typography>
               </div>
-              <Button color="inherit" onClick={() => goBack()}>Back</Button>
+              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
             </Grid>
             <Divider />
             <Typography variant="body1" color="text.secondary">
@@ -505,7 +505,7 @@ function Post() {
 
 
             <Typography gutterBottom variant="h5" component="div">
-              <Box pl={6} pr={2} ml={13}>Comments</Box>
+              <Box pr={2} >Comments</Box>
             </Typography>
             <Divider />
 
@@ -514,19 +514,19 @@ function Post() {
 
 
             <Divider />
-            <Box sx={{ m: 2 }}>
+            <Box sx={{ my: 2 }}>
               <form
                 onSubmit={handleSubmit}
               >
                 <Textarea
                   placeholder="Add a comment here..."
                   required
-                  sx={{ mt: 1, width: '86.5%', marginLeft: 'auto', marginRight: 'auto', display: 'block' }}
+                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto', display: 'block' }}
                   id="inputComment"
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
                 />
-                <Button type="submit" variant="contained" sx={{ marginLeft: 14, marginTop: 2 }}>Submit</Button>
+                <Button type="submit" variant="contained" sx={{marginTop: 2 }}>Submit</Button>
               </form>
             </Box>
 
@@ -574,7 +574,7 @@ function Post() {
                   {body}
                 </Typography>
               </div>
-              <Button color="inherit" onClick={() => goBack()}>Back</Button>
+              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
             </Grid>
             <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
               <CardActionArea onClick={(e) => handleChange(e)}>
@@ -589,19 +589,19 @@ function Post() {
               </CardActionArea>
             </Card>
             <Divider />
-            <Box sx={{ m: 2 }}>
+            <Box sx={{ my: 2 }}>
               <form
                 onSubmit={handleSubmit}
               >
                 <Textarea
                   placeholder="Add a comment here..."
                   required
-                  sx={{ mt: 1, width: '86.5%', marginLeft: 'auto', marginRight: 'auto', display: 'block' }}
+                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto', display: 'block' }}
                   id="inputComment"
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
                 />
-                <Button type="submit" variant="contained" sx={{ marginLeft: 14, marginTop: 2 }}>Submit</Button>
+                <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>Submit</Button>
               </form>
             </Box>
 
