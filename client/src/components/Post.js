@@ -13,6 +13,7 @@ import Moment from 'react-moment';
 import moment from 'moment';
 import { Link, Navigate } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
+import "./Post.css"
 
 
 export async function loader({ params }) {
@@ -32,11 +33,14 @@ function Post() {
   const [userIDs, setUserIDs] = useState([]);
   const [commentBodies, setCommentBodies] = useState([]);
   const [postTimes, setPostTimes] = useState([]);
-  const [userNames, setUserNames] = useState([]);
+  const [userNames, setUserNames] = useState(new Map());
   const [classList, setClassList] = useState([]);
   const [fetchDone, setFetchDone] = useState(false)
+  const [clickID, setClickID] = useState(null)
+  const [commentTotal, setCommentTotal] = useState([])
   const navigate = useNavigate();
   const paperStyle = { padding: "30px 20px", height: '90%', width: '90%', margin: "20px auto" }
+  const [userReply, setUserReply] = useState("")
 
 
 
@@ -45,71 +49,73 @@ function Post() {
     console.log(title)
 
 
-    async function fetchData() {
-      //fetch post list as JSON
-      const token = await fetch("http://localhost:5000/getClasses", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          userID: sessionStorage.getItem('token')
-        }),
-      })
-        .then((response) => response.json())
-      const temp1 = token.classList
-      setClassList(temp1)
-      console.log(temp1)
-      console.log(classID)
-      var inClass = false
-      for (let i = 0; i < temp1.length; i++) {
-        if (temp1[i][0] == classID) {
-          inClass = true
-        }
-      }
-      if (!inClass) {
-        console.log(token.classList)
-        console.log("Exiting")
-        navigate("/")
-      }
-      const commentList = await getPostComments({
-        postID: postID
-      });
-      console.log("comment list: ")
-      console.log(commentList);
+    // async function fetchData() {
+    //   //fetch post list as JSON
+    //   const token = await fetch("http://localhost:5000/getClasses", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({
+    //       userID: sessionStorage.getItem('token')
+    //     }),
+    //   })
+    //     .then((response) => response.json())
+    //   const temp1 = token.classList
+    //   setClassList(temp1)
+    //   console.log(temp1)
+    //   console.log(classID)
+    //   var inClass = false
+    //   for (let i = 0; i < temp1.length; i++) {
+    //     if (temp1[i][0] == classID) {
+    //       inClass = true
+    //     }
+    //   }
+    //   if (!inClass) {
+    //     console.log(token.classList)
+    //     console.log("Exiting")
+    //     navigate("/")
+    //   }
+    //   const commentList = await getPostComments({
+    //     postID: postID
+    //   });
+    //   console.log("comment list: ")
+    //   console.log(commentList);
 
-      const postInfo = await getPostTitleBody({
-        postID: postID
-      });
+    //   const postInfo = await getPostTitleBody({
+    //     postID: postID
+    //   });
 
-      setTitle(postInfo["title"])
-      setBody(postInfo["body"])
-      const userIDs = []
-      const commentBodies = []
-      const commentIDs = []
-      const postTimes = []
-      const names = []
-      for (let i = 0; i < commentList[0].length; i++) {
-        userIDs[i] = commentList[0][i]
-        commentBodies[i] = commentList[1][i]
-        postTimes[i] = commentList[2][i]
-        commentIDs[i] = commentList[3][i]
-      }
-      setUserIDs(userIDs)
-      setCommentBodies(commentBodies)
-      setPostTimes(postTimes)
-      setCommentIDs(commentIDs)
+    //   setTitle(postInfo["title"])
+    //   setBody(postInfo["body"])
+    //   const userIDs = []
+    //   const commentBodies = []
+    //   const commentIDs = []
+    //   const postTimes = []
+    //   const names = []
+    //   const commentReplyID = []
+    //   for (let i = 0; i < commentList[0].length; i++) {
+    //     userIDs[i] = commentList[0][i]
+    //     commentBodies[i] = commentList[1][i]
+    //     postTimes[i] = commentList[2][i]
+    //     commentIDs[i] = commentList[3][i]
+    //     commentReplyID[i] = commentList[4][i]
+    //   }
+    //   setUserIDs(userIDs)
+    //   setCommentBodies(commentBodies)
+    //   setPostTimes(postTimes)
+    //   setCommentIDs(commentIDs)
 
 
-      for (let i = 0; i < commentList[0].length; i++) {
-        let n = await getName({
-          userID: userIDs[i]
-        });
-        names[i] = n.name
-      }
-      setUserNames(names)
-      setFetchDone(true)
-    }
+    //   for (let i = 0; i < commentList[0].length; i++) {
+    //     let n = await getName({
+    //       userID: userIDs[i]
+    //     });
+    //     names[i] = n.name
+    //   }
+    //   setUserNames(names)
+    //   setFetchDone(true)
+    // }
     fetchData();
 
 
@@ -121,70 +127,72 @@ function Post() {
   }, []);
 
   async function fetchData() {
-      //fetch post list as JSON
-      const token = await fetch("http://localhost:5000/getClasses", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          userID: sessionStorage.getItem('token')
-        }),
-      })
-        .then((response) => response.json())
-      const temp1 = token.classList
-      setClassList(temp1)
-      console.log(temp1)
-      console.log(classID)
-      var inClass = false
-      for (let i = 0; i < temp1.length; i++) {
-        if (temp1[i][0] == classID) {
-          inClass = true
-        }
+    //fetch post list as JSON
+    const token = await fetch("http://localhost:5000/getClasses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userID: sessionStorage.getItem('token')
+      }),
+    })
+      .then((response) => response.json())
+    const temp1 = token.classList
+    setClassList(temp1)
+    console.log(temp1)
+    console.log(classID)
+    var inClass = false
+    for (let i = 0; i < temp1.length; i++) {
+      if (temp1[i][0] == classID) {
+        inClass = true
       }
-      if (!inClass) {
-        console.log(token.classList)
-        console.log("Exiting")
-        navigate("/")
-      }
-      const commentList = await getPostComments({
-        postID: postID
-      });
-      console.log("comment list: ")
-      console.log(commentList);
-
-      const postInfo = await getPostTitleBody({
-        postID: postID
-      });
-
-      setTitle(postInfo["title"])
-      setBody(postInfo["body"])
-      const userIDs = []
-      const commentBodies = []
-      const commentIDs = []
-      const postTimes = []
-      const names = []
-      for (let i = 0; i < commentList[0].length; i++) {
-        userIDs[i] = commentList[0][i]
-        commentBodies[i] = commentList[1][i]
-        postTimes[i] = commentList[2][i]
-        commentIDs[i] = commentList[3][i]
-      }
-      setUserIDs(userIDs)
-      setCommentBodies(commentBodies)
-      setPostTimes(postTimes)
-      setCommentIDs(commentIDs)
-
-
-      for (let i = 0; i < commentList[0].length; i++) {
-        let n = await getName({
-          userID: userIDs[i]
-        });
-        names[i] = n.name
-      }
-      setUserNames(names)
-      setFetchDone(true)
     }
+    if (!inClass) {
+      console.log(token.classList)
+      console.log("Exiting")
+      navigate("/")
+    }
+    const token1 = await getPostComments({
+      postID: postID
+    });
+
+    const postInfo = await getPostTitleBody({
+      postID: postID
+    });
+
+    setTitle(postInfo["title"])
+    setBody(postInfo["body"])
+    const commentList = token1.arr
+    const userIDs = []
+    const commentBodies = []
+    const commentIDs = []
+    const postTimes = []
+    const names = []
+    for (let i = 0; i < commentList[0].length; i++) {
+      userIDs[i] = commentList[0][i]
+      commentBodies[i] = commentList[1][i]
+      postTimes[i] = commentList[2][i]
+      commentIDs[i] = commentList[3][i]
+    }
+    setUserIDs(userIDs)
+    setCommentBodies(commentBodies)
+    setPostTimes(postTimes)
+    setCommentIDs(commentIDs)
+    setCommentTotal(token1.rows)
+    console.log(token1.rows[0])
+
+    const userMap = new Map()
+    for (let i = 0; i < commentList[0].length; i++) {
+      let n = await getName({
+        userID: userIDs[i]
+      });
+      userMap.set(userIDs[i], n.name)
+    }
+    setUserNames(userMap)
+    console.log(userMap)
+    setFetchDone(true)
+  }
 
 
 
@@ -258,52 +266,148 @@ function Post() {
   const handleChange = (event) => {
 
   }
+  function handleReplyChange(curID) {
+    setClickID(curID)
+    setUserReply("")
+  }
 
 
-  var comments = [];
-  for (let i = 0; i < userIDs.length; i++) {
-    comments.push(
 
-      <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: 'auto', marginRight: 'auto' }}>
+  // var comments = [];
+  var directComments = [];
+  var comments1 = [];
+  const mapMargin = new Map()
+  var curMargin = 0;
+  var prevCommentID = -1;
+  for (let i = commentTotal.length - 1; i >= 0; i--) {
+    if (commentTotal[i][5] == -1) {
+      directComments.push(commentTotal[i])
+    }
+  }
+
+  while (directComments.length != 0) {
+    const curComment = directComments.pop()
+    if (curComment[5] == -1) {
+      curMargin = 0
+      mapMargin.set(curComment[2], curMargin)
+    }
+    else if (prevCommentID == curComment[5]) {
+      curMargin += 5
+      mapMargin.set(curComment[2], curMargin)
+    }
+    else {
+      curMargin = mapMargin.get(curComment[5]) + 5
+      mapMargin.set(curComment[2], curMargin)
+    }
+    comments1.push(
+      <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
         <CardActionArea onClick={(e) => handleChange(e)}>
 
           <CardContent >
 
             <Typography gutterBottom variant="body1" component="div" sx={{}}>
-              {commentBodies[i]}
+              {curComment[3]}
             </Typography>
 
             <Typography variant="caption text" color="text.secondary">
-              {userNames[i]} commented at {postTimes[i]}
+              {userNames.get(curComment[1])} commented at {curComment[4]}
             </Typography>
 
-             <Button onClick={() => removeComment({postID}, commentIDs[i])}>Delete</Button>
+            <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
+            <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
+            <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
+              onChange={(e) => setUserReply(e.target.value)}></Textarea>
+            <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
         </CardActionArea>
       </Card>
     )
+    for (let j = commentTotal.length - 1; j >= 0; j--) {
+      if (curComment[2] == commentTotal[j][5]) {
+        directComments.push(commentTotal[j])
+      }
+    }
+    prevCommentID = curComment[2]
   }
-  function refreshPage(delay) {
-    return new Promise(window.location.reload(false), setTimeout(delay));
+  // for (let i = 0; i < userIDs.length; i++) {
+  //   comments.push(
 
-  }
-  function goBack(){
+  //     <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: 'auto', marginRight: 'auto' }}>
+  //       <CardActionArea onClick={(e) => handleChange(e)}>
+
+  //         <CardContent >
+
+  //           <Typography gutterBottom variant="body1" component="div" sx={{}}>
+  //             {commentBodies[i]}
+  //           </Typography>
+
+  //           <Typography variant="caption text" color="text.secondary">
+  //             {userNames.get(userIDs[i])} commented at {postTimes[i]}
+  //           </Typography>
+
+  //           <Button onClick={() => removeComment({ postID }, commentIDs[i])}>Delete</Button>
+  //           <Button onClick={() => setClickID(i)}>Reply</Button>
+  //           <Textarea className={clickID == i ? "reply-text" : "reply-text-hidden"}></Textarea>
+  //           <Button className={clickID == i ? "reply-text" : "reply-text-hidden"}>Post</Button>
+  //         </CardContent>
+  //       </CardActionArea>
+  //     </Card>
+  //   )
+  // }
+  // function refreshPage(delay) {
+  //   return new Promise(window.location.reload(false), setTimeout(delay));
+
+  // }
+  function goBack() {
     navigate("/board/" + classID)
   }
   const handleSubmit = async ev => {
-
-    ev.preventDefault();
-    let date_create = moment().format("YYYY-MM-DD hh:mm:ss")
-    await createComment({
-      userID: sessionStorage.getItem('token'),
-      postID,
-      comment: newComment,
-      date: date_create
-    });
-
+    if (newComment != "") {
+      ev.preventDefault();
+      setNewComment("")
+      let date_create = moment().format("YYYY-MM-DD hh:mm:ss")
+      await createComment({
+        userID: sessionStorage.getItem('token'),
+        postID,
+        comment: newComment,
+        date: date_create,
+        commentReply: -1,
+      });
+      const token1 = await getPostComments({
+        postID: postID
+      });
+      const commentList = token1.arr
+      const userIDs = []
+      const commentBodies = []
+      const commentIDs = []
+      const postTimes = []
+      const names = []
+      for (let i = 0; i < commentList[0].length; i++) {
+        userIDs[i] = commentList[0][i]
+        commentBodies[i] = commentList[1][i]
+        postTimes[i] = commentList[2][i]
+        commentIDs[i] = commentList[3][i]
+      }
+      setUserIDs(userIDs)
+      setCommentBodies(commentBodies)
+      setPostTimes(postTimes)
+      setCommentIDs(commentIDs)
+      setCommentTotal(token1.rows)
+      console.log(token1.rows[0])
+  
+      const userMap = new Map()
+      for (let i = 0; i < commentList[0].length; i++) {
+        let n = await getName({
+          userID: userIDs[i]
+        });
+        userMap.set(userIDs[i], n.name)
+      }
+      setUserNames(userMap)
+      console.log(userMap)
+    }
   }
 
-    const removeComment = async (index, commentIndex) => {
+  const removeComment = async (index, commentIndex) => {
     console.log(index)
     console.log(commentIndex)
     await remove({
@@ -312,6 +416,51 @@ function Post() {
     })
 
 
+  }
+  const handleReplySubmit = async (commentID) => {
+    if (userReply != "") {
+      setUserReply("")
+      setClickID(null)
+      let date_create = moment().format("YYYY-MM-DD hh:mm:ss")
+      await createComment({
+        userID: sessionStorage.getItem('token'),
+        postID,
+        comment: userReply,
+        date: date_create,
+        commentReply: commentID,
+      })
+      const token1 = await getPostComments({
+        postID: postID
+      });
+      const commentList = token1.arr
+      const userIDs = []
+      const commentBodies = []
+      const commentIDs = []
+      const postTimes = []
+      const names = []
+      for (let i = 0; i < commentList[0].length; i++) {
+        userIDs[i] = commentList[0][i]
+        commentBodies[i] = commentList[1][i]
+        postTimes[i] = commentList[2][i]
+        commentIDs[i] = commentList[3][i]
+      }
+      setUserIDs(userIDs)
+      setCommentBodies(commentBodies)
+      setPostTimes(postTimes)
+      setCommentIDs(commentIDs)
+      setCommentTotal(token1.rows)
+      console.log(token1.rows[0])
+  
+      const userMap = new Map()
+      for (let i = 0; i < commentList[0].length; i++) {
+        let n = await getName({
+          userID: userIDs[i]
+        });
+        userMap.set(userIDs[i], n.name)
+      }
+      setUserNames(userMap)
+      console.log(userMap)
+    }
   }
 
   if (commentBodies.length != 0 && fetchDone) {
@@ -361,7 +510,7 @@ function Post() {
             <Divider />
 
 
-            {comments}
+            {comments1}
 
 
             <Divider />
@@ -378,11 +527,6 @@ function Post() {
                   value={newComment}
                 />
                 <Button type="submit" variant="contained" sx={{ marginLeft: 14, marginTop: 2 }}>Submit</Button>
-                <Typography variant="body2" color="text.secondary">
-                  <br />
-
-                  Click submit and refresh the page to see your comment
-                </Typography>
               </form>
             </Box>
 
@@ -396,7 +540,7 @@ function Post() {
   else if (!sessionStorage.getItem('token')) {
     return <Navigate replace to="/" />
   }
-  else if(fetchDone){
+  else if (fetchDone) {
     return (
       <nav>
         <Layout />
@@ -458,11 +602,6 @@ function Post() {
                   value={newComment}
                 />
                 <Button type="submit" variant="contained" sx={{ marginLeft: 14, marginTop: 2 }}>Submit</Button>
-                <Typography variant="body2" color="text.secondary">
-                  <br />
-
-                  Click submit and refresh the page to see your comment
-                </Typography>
               </form>
             </Box>
 
@@ -473,15 +612,15 @@ function Post() {
       </nav>
     )
   }
-  else{
+  else {
     return (
       <Grid >
-      <Layout/>
-      <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-      <CircularProgress color="success" size={80}/>
-      </Box>
+        <Layout />
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '300px' }}>
+          <CircularProgress color="success" size={80} />
+        </Box>
       </Grid>
-      )
+    )
   }
 
 
