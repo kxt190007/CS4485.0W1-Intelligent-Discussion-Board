@@ -369,7 +369,7 @@ export function ClassList() {
                                 </Typography>
                                 <Button variant="contained" color="primary" size="small" onClick={() => demoteStudent(index)}>
                                     Demote to student
-                                </Button>
+                                </Button> <br></br>
                                 <Button variant="contained" color="error" size="small" onClick={() => removeClassM(index)}>
                                     Remove from class
                                 </Button>
@@ -385,11 +385,11 @@ export function ClassList() {
                         {studentList.map((student, index) => (
                             <div key={index}>
                                 <Typography variant="body1" component="div">
-                                    {`${student[3]} ${student[4]}`}
+                                    {`${student[3]} ${student[4]}`} <br></br>
 
                                     <Button variant="contained" color="primary" size="small" onClick={() => promoteStudent(index)}>
                                         Promote to moderator
-                                    </Button>
+                                    </Button> <br></br>
                                     <Button variant="contained" color="error" size="small" onClick={() => removeClassS(index)}>
                                         Remove from class
                                     </Button>
@@ -484,7 +484,7 @@ export function ClassList() {
                         <br />
                         <Typography>{fileList}</Typography>
 
-                        <input type="file" id="file" name="file" onChange={fileChange} />
+                        <input type="file" id="file" name="file" accept = 'application/pdf' onChange={fileChange} />
                         <Button variant="contained" color="primary" size="small" style={{ marginLeft: '13px' }} onClick={(e) => addFile(e)}>
                             Add
                         </Button>

@@ -301,9 +301,7 @@ export function Board() {
               borderRadius: 1,
             }}>
               <h2>There are no posts for {className}</h2>
-              <Button variant="contained" color="primary" >
-                <Link to="/">Back</Link>
-              </Button>
+              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
             </Grid>
             <Divider />
             <Typography gutterBottom variant="h6" component="div">
