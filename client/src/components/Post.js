@@ -26,6 +26,7 @@ function Post() {
   const loaderData = useLoaderData()
   const postID = loaderData[0]
   const classID = loaderData[1]
+  const [moderator, setModerator] = useState("")
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [newComment, setNewComment] = useState("");
@@ -47,82 +48,7 @@ function Post() {
 
   useEffect(() => {
     console.log(title)
-
-
-    // async function fetchData() {
-    //   //fetch post list as JSON
-    //   const token = await fetch("http://localhost:5000/getClasses", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //       userID: sessionStorage.getItem('token')
-    //     }),
-    //   })
-    //     .then((response) => response.json())
-    //   const temp1 = token.classList
-    //   setClassList(temp1)
-    //   console.log(temp1)
-    //   console.log(classID)
-    //   var inClass = false
-    //   for (let i = 0; i < temp1.length; i++) {
-    //     if (temp1[i][0] == classID) {
-    //       inClass = true
-    //     }
-    //   }
-    //   if (!inClass) {
-    //     console.log(token.classList)
-    //     console.log("Exiting")
-    //     navigate("/")
-    //   }
-    //   const commentList = await getPostComments({
-    //     postID: postID
-    //   });
-    //   console.log("comment list: ")
-    //   console.log(commentList);
-
-    //   const postInfo = await getPostTitleBody({
-    //     postID: postID
-    //   });
-
-    //   setTitle(postInfo["title"])
-    //   setBody(postInfo["body"])
-    //   const userIDs = []
-    //   const commentBodies = []
-    //   const commentIDs = []
-    //   const postTimes = []
-    //   const names = []
-    //   const commentReplyID = []
-    //   for (let i = 0; i < commentList[0].length; i++) {
-    //     userIDs[i] = commentList[0][i]
-    //     commentBodies[i] = commentList[1][i]
-    //     postTimes[i] = commentList[2][i]
-    //     commentIDs[i] = commentList[3][i]
-    //     commentReplyID[i] = commentList[4][i]
-    //   }
-    //   setUserIDs(userIDs)
-    //   setCommentBodies(commentBodies)
-    //   setPostTimes(postTimes)
-    //   setCommentIDs(commentIDs)
-
-
-    //   for (let i = 0; i < commentList[0].length; i++) {
-    //     let n = await getName({
-    //       userID: userIDs[i]
-    //     });
-    //     names[i] = n.name
-    //   }
-    //   setUserNames(names)
-    //   setFetchDone(true)
-    // }
     fetchData();
-
-
-
-
-
-
 
   }, []);
 
@@ -192,8 +118,28 @@ function Post() {
     setUserNames(userMap)
     console.log(userMap)
     setFetchDone(true)
+    const moderator = await checkModerator({
+      userID: sessionStorage.getItem('token'),
+      classID,
+    })
+    setModerator(moderator.message)
+    console.log("checking mod")
+    console.log(moderator.message)
   }
 
+  async function checkModerator(credentials) {
+    return fetch("http://localhost:5000/checkModerator", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then(
+        res =>
+          res.json()
+      )
+  }
 
 
   async function remove(credentials) {
@@ -299,6 +245,7 @@ function Post() {
       curMargin = mapMargin.get(curComment[5]) + 5
       mapMargin.set(curComment[2], curMargin)
     }
+    if (sessionStorage.getItem('accesslevel') == 5 || moderator == 'yes') {
     comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
         <CardActionArea onClick={(e) => handleChange(e)}>
@@ -322,6 +269,58 @@ function Post() {
         </CardActionArea>
       </Card>
     )
+    }
+    else {
+        if(curComment[1] == sessionStorage.getItem('token')) {
+
+        comments1.push(
+      <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
+        <CardActionArea onClick={(e) => handleChange(e)}>
+
+          <CardContent >
+
+            <Typography gutterBottom variant="body1" component="div" sx={{}}>
+              {curComment[3]}
+            </Typography>
+
+            <Typography variant="caption text" color="text.secondary">
+              {userNames.get(curComment[1])} commented at {curComment[4]}
+            </Typography>
+
+            <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
+            <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
+            <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
+              onChange={(e) => setUserReply(e.target.value)}></Textarea>
+            <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    )
+        }
+        else {
+            comments1.push(
+      <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
+        <CardActionArea onClick={(e) => handleChange(e)}>
+
+          <CardContent >
+
+            <Typography gutterBottom variant="body1" component="div" sx={{}}>
+              {curComment[3]}
+            </Typography>
+
+            <Typography variant="caption text" color="text.secondary">
+              {userNames.get(curComment[1])} commented at {curComment[4]}
+            </Typography>
+            <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
+            <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
+              onChange={(e) => setUserReply(e.target.value)}></Textarea>
+            <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+        )
+        }
+    }
     for (let j = commentTotal.length - 1; j >= 0; j--) {
       if (curComment[2] == commentTotal[j][5]) {
         directComments.push(commentTotal[j])
