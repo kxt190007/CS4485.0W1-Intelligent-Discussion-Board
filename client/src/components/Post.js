@@ -521,7 +521,7 @@ function Post() {
                 <Textarea
                   placeholder="Add a comment here..."
                   required
-                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto', display: 'block' }}
+                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto'}}
                   id="inputComment"
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
@@ -596,7 +596,7 @@ function Post() {
                 <Textarea
                   placeholder="Add a comment here..."
                   required
-                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto', display: 'block' }}
+                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto'}}
                   id="inputComment"
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
