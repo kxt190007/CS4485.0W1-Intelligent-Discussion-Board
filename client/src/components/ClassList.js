@@ -4,7 +4,7 @@ import Layout from './Layout'
 import { Link, Navigate } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button'
-import { Divider, Grid, Typography, Box, InputLabel, TextField, CircularProgress } from '@mui/material'
+import { Paper, Divider, Grid, Typography, Box, InputLabel, TextField, CircularProgress } from '@mui/material'
 
 export async function loader({ params }) {
     console.log(params.classID)
@@ -32,6 +32,8 @@ export function ClassList() {
     const [fileList, setFileList] = useState([])
     const [objectURL, setObjectURL] = useState("")
     const [fetchDone, setFetchDone] = useState(false)
+    const paperStyle = { padding: "30px 20px", height: '90%', width: 'auto', margin: "20px auto"}
+
     async function getStudents(credentials) {
         return fetch("http://localhost:5000/getStudents", {
             method: "POST",
@@ -307,6 +309,10 @@ export function ClassList() {
                 getFiles()
             })))
     }
+    function goBack(){
+        navigate("/classes/")
+      }
+      
     if (sessionStorage.getItem('accesslevel') != 5) {
         return <Navigate replace to="/" />
     }
@@ -321,13 +327,25 @@ export function ClassList() {
                         <Typography variant="h4" fontWeight='bold'>
                             {className}
 
-                            <Button color="inherit" style={{ marginLeft: '1185px' }}>
-                                <Link to={"/classes/"}>Back to Classes</Link>
+                            <Button variant="contained" color="primary" onClick={() => goBack()} style={{ marginLeft: '1185px' }}>
+                                BACK
                             </Button>
                         </Typography>
 
                         <br />
                         <br />
+                        <Grid sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: "flex-start",
+                            p: 0,
+                            m: 0,
+                            bgcolor: 'background.paper',
+                            maxWidth: "100%",
+                            borderRadius: 1,
+                            
+                            }}>
+                        <Paper style ={{ padding: "30px 20px", height: '90%', width: '20%', marginRight: "10px"}}>
                         <Typography variant="h6" fontWeight='bold'>
                             {instructorLabel}
                         </Typography>
@@ -337,8 +355,9 @@ export function ClassList() {
                                 {`${prof[3]} ${prof[4]}`}
                             </Typography>
                         ))}
+                        </Paper>
                         <br />
-
+                        <Paper style ={{ padding: "30px 20px", height: '90%', width: '20%', marginRight: "10px"}}>
                         <Typography variant="h6" fontWeight='bold'>
                             {moderatorLabel}
                         </Typography>
@@ -356,8 +375,9 @@ export function ClassList() {
                                 </Button>
                             </div>
                         ))}
+                        </Paper>
                         <br />
-
+                        <Paper style ={{ padding: "30px 20px", height: '90%', width: '20%'}}>
                         <Typography variant="h6" fontWeight='bold'>
                             {studentLabel}
                         </Typography>
@@ -378,10 +398,12 @@ export function ClassList() {
                             </div>
 
                         ))}
+                        </Paper>
+                        </Grid>
                         <br />
                         <Divider />
                         <br />
-
+                        <Paper style ={{ padding: "30px 20px", height: '90%', width: '40%'}}>
                         <Typography variant="h5" fontWeight='bold'>
                             Add Students
                         </Typography>
@@ -421,11 +443,13 @@ export function ClassList() {
                                 Add
                             </Button>
                         </Box>
+                        
                         {errMessage && (
                             <Typography variant="body2" color="error" mt={2}>
                                 {errMessage}
                             </Typography>
                         )}
+                        </Paper>
 
                         <br />
                         <Divider />
@@ -454,6 +478,7 @@ export function ClassList() {
             ) : (<a></a>)}*/}
 
 
+                    <Paper style ={{ padding: "30px 20px", height: '90%', width: '40%'}}>
 
                         <Typography variant="h5" fontWeight='bold'>Files</Typography>
                         <br />
@@ -482,7 +507,7 @@ export function ClassList() {
                                 <object data={objectURL} type="application/pdf" width="100%" height="500px"></object>
                             </Grid>
                         ) : null}
-
+                    </Paper>
                     </Box>
 
                 </Grid>

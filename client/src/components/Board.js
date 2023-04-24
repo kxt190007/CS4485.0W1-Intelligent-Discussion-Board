@@ -154,7 +154,28 @@ export function Board() {
     }
     else {
       for (let i = 0; i < postIDs.length; i++) {
-        temp.push(
+        if(userIDs[i] == sessionStorage.getItem('token')) {
+
+            temp.push(
+              <Card sx={{ maxWidth: "100%", my: 2, maxHeight: 200 }}>
+                <CardActionArea onClick={() => handleChange(postIDs[i])}>
+
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      <option value={i}>{postTitles[i]}</option>
+                    </Typography>
+                    <Divider />
+                    <Typography variant="body2" color="text.secondary">
+                      {postBodies[i]}
+
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            )
+        }
+        else {
+            temp.push(
           <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
             <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
@@ -169,8 +190,10 @@ export function Board() {
                 </Typography>
               </CardContent>
             </CardActionArea>
+            <Button onClick={() => removePost(postIDs[i])}>Delete</Button>
           </Card>
         )
+        }
       }
     }
     setPostArr(temp)
@@ -314,12 +337,12 @@ export function Board() {
               display: 'flex',
               justifyContent: 'space-between',
               p: 0,
-              m: 1,
+              my: 1,
               bgcolor: 'background.paper',
               borderRadius: 1,
             }}>
               <h2>Discussion Board for {className}</h2>
-              <Button color="inherit" onClick={() => goBack()}>Back to classes</Button>
+              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
             </Grid>
 
             <Divider />
