@@ -575,6 +575,7 @@ function Post() {
                 <Divider />
                 <Typography variant="body1" color="text.secondary">
                   {body}
+                  <br/> Posted by: {firstName + " " + lastName}
                 </Typography>
               </div>
               <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>

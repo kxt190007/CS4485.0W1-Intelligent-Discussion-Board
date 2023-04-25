@@ -76,6 +76,10 @@ export function MyProfile() {
         }
     }
     const changePassword = async e =>{
+        console.log(password)
+        if(password == ""){
+            setErrMessage1("Password cannot be empty")
+        }
         if(password != passwordConf){
             setErrMessage1("Passwords do not match")
         }
@@ -88,6 +92,7 @@ export function MyProfile() {
             setErrMessage1("Password changed")
             document.getElementById("pass").value = ""
             document.getElementById("pass1").value = ""
+            setPassword("")
         }
     }
     if (!sessionStorage.getItem('token')) {
