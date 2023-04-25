@@ -42,6 +42,8 @@ function Post() {
   const navigate = useNavigate();
   const paperStyle = { padding: "30px 20px", height: '90%', width: '90%', margin: "20px auto" }
   const [userReply, setUserReply] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
 
 
 
@@ -89,6 +91,8 @@ function Post() {
 
     setTitle(postInfo["title"])
     setBody(postInfo["body"])
+    setFirstName(postInfo['firstName'])
+    setLastName(postInfo['lastName'])
     const commentList = token1.arr
     const userIDs = []
     const commentBodies = []
@@ -108,15 +112,14 @@ function Post() {
     setCommentTotal(token1.rows)
     console.log(token1.rows[0])
 
-    const userMap = new Map()
-    for (let i = 0; i < commentList[0].length; i++) {
-      let n = await getName({
-        userID: userIDs[i]
-      });
-      userMap.set(userIDs[i], n.name)
-    }
-    setUserNames(userMap)
-    console.log(userMap)
+    // const userMap = new Map()
+    // for (let i = 0; i < commentList[0].length; i++) {
+    //   let n = await getName({
+    //     userID: userIDs[i]
+    //   });
+    //   userMap.set(userIDs[i], n.name)
+    // }
+    // setUserNames(userMap)
     setFetchDone(true)
     const moderator = await checkModerator({
       userID: sessionStorage.getItem('token'),
@@ -184,18 +187,18 @@ function Post() {
       )
   }
 
-  async function getName(credentials) {
-    return fetch("http://localhost:5000/getCommentUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    })
-      .then(
-        res => res.json()
-      )
-  }
+  // async function getName(credentials) {
+  //   return fetch("http://localhost:5000/getCommentUser", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(credentials),
+  //   })
+  //     .then(
+  //       res => res.json()
+  //     )
+  // }
   async function createComment(credentials) {
     return fetch("http://localhost:5000/createComment", {
       method: "POST",
@@ -257,7 +260,7 @@ function Post() {
             </Typography>
 
             <Typography variant="caption text" color="text.secondary">
-              {userNames.get(curComment[1])} commented at {curComment[4]}
+              {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
 
             <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
@@ -284,7 +287,7 @@ function Post() {
             </Typography>
 
             <Typography variant="caption text" color="text.secondary">
-              {userNames.get(curComment[1])} commented at {curComment[4]}
+              {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
 
             <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
@@ -309,7 +312,7 @@ function Post() {
             </Typography>
 
             <Typography variant="caption text" color="text.secondary">
-              {userNames.get(curComment[1])} commented at {curComment[4]}
+              {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
@@ -394,16 +397,16 @@ function Post() {
       setCommentTotal(token1.rows)
       console.log(token1.rows[0])
   
-      const userMap = new Map()
-      for (let i = 0; i < commentList[0].length; i++) {
-        let n = await getName({
-          userID: userIDs[i]
-        });
-        userMap.set(userIDs[i], n.name)
-      }
-      setUserNames(userMap)
-      console.log(userMap)
-    }
+    //   const userMap = new Map()
+    //   for (let i = 0; i < commentList[0].length; i++) {
+    //     let n = await getName({
+    //       userID: userIDs[i]
+    //     });
+    //     userMap.set(userIDs[i], n.name)
+    //   }
+    //   setUserNames(userMap)
+    //   console.log(userMap)
+     }
   }
 
   const removeComment = async (index, commentIndex) => {
@@ -450,15 +453,15 @@ function Post() {
       setCommentTotal(token1.rows)
       console.log(token1.rows[0])
   
-      const userMap = new Map()
-      for (let i = 0; i < commentList[0].length; i++) {
-        let n = await getName({
-          userID: userIDs[i]
-        });
-        userMap.set(userIDs[i], n.name)
-      }
-      setUserNames(userMap)
-      console.log(userMap)
+      // const userMap = new Map()
+      // for (let i = 0; i < commentList[0].length; i++) {
+      //   let n = await getName({
+      //     userID: userIDs[i]
+      //   });
+      //   userMap.set(userIDs[i], n.name)
+      // }
+      // setUserNames(userMap)
+      // console.log(userMap)
     }
   }
 
@@ -497,6 +500,7 @@ function Post() {
             <Divider />
             <Typography variant="body1" color="text.secondary">
               {body}
+              <br/> Posted by: {firstName + " " + lastName}
             </Typography>
             <br />
             <br />
