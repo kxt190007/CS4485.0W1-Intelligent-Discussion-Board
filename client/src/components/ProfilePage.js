@@ -88,7 +88,10 @@ function ProfilePage() {
     }
   }
   const changePassword = async e => {
-    if (password != passwordConf) {
+    if(password == ""){
+      setErrMessage1("Password cannot be empty")
+    }
+    else if (password != passwordConf) {
       setErrMessage1("Passwords do not match")
     }
     else {
