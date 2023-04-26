@@ -108,6 +108,7 @@ function Home() {
     <Typography variant="h1" align="center" marginTop={40} sx={{ fontFamily: 'Segoe UI' }}>
     Welcome to Intelligent Discussion Board
     </Typography>
+    <Link to="/login">Login</Link>
     </Grid>
     )
   }
