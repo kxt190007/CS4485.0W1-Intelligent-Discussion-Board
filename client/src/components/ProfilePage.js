@@ -114,6 +114,44 @@ function ProfilePage() {
     fetchData()
   }, [])
 
+  const addToClass = async e => {
+    console.log("test")
+    const token = await addClass({
+      userID: sessionStorage.getItem('token'),
+      classCode,
+    })
+    if (token.status == "Failed") {
+      setErrMessage(token.message)
+    }
+    else {
+      const temp = token.classList
+      setClasses(temp)
+    }
+  }
+  const changePassword = async e => {
+    if(password == ""){
+      setErrMessage1("Password cannot be empty")
+    }
+    else if (password != passwordConf) {
+      setErrMessage1("Passwords do not match")
+    }
+    else {
+      const token = await changePass({
+        userID: sessionStorage.getItem('token'),
+        password,
+      })
+
+      setErrMessage1("Password changed")
+      document.getElementById("pass").value = ""
+      document.getElementById("pass1").value = ""
+    }
+  }
+
+  const handleChange = (index) => {
+    navigate("/classlist/" + classes[index][0]);
+  }
+
+
   useEffect(() => {
     async function fetchData() {
       //fetch classes list
