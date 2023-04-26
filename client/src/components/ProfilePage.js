@@ -193,30 +193,35 @@ function ProfilePage() {
     return (
       <nav>
         <Layout />
-        <Grid align='left' style={{ width: "100%", height: "200px" }}>
+        <Grid   container component="main" sx={{ height: '100vh' }}>
         <Typography gutterBottom variant="h6" component="div">
-          <Box sx={{ width:'100%', height:'20vh', bgcolor: 'background.paper', margin: "10px auto"}}>
+          <Box sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'left',
+            }}>
             <Paper style = {paperStyle}>
-              <Avatar style={avatarStyle} sx={{width: 70, height:70}} align='center'><AccountBoxIcon /></Avatar>
-              <h2>{userName}'s Profile Page</h2>
-              <h3>E-Mail: {email}</h3>
-              <br></br>
+            <Avatar style={avatarStyle} sx={{width: 70, height:70}} align='center'><AccountBoxIcon /></Avatar>
+                  <h2>{userName}'s Profile Page</h2>
+                  <h3>E-Mail: {email}</h3>
+                  <br></br>
+                  <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goChange()}>Change Password</Button>
             </Paper>
           </Box>
           <div>
           <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
             <Paper style = {paperStyle}>
-             <h2>Enrolled Classes</h2>
                <Divider/>
                  <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                 <h2>Enrolled Classes</h2>
                   <nav aria-label="enrolled classes">
                     <List>
                       {inputs}
                     </List>
                   </nav>
-                  <Button color="inherit" onClick={() => goAdd()}>Add Class</Button>
-                  <br></br>
-                  <Button color="inherit" onClick={() => goChange()}>Change Password</Button>
+                    <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goAdd()}>Add Class</Button>
                 </Box>
               </Paper>
             </Box>

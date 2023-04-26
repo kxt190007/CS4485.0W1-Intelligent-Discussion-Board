@@ -122,7 +122,7 @@ function AddClass() {
                 <TextField onChange={(e) => setClassCode(e.target.value)} />
                 <Button onClick={() => addToClass()}>Add</Button>
                 {errMessage} <br></br>
-                <Button color="inherit" onClick={() => goBack()}>Back to profile</Button>
+                <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goBack()}>Back to profile</Button>
             </div>
         </Grid>
       </nav>

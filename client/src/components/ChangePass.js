@@ -116,7 +116,7 @@ function ChangePass() {
             Confirm New Password: <br></br>
             <TextField id="pass1" onChange={(e) => setPasswordConf(e.target.value)} type='password' /> <br></br>
             <Button onClick={() => changePassword()}>Change</Button><br></br>
-            <Button color="inherit" onClick={() => goBack()}>Back to profile</Button>
+            <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goBack()}>Back to profile</Button>
             {errMessage1 != "" ? (
             <div>
             {errMessage1}<br></br>
