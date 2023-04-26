@@ -61,12 +61,13 @@ def createComment():
     postID = request.json.get('postID')
     comment = request.json.get('comment')
     date = request.json.get('date')
+    commentReply = request.json.get('commentReply')
     cursor = mysql.connection.cursor()
-    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime) VALUES (%s, %s, %s, %s)',
-                    (postID, userID, comment, date))
+    cursor.execute('INSERT INTO PostComment (PostID, UserID, CommentBody, PostTime, ReplyCommentID) VALUES (%s, %s, %s, %s, %s)',
+                    (postID, userID, comment, date, commentReply))
     mysql.connection.commit()
     cursor.close()
-    return
+    return {"status": "Success"}
     
 @app.route("/post1", methods=['POST'])
 def post1():
@@ -129,19 +130,21 @@ def post():
 def getPostTitleBody():
     postID = request.json.get('postID')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT PostBody, PostTitle FROM Posts WHERE PostID = %s', (postID,))
+    cursor.execute('SELECT PostBody, PostTitle, FirstName, LastName FROM Posts INNER JOIN Users ON Posts.UserID=Users.UserID WHERE PostID = %s', (postID,))
     rows = cursor.fetchone()
     cursor.close()
     body = rows[0]
     title = rows[1]
-    return {"title" : title, "body": body}
+    firstName = rows[2]
+    lastName = rows[3]
+    return {"title" : title, "body": body, "firstName":firstName,"lastName":lastName}
 
 
 @app.route("/getPosts", methods=['POST'])
 def getPosts():
     classID = request.json.get('classID')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM Posts WHERE ClassID = %s', (classID,))
+    cursor.execute('SELECT * FROM Posts INNER JOIN Users ON Posts.UserID=Users.UserID WHERE ClassID = %s', (classID,))
     rows = cursor.fetchall()
     print(rows)
     postIDs = []
@@ -150,6 +153,8 @@ def getPosts():
     postBodies = []
     postTitles = []
     postTags = []
+    postFirstName = []
+    postLastName = []
     for x in rows:
         postIDs.append(x[0])
         UserIDs.append(x[1])
@@ -157,7 +162,9 @@ def getPosts():
         postBodies.append(x[3])
         postTitles.append(x[4])
         postTags.append(x[5])
-    arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags]
+        postFirstName.append(x[11])
+        postLastName.append(x[12])
+    arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags, postFirstName, postLastName]
     cursor.close()
     return arr
 
@@ -165,18 +172,23 @@ def getPosts():
 def getPostComments():
     postID = request.json.get('postID')
     cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM PostComment WHERE PostID = %s', (postID,))
+    cursor.execute('SELECT * FROM PostComment INNER JOIN Users ON PostComment.UserID=Users.UserID WHERE PostID = %s', (postID,))
     rows = cursor.fetchall()
     userIDs = []
+    commentIDs = []
     commentBodies = []
     postTimes = []
+    commentReplies = []
     for x in rows:
         userIDs.append(x[1])
+        commentIDs.append(x[2])
         commentBodies.append(x[3])
         postTimes.append(x[4])
-    arr = [userIDs, commentBodies, postTimes]
+        commentReplies.append(x[5])
 
-    return arr
+    arr = [userIDs, commentBodies, postTimes, commentIDs, commentReplies]
+
+    return {"status": "Success", "arr": arr, "rows": rows}
 
 
 
@@ -202,17 +214,17 @@ def createUser():
         return {"token" : rows[0], "password" : rows[1], "email" : rows[2], "name" : rows[3], "lastname" : rows[4], "accesslevel" : rows[5]}
     return {"token" : ""}
 
-@app.route("/getCommentUser", methods = ['POST'])
-def getCommentUser():
-    userID = request.json.get('userID')
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT FirstName, LastName FROM Users WHERE UserID = %s', (userID,))
-    rows = cursor.fetchone()
-    cursor.close()
-    first = rows[0]
-    last = rows[1]
-    fullname = str(first + " " + last)
-    return {"name" : fullname}
+# @app.route("/getCommentUser", methods = ['POST'])
+# def getCommentUser():
+#     userID = request.json.get('userID')
+#     cursor = mysql.connection.cursor()
+#     cursor.execute('SELECT FirstName, LastName FROM Users WHERE UserID = %s', (userID,))
+#     rows = cursor.fetchone()
+#     cursor.close()
+#     first = rows[0]
+#     last = rows[1]
+#     fullname = str(first + " " + last)
+#     return {"name" : fullname}
 @app.route("/createClass", methods = ['POST'])
 def createClass():
     className = request.json.get('className')
@@ -372,6 +384,21 @@ def removePost():
     cursor.execute('SET SQL_SAFE_UPDATES = 1')
     mysql.connection.commit()
     return {"status":"Success"}
+
+@app.route("/removeComment", methods = ['POST'])
+def removeComment():
+    postID = request.json.get('postID')
+    postID = postID.get("postID")
+    commentID = request.json.get('commentID')
+    print("this is postid " + str(postID))
+    print("this is commentid  " + str(commentID))
+    cursor = mysql.connection.cursor()
+    cursor.execute('SET SQL_SAFE_UPDATES = 0')
+    cursor.execute('DELETE FROM PostComment WHERE PostID = "{}" AND CommentID = "{}"'.format(postID, commentID))
+    cursor.execute('SET SQL_SAFE_UPDATES = 1')
+    mysql.connection.commit()
+    return {"status":"Success"}
+
 
 @app.route("/checkModerator", methods = ['POST'])
 def checkModerator():

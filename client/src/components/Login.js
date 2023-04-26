@@ -75,14 +75,14 @@ function Login() {
     }
   }
 
- 
+  
   const paperStyle = { padding: "70px 20px", height: '40vh', width: 450, margin: "110px auto" }
   const avatarStyle = { backgroundColor: '#ef6c00' }
   const btnStyle = { margin: '40px 0'}
 
   return (
     
-    <Grid>
+    <Grid sx={{backgroundImage:'url(https://utdmercury.com/wp-content/uploads/2019/08/utdallas_min-1024x683.jpg)'}}>
       <Box sx={{ flexGrow: 1}}> 
       <AppBar position="static" style={{ background: '#ef6c00' }}>
         <Toolbar>
