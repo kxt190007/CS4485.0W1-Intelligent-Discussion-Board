@@ -48,23 +48,31 @@ def get_response(prompt):
 
 
 def ask_question(postTitle, postBody, classID, pdfName):
-    syllabus = "files/" + str(classID) + ".pdf"
-    #syllabus = "files/" + classID + "/" + "pdfName"
+    thislist = []
+    for var in pdfName:
+        thislist.append(var[0])
+    check = "error"
+    print("printin pdfname" + str(thislist))
+    #syllabus = "files/" + str(classID) + ".pdf"
+    for name in thislist:
+        print(name)
+        name = str(name)
+        syllabus = "files/" + str(classID) + "/" + name
     #/ flask - server / files / classID / pdfname
-    try:
-        syllabusText = extract_text(syllabus)
-        new_question = "A student has made a new question on a discussion board. \n given this syllabus: " + syllabusText + "\n end of syllabus \n" + \
-                       "answer the following question. Post Title: " + postTitle + "\n end Post Title \n Post Body: " + postBody + " ?"
-        response = get_response(INSTRUCTIONS + new_question)
-        response = response.lstrip()
-        print(response)
-        if response == "I do not think that is on the syllabus.":
-            return "error"
+        try:
+            syllabusText = extract_text(syllabus)
+            new_question = "A student has made a new question on a discussion board. \n given this syllabus: " + syllabusText + "\n end of syllabus \n" + \
+                           "answer the following question. Post Title: " + postTitle + "\n end Post Title \n Post Body: " + postBody + " ?"
+            response = get_response(INSTRUCTIONS + new_question)
+            response = response.lstrip()
+            print(response)
+            if response == "I do not think that is on the syllabus.":
+                print("not here")
+            else:
+                check = response
+        except FileNotFoundError:
+            print("fail")
         else:
-            return response
-    except FileNotFoundError:
-        print("fail")
-    else:
-        pass
-    return "error"
+            pass
+    return check
 

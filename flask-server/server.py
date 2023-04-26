@@ -112,10 +112,11 @@ def post():
                 cursor.close()
                 return {"status": "Success", "message": "{}".format(link)}
         cursor.execute('Select FileName FROM Resource WHERE classID = "{}"'.format(classID))
-        pdfName = cursor.fetchone()
+        pdfName = cursor.fetchall()
         pdfName = pdfName
-        print(pdfName)
+        print("classid")
         print(classID)
+        print(pdfName)
         response = ask_question(postTitle, postBody, classID, pdfName)
         if response == "error":
             cursor.close()
