@@ -251,25 +251,19 @@ function Post() {
     if (sessionStorage.getItem('accesslevel') == 5 || moderator == 'yes') {
     comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
-
           <CardContent >
-
             <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {curComment[3]}
             </Typography>
-
             <Typography variant="caption text" color="text.secondary">
               {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
-
             <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
             <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
-        </CardActionArea>
       </Card>
     )
     }
