@@ -18,7 +18,7 @@ function AddClass() {
     const [passwordConf, setPasswordConf] = useState("")
     const [errMessage1, setErrMessage1] = useState("")
     const [fetchDone, setFetchDone] = useState(false)
-
+    
     useEffect(() => {
     async function fetchData() {
       const token = await getClass({
