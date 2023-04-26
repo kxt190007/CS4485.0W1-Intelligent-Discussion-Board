@@ -132,7 +132,7 @@ function CreateClass() {
             
             {error && <Typography color="error">{error}</Typography>}
             
-            <Button variant="contained" type="submit">
+            <Button variant="contained" sx={{ backgroundColor: 'orange' }} type="submit">
               Create Class
             </Button>
           </form>
@@ -149,7 +149,7 @@ function CreateClass() {
               value={additionalEmail}
               onChange={(e) => setAdditionalEmail(e.target.value)}
             />
-            <Button variant="contained" onClick={handleChange}>
+            <Button sx={{ backgroundColor: 'orange' }} variant="contained" onClick={handleChange}>
               Add
             </Button>
             {errMessage && (

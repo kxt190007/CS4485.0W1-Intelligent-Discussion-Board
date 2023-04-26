@@ -82,7 +82,7 @@ function Login() {
 
   return (
     
-    <Grid sx={{backgroundImage:'url(https://utdmercury.com/wp-content/uploads/2019/08/utdallas_min-1024x683.jpg)'}}>
+    <Grid sx={{backgroundImage:'url(https://utdmercury.com/wp-content/uploads/2019/08/utdallas_min-1024x683.jpg)', backgroundSize: 'cover', height: '100vh'}}>
       <Box sx={{ flexGrow: 1}}> 
       <AppBar position="static" style={{ background: '#ef6c00' }}>
         <Toolbar>
