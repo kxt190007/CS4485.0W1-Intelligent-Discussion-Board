@@ -105,7 +105,7 @@ function Home() {
         </Toolbar>
       </AppBar>
     </Box>
-    <Typography variant="h1" align="center" marginTop={5} sx={{ fontFamily: 'Segoe UI' }}>
+    <Typography variant="h1" align="center" marginTop={3} sx={{ fontFamily: 'Segoe UI', color:'white' }}>
     Welcome to Intelligent Discussion Board
     </Typography>
     </Grid>

@@ -494,6 +494,8 @@ function Post() {
             <Divider />
             <Typography variant="body1" color="text.secondary">
               {body}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
               <br/> Posted by: {firstName + " " + lastName}
             </Typography>
             <br />

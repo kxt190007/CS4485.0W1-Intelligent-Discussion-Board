@@ -145,8 +145,11 @@ export function Board() {
                 <Divider />
                 <Typography variant="body2" color="text.secondary" maxHeight = "40px" overflow="hidden">
                   {postBodies[i]}
+                </Typography >
+                <br/> 
+                <Typography variant="caption" color="text.secondary">
+                Posted by: {postFirstName[i] + " "  + postLastName[i]}
                 </Typography>
-                <br/> Posted by: {postFirstName[i] + " "  + postLastName[i]}
               </CardContent>
             </CardActionArea>
             <Button color="error" onClick={() => removePost(postIDs[i])}>Delete</Button>
