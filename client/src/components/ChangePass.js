@@ -17,7 +17,6 @@ function ChangePass() {
     const [errMessage1, setErrMessage1] = useState("")
     const [fetchDone, setFetchDone] = useState(false)
 
-
     async function getClass(credentials) {
         return fetch("http://localhost:5000/getClasses", {
           method: "POST",

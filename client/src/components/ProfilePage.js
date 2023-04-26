@@ -147,10 +147,6 @@ function ProfilePage() {
     }
   }
 
-  const handleChange = (index) => {
-    navigate("/classlist/" + classes[index][0]);
-  }
-
 
   useEffect(() => {
     async function fetchData() {
