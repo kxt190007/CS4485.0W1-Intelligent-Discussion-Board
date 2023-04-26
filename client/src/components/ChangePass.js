@@ -13,8 +13,6 @@ function ChangePass() {
     const [classes, setClasses] = useState([[]]);
     const [userName, setUserName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [classCode, setClassCode] = useState("")
-    const [errMessage, setErrMessage] = useState("")
     const [passwordConf, setPasswordConf] = useState("")
     const [errMessage1, setErrMessage1] = useState("")
     const [fetchDone, setFetchDone] = useState(false)

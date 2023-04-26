@@ -5,6 +5,10 @@ import Layout from './Layout.js'
 import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Typography, CircularProgress } from '@mui/material'
 import Box from '@mui/material/Box';
 import { Link, Navigate } from 'react-router-dom'
+import ListItem from '@mui/joy/ListItem';
+import { ListItemText, ListItemButton, Divider } from '@mui/material'
+import List from '@mui/joy/List';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 function ProfilePage() {
   const [email, setEmail] = useState("");
@@ -18,6 +22,49 @@ function ProfilePage() {
   const [passwordConf, setPasswordConf] = useState("")
   const [errMessage1, setErrMessage1] = useState("")
   const [fetchDone, setFetchDone] = useState(false)
+  const [inputs, setInputs] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      //fetch classes list
+      const token = await fetch("http://localhost:5000/getClasses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        userID: sessionStorage.getItem('token')
+      }),
+    })
+      .then((response) => response.json())
+      const classList = token.classList
+      setClasses(classList)
+      const temp = [];
+      for(let i = 0; i<classList.length; i++){
+        temp.push(
+          <ListItem disablePadding onClick = {() => handleChange(classList[i][0])}>
+            <ListItemButton >
+              <ListItemText primary={classList[i][1]}/>
+            </ListItemButton>
+          </ListItem>
+        );
+        setInputs(temp);
+        console.log("inputs:");
+        console.log(inputs);
+      }
+      const userData = sessionStorage.getItem('name')
+      console.log(userData);
+      setUserName(userData);
+      console.log("classlist length:")
+      console.log(inputs.length)
+      setFetchDone(true)
+    }
+    fetchData();
+  }, []);
+
+  const handleChange = (classID) => {
+    navigate("/board/" + classID);
+  }
 
   async function getClass(credentials) {
     return fetch("http://localhost:5000/getClasses", {
@@ -66,39 +113,6 @@ function ProfilePage() {
     }
     fetchData()
   }, [])
-  const addToClass = async e => {
-    console.log("test")
-    const token = await addClass({
-      userID: sessionStorage.getItem('token'),
-      classCode,
-    })
-    if (token.status == "Failed") {
-      setErrMessage(token.message)
-    }
-    else {
-      const temp = token.classList
-      setClasses(temp)
-    }
-  }
-  const changePassword = async e => {
-    if (password != passwordConf) {
-      setErrMessage1("Passwords do not match")
-    }
-    else {
-      const token = await changePass({
-        userID: sessionStorage.getItem('token'),
-        password,
-      })
-
-      setErrMessage1("Password changed")
-      document.getElementById("pass").value = ""
-      document.getElementById("pass1").value = ""
-    }
-  }
-
-  const handleChange = (index) => {
-    navigate("/classlist/" + classes[index][0]);
-  }
 
   useEffect(() => {
     async function fetchData() {
@@ -112,19 +126,6 @@ function ProfilePage() {
     fetchData();
 
   }, []);
-
-  async function userProfile(credentials) {
-    return fetch("http://localhost:5000/profile", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    })
-      .then(
-        res => res.json()
-      )
-  }
 
   async function getClass(credentials) {
     return fetch("http://localhost:5000/getClasses", {
@@ -157,26 +158,33 @@ function ProfilePage() {
   else if (fetchDone) {
     return (
       <nav>
-
         <Layout />
         <Grid align='left' style={{ width: "100%", height: "200px" }}>
         <Typography gutterBottom variant="h6" component="div">
-          <h2>{userName}'s Profile Page</h2>
-          <h3>E-Mail: {email}</h3>
+          <Box sx={{ width:'100%', height:'20vh', bgcolor: 'background.paper', margin: "10px auto"}}>
+            <Paper style = {paperStyle}>
+              <Avatar style={avatarStyle} sx={{width: 70, height:70}} align='center'><AccountBoxIcon /></Avatar>
+              <h2>{userName}'s Profile Page</h2>
+              <h3>E-Mail: {email}</h3>
+              <br></br>
+            </Paper>
+          </Box>
           <div>
-            <h2>Enrolled Classes</h2>
-            <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-              <nav aria-label="main mailbox folders">
-
-                {classes.map((classInfo) => (
-                  <div>{classInfo[1]}
-                  </div>
-                ))}
-                <br></br>
-                <Button color="inherit" onClick={() => goAdd()}>Add Class</Button>
-                <br></br>
-                <Button color="inherit" onClick={() => goChange()}>Change Password</Button>
-              </nav>
+          <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+            <Paper style = {paperStyle}>
+             <h2>Enrolled Classes</h2>
+               <Divider/>
+                 <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                  <nav aria-label="enrolled classes">
+                    <List>
+                      {inputs}
+                    </List>
+                  </nav>
+                  <Button color="inherit" onClick={() => goAdd()}>Add Class</Button>
+                  <br></br>
+                  <Button color="inherit" onClick={() => goChange()}>Change Password</Button>
+                </Box>
+              </Paper>
             </Box>
           </div>
           </Typography>
