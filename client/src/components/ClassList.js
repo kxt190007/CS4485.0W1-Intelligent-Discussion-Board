@@ -321,7 +321,7 @@ export function ClassList() {
                         <Typography variant="h4" fontWeight='bold'>
                             {className}
 
-                            <Button variant="contained" color="primary" onClick={() => goBack()} style={{ marginLeft: '1185px' }}>
+                            <Button variant="contained" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()} style={{ marginLeft: '1185px' }}>
                                 BACK
                             </Button>
                         </Typography>
@@ -361,7 +361,7 @@ export function ClassList() {
                                 <Typography variant="body1" component="div">
                                     {`${moderator[3]} ${moderator[4]}`}
                                 </Typography>
-                                <Button variant="contained" color="primary" size="small" onClick={() => demoteStudent(index)}>
+                                <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={() => demoteStudent(index)}>
                                     Demote to student
                                 </Button> <br></br>
                                 <Button variant="contained" color="error" size="small" onClick={() => removeClassM(index)}>
