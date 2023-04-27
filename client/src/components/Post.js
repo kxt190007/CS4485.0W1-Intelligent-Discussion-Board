@@ -569,10 +569,9 @@ function Post() {
                   {title}
                 </Typography>
                 <Divider />
-                <Typography variant="body1" color="text.secondary">
-                  {body}
-                  <br/> Posted by: {firstName + " " + lastName}
-                </Typography>
+                <Typography variant="caption" color="text.secondary">
+              <br/> Posted by: {firstName + " " + lastName}
+            </Typography>
               </div>
               <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
@@ -617,7 +616,7 @@ function Post() {
       <Grid >
         <Layout />
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '300px' }}>
-          <CircularProgress color="success" size={80} />
+        <CircularProgress style={{ color: 'orange' }} size={80}/>
         </Box>
       </Grid>
     )
