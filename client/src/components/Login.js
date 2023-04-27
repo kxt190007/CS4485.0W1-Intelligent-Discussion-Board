@@ -51,14 +51,11 @@ function Login() {
       email,
       password
     });
-    console.log(token.token);
     if(token.token !== ''){
       const token1 = await getClass({
         userID : token.token
       });
       const user = new UserProfile(token.token, token.email, token.password, token.name, token.lastname, token1.classList, token.accesslevel);
-      console.log(user.userID)
-      console.log(user)
       sessionStorage.setItem('user', JSON.stringify(user))
       sessionStorage.setItem('token', user.userID);
       sessionStorage.setItem('email', user.email);
@@ -67,7 +64,6 @@ function Login() {
       sessionStorage.setItem('password', user.password);
       sessionStorage.setItem('accesslevel', user.accesslevel);
       sessionStorage.setItem('classes', JSON.stringify(user.classes));
-      console.log(sessionStorage.getItem('classes'));
       navigate("/");
     }
     else{
@@ -113,7 +109,7 @@ function Login() {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/login" size="large">Login</Button>
+          <Button color="inherit" href="/#/login" size="large">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
@@ -144,7 +140,7 @@ function Login() {
         <Typography variant="caption" display="block" gutterBottom sx={{ ml: 1 }}>
         Not a user yet?
       </Typography>
-        <Button color="secondary" href="/register">
+        <Button color="secondary" href="/#/register">
           Sign up here!
           </Button>
         

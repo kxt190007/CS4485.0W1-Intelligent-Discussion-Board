@@ -50,14 +50,9 @@ function Home() {
           </ListItem>
         );
         setInputs(temp);
-        console.log("inputs:");
-        console.log(inputs);
       }
       const userData = sessionStorage.getItem('name')
-      console.log(userData);
       setUserName(userData);
-      console.log("classlist length:")
-      console.log(inputs.length)
       setFetchDone(true)
     }
     fetchData();
@@ -82,7 +77,7 @@ function Home() {
             sx={{ mr: 2 }}
           >
             <HomeIcon 
-            href="/login"/>
+            href="/#/login"/>
           </IconButton>
           <Typography
             variant="h6"
@@ -101,7 +96,7 @@ function Home() {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/login">Login</Button>
+          <Button color="inherit" href="/#/login">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>

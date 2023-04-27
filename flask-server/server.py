@@ -82,12 +82,12 @@ def post1():
         (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
     newID = cursor.lastrowid
-    link = 'localhost:3000/board/' + str(classID) + '/post/' + str(newID)
+    link = 'localhost:3000/#/board/' + str(classID) + '/post/' + str(newID)
     print(link)
     cursor.execute('UPDATE Posts SET PostLink = %s WHERE PostID = %s', (link,newID,))
     mysql.connection.commit()
     cursor.close()
-    return {"status": "Success", "message": "message"}
+    return {"status": "Success", "message": "message", "classID":classID, "newID":newID}
 
 @app.route("/post", methods=['POST'])
 def post():
@@ -112,10 +112,11 @@ def post():
                 cursor.close()
                 return {"status": "Success", "message": "{}".format(link)}
         cursor.execute('Select FileName FROM Resource WHERE classID = "{}"'.format(classID))
-        pdfName = cursor.fetchone()
+        pdfName = cursor.fetchall()
         pdfName = pdfName
-        print(pdfName)
+        print("classid")
         print(classID)
+        print(pdfName)
         response = ask_question(postTitle, postBody, classID, pdfName)
         if response == "error":
             cursor.close()
@@ -166,7 +167,7 @@ def getPosts():
         postLastName.append(x[12])
     arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags, postFirstName, postLastName]
     cursor.close()
-    return arr
+    return {"status":"Success","arr":arr}
 
 @app.route("/getPostComments", methods = ['POST'])
 def getPostComments():

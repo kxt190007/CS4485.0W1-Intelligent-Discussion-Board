@@ -32,7 +32,6 @@ function AddClass() {
      }, [])
 
     const addToClass = async e => {
-    console.log("test")
     const token = await addClass({
       userID: sessionStorage.getItem('token'),
       classCode,

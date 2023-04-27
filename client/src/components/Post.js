@@ -17,7 +17,6 @@ import "./Post.css"
 
 
 export async function loader({ params }) {
-  console.log(params.postID)
   //const classInfo = await getClass(params.classID);
   return [params.postID, params.classID]
 }
@@ -49,7 +48,6 @@ function Post() {
 
 
   useEffect(() => {
-    console.log(title)
     fetchData();
 
   }, []);
@@ -68,8 +66,6 @@ function Post() {
       .then((response) => response.json())
     const temp1 = token.classList
     setClassList(temp1)
-    console.log(temp1)
-    console.log(classID)
     var inClass = false
     for (let i = 0; i < temp1.length; i++) {
       if (temp1[i][0] == classID) {
@@ -77,8 +73,6 @@ function Post() {
       }
     }
     if (!inClass) {
-      console.log(token.classList)
-      console.log("Exiting")
       navigate("/")
     }
     const token1 = await getPostComments({
@@ -110,7 +104,6 @@ function Post() {
     setPostTimes(postTimes)
     setCommentIDs(commentIDs)
     setCommentTotal(token1.rows)
-    console.log(token1.rows[0])
 
     // const userMap = new Map()
     // for (let i = 0; i < commentList[0].length; i++) {
@@ -126,8 +119,6 @@ function Post() {
       classID,
     })
     setModerator(moderator.message)
-    console.log("checking mod")
-    console.log(moderator.message)
   }
 
   async function checkModerator(credentials) {
@@ -146,7 +137,6 @@ function Post() {
 
 
   async function remove(credentials) {
-    console.log("remove is called")
     return fetch("http://localhost:5000/removeComment", {
       method: "POST",
       headers: {
@@ -387,7 +377,6 @@ function Post() {
       setPostTimes(postTimes)
       setCommentIDs(commentIDs)
       setCommentTotal(token1.rows)
-      console.log(token1.rows[0])
   
     //   const userMap = new Map()
     //   for (let i = 0; i < commentList[0].length; i++) {
@@ -397,13 +386,10 @@ function Post() {
     //     userMap.set(userIDs[i], n.name)
     //   }
     //   setUserNames(userMap)
-    //   console.log(userMap)
      }
   }
 
   const removeComment = async (index, commentIndex) => {
-    console.log(index)
-    console.log(commentIndex)
     await remove({
       postID: index,
       commentID: commentIndex,
@@ -443,7 +429,6 @@ function Post() {
       setPostTimes(postTimes)
       setCommentIDs(commentIDs)
       setCommentTotal(token1.rows)
-      console.log(token1.rows[0])
   
       // const userMap = new Map()
       // for (let i = 0; i < commentList[0].length; i++) {
@@ -453,7 +438,6 @@ function Post() {
       //   userMap.set(userIDs[i], n.name)
       // }
       // setUserNames(userMap)
-      // console.log(userMap)
     }
   }
 

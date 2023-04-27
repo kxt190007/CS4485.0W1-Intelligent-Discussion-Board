@@ -15,6 +15,7 @@ import Classes from "./components/Classes"
 import CreateClass from "./components/CreateClass"
 import {
   createBrowserRouter,
+  createHashRouter,
   RouterProvider,
 } from "react-router-dom";
 import ClassList, {
@@ -25,7 +26,7 @@ import AddClass from "./components/AddClass";
 import ChangePass from "./components/ChangePass";
 import MyProfile from "./components/MyProfile"
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     children:[

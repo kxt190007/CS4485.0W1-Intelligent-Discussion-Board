@@ -59,7 +59,6 @@ function Create() {
           <MenuItem value={classList[i][0]}>{classList[i][1]}</MenuItem>
         );
         setInputs(temp);
-        console.log(inputs);
       }
       setFetchDone(true)
     }
@@ -93,7 +92,6 @@ function Create() {
   }
 
   const handleSubmit = async e => {
-    console.log(inputs)
     e.preventDefault();
     if (chosenclass === "" || chosenclass === "Select a Class") {
       setErrorText("Please select a class.")
@@ -106,16 +104,15 @@ function Create() {
       postTag,
       chosenclass
     });
-    console.log(token.message)
     if (token.message == "message") {
-      await createPost1({
+      const token1 = await createPost1({
         userID: sessionStorage.getItem('token'),
         postContent,
         postTitle,
         postTag,
         chosenclass
       });
-      navigate('/')
+      navigate('/board/' + token1.classID + '/post/' + token1.newID)
     }
     if (token.message.includes("localhost")) {
       setLink(token.message)
@@ -127,17 +124,14 @@ function Create() {
   }
 
   const handlePop = async e => {
-    console.log(inputs)
-    console.log("a")
-    await createPost1({
+    const token = await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
       postTitle,
       postTag,
       chosenclass
     });
-    console.log("a")
-    navigate("/")
+    navigate('/board/' + token.classID + '/post/' + token.newID)
   }
 
 

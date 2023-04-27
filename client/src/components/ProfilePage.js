@@ -49,14 +49,9 @@ function ProfilePage() {
           </ListItem>
         );
         setInputs(temp);
-        console.log("inputs:");
-        console.log(inputs);
       }
       const userData = sessionStorage.getItem('name')
-      console.log(userData);
       setUserName(userData);
-      console.log("classlist length:")
-      console.log(inputs.length)
       setFetchDone(true)
     }
     fetchData();
@@ -115,7 +110,6 @@ function ProfilePage() {
   }, [])
 
   const addToClass = async e => {
-    console.log("test")
     const token = await addClass({
       userID: sessionStorage.getItem('token'),
       classCode,
