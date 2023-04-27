@@ -262,17 +262,13 @@ function Post() {
 
         comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-
           <CardContent >
-
             <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {curComment[3]}
             </Typography>
-
             <Typography variant="caption text" color="text.secondary">
               {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
-
             <Button color="error" onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
@@ -285,14 +281,10 @@ function Post() {
         else {
             comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
-
           <CardContent >
-
             <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {curComment[3]}
             </Typography>
-
             <Typography variant="caption text" color="text.secondary">
               {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
@@ -301,7 +293,6 @@ function Post() {
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
             <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
-        </CardActionArea>
       </Card>
         )
         }
@@ -489,11 +480,7 @@ function Post() {
               <Box pr={2} >Comments</Box>
             </Typography>
             <Divider />
-
-
             {comments1}
-
-
             <Divider />
             <Box sx={{ my: 2 }}>
               <form
@@ -510,9 +497,6 @@ function Post() {
                 <Button type="submit" variant="contained" sx={{ marginTop: 2 ,backgroundColor: 'orange'}} >Submit</Button>
               </form>
             </Box>
-
-
-
           </Paper>
         </Grid>
       </nav>
@@ -558,8 +542,6 @@ function Post() {
               <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
             <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
-              <CardActionArea onClick={(e) => handleChange(e)}>
-
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="div">
                     It's quiet here... Be the first to comment!
@@ -567,7 +549,6 @@ function Post() {
                   <Divider />
 
                 </CardContent>
-              </CardActionArea>
             </Card>
             <Divider />
             <Box sx={{ my: 2 }}>
