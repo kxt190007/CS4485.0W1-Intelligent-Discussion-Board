@@ -82,12 +82,12 @@ def post1():
         (userID, postBody, postTitle, postTag, classID))
     mysql.connection.commit()
     newID = cursor.lastrowid
-    link = 'localhost:3000/board/' + str(classID) + '/post/' + str(newID)
+    link = 'localhost:3000/#/board/' + str(classID) + '/post/' + str(newID)
     print(link)
     cursor.execute('UPDATE Posts SET PostLink = %s WHERE PostID = %s', (link,newID,))
     mysql.connection.commit()
     cursor.close()
-    return {"status": "Success", "message": "message"}
+    return {"status": "Success", "message": "message", "classID":classID, "newID":newID}
 
 @app.route("/post", methods=['POST'])
 def post():

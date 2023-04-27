@@ -105,14 +105,14 @@ function Create() {
       chosenclass
     });
     if (token.message == "message") {
-      await createPost1({
+      const token1 = await createPost1({
         userID: sessionStorage.getItem('token'),
         postContent,
         postTitle,
         postTag,
         chosenclass
       });
-      navigate('/')
+      navigate('/board/' + token1.classID + '/post/' + token1.newID)
     }
     if (token.message.includes("localhost")) {
       setLink(token.message)
@@ -124,14 +124,14 @@ function Create() {
   }
 
   const handlePop = async e => {
-    await createPost1({
+    const token = await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
       postTitle,
       postTag,
       chosenclass
     });
-    navigate("/")
+    navigate('/board/' + token.classID + '/post/' + token.newID)
   }
 
 
