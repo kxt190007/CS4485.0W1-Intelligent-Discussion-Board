@@ -20,7 +20,7 @@ Do not use any external URLs in your answer. Do not refer to any blogs in your a
 
 
 TEMPERATURE = 0.5
-MAX_TOKENS = 500
+MAX_TOKENS = 100
 FREQUENCY_PENALTY = 0
 PRESENCE_PENALTY = 0.6
 
@@ -62,7 +62,7 @@ def ask_question(postTitle, postBody, classID, pdfName):
         try:
             syllabusText = extract_text(syllabus)
             new_question = "A student has made a new question on a discussion board. \n given this syllabus: " + syllabusText + "\n end of syllabus \n" + \
-                           "answer the following question. Post Title: " + postTitle + "\n end Post Title \n Post Body: " + postBody + " ?"
+                           "answer the following question. Post Title: " + postTitle + "\n end Post Title \n Post Body: " + postBody + " ?" + " end post body"
             response = get_response(INSTRUCTIONS + new_question)
             response = response.lstrip()
             print(response)

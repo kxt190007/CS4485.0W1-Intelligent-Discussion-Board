@@ -22,6 +22,7 @@ function Create() {
   const [errorText, setErrorText] = useState("");
   const [inputs, setInputs] = useState([]);
   const [fetchDone, setFetchDone] = useState(false)
+  const [waitAi, setWaitAi] = useState(false)
   const navigate = useNavigate();
 
   async function navHome() {
@@ -97,6 +98,7 @@ function Create() {
       setErrorText("Please select a class.")
       return;
     }
+    setWaitAi(true)
     const token = await createPost({
       userID: sessionStorage.getItem('token'),
       postContent,
@@ -120,6 +122,7 @@ function Create() {
     else {
       setMessage(token.message)
     }
+    setWaitAi(false)
     togglepopup();
   }
 
@@ -157,11 +160,12 @@ function Create() {
     return (
 
       <Grid>
-
+        
         <Layout />
+        
         <Paper elevation={10} style={paperStyle}>
-
-          <>
+              <CircularProgress  className = {waitAi ? "loadCircle" : "loadCircleGone"} style={{ color: 'orange' }} size={80} />
+            <>
             {popup && (
               <div className="popup">
                 <div onClick={togglepopup} className="overlay"></div>
@@ -202,8 +206,6 @@ function Create() {
               variant="standard"
               onChange={(e) => setPostTitle(e.target.value)}
             ></TextField>
-
-
             <br />
             <TextareaAutosize
               name="postcontent"
@@ -214,6 +216,7 @@ function Create() {
               rowsMin={6}
               onChange={(e) => setPostContent(e.target.value)}
               style={{ width: '100%', height: '360px' }}
+              
             />
 
 
@@ -250,18 +253,19 @@ function Create() {
 
       </Grid>
 
+      
 
 
     )
   }
-  else{
+  else {
     return (
-    <Grid >
-    <Layout/>
-    <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-    <CircularProgress style={{ color: 'orange' }} size={80}/>
-    </Box>
-    </Grid>
+      <Grid >
+        <Layout />
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '300px' }}>
+          <CircularProgress style={{ color: 'orange' }} size={80} />
+        </Box>
+      </Grid>
     )
   }
 }

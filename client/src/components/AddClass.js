@@ -19,17 +19,6 @@ function AddClass() {
     const [errMessage1, setErrMessage1] = useState("")
     const [fetchDone, setFetchDone] = useState(false)
     
-    useEffect(() => {
-    async function fetchData() {
-      const token = await getClass({
-        userID: sessionStorage.getItem('token'),
-      })
-      const temp = token.classList
-      setClasses(temp)
-      setFetchDone(true)
-    }
-    fetchData()
-     }, [])
 
     const addToClass = async e => {
     const token = await addClass({
@@ -43,24 +32,13 @@ function AddClass() {
       const temp = token.classList
       setClasses(temp)
     }
+    goBack()
   }
 
   const handleChange = (index) => {
     navigate("/classlist/" + classes[index][0]);
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      //fetch classes list
-      const classList = JSON.parse(sessionStorage.getItem('classes'))
-      setClasses(classList);
-      setUserName(sessionStorage.getItem('name'))
-      setEmail(sessionStorage.getItem('email'))
-      setLastName(sessionStorage.getItem('lastName'))
-    }
-    fetchData();
-
-  }, []);
 
   async function addClass(credentials) {
     return fetch("http://localhost:5000/addToClass1", {
@@ -111,7 +89,7 @@ function AddClass() {
   if (!sessionStorage.getItem('token')) {
     return <Navigate replace to="/" />
   }
-  else if (fetchDone) {
+  else{
     return (
         <nav>
         <Layout />
@@ -127,16 +105,7 @@ function AddClass() {
       </nav>
     )
   }
-  else{
-    return (
-      <Grid >
-      <Layout/>
-      <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-      <CircularProgress style={{ color: 'orange' }} size={80}/>
-      </Box>
-      </Grid>
-      )
-  }
+
 }
 
 export default AddClass
