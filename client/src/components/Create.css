@@ -6,7 +6,9 @@
     right: 0;
     bottom: 0;
     position: fixed;
+    z-index: 888;
 }
+
 
 .overlay {
     background: rgba(49,49,49,0.5);
@@ -21,5 +23,6 @@
     border-radius: 3px;
     max-width: 600px;
     min-width: 300px;
+    z-index: 999
 }
 
