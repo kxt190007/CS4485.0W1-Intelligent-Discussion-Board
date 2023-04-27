@@ -194,7 +194,7 @@ export function Board() {
                 <br/> Posted by: {postFirstName[i] + " "  + postLastName[i]}
               </CardContent>
             </CardActionArea>
-            <Button onClick={() => removePost(postIDs[i])}>Delete</Button>
+            <Button color="error" onClick={() => removePost(postIDs[i])}>Delete</Button>
           </Card>
         )
         }
