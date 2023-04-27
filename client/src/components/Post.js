@@ -262,7 +262,6 @@ function Post() {
 
         comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
 
           <CardContent >
 
@@ -280,7 +279,6 @@ function Post() {
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
             <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
-        </CardActionArea>
       </Card>
     )
         }
@@ -553,10 +551,9 @@ function Post() {
                   {title}
                 </Typography>
                 <Divider />
-                <Typography variant="body1" color="text.secondary">
-                  {body}
-                  <br/> Posted by: {firstName + " " + lastName}
-                </Typography>
+                <Typography variant="caption" color="text.secondary">
+              <br/> Posted by: {firstName + " " + lastName}
+            </Typography>
               </div>
               <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
@@ -601,7 +598,7 @@ function Post() {
       <Grid >
         <Layout />
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '300px' }}>
-          <CircularProgress color="success" size={80} />
+        <CircularProgress style={{ color: 'orange' }} size={80}/>
         </Box>
       </Grid>
     )

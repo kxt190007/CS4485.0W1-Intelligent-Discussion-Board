@@ -230,7 +230,7 @@ function ProfilePage() {
       <Grid >
       <Layout/>
       <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-      <CircularProgress color="success" size={80}/>
+      <CircularProgress style={{ color: 'orange' }} size={80}/>
       </Box>
       </Grid>
       )
