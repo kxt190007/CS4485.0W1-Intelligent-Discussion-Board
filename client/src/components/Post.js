@@ -465,7 +465,7 @@ function Post() {
               <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
             <Divider />
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1">
               {body}
             </Typography>
             <Typography variant="caption" color="text.secondary">
