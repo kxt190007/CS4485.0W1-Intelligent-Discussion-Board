@@ -266,7 +266,7 @@ export function ClassList() {
             temp.push(
                 <p>
                     <Button onClick={() => getFile(resources[i][3])}>{resources[i][1]}</Button>
-                    <Button onClick={() => deleteFile(resources[i][0], resources[i][3])}>Delete</Button>
+                    <Button variant="contained" color="error" size="small" onClick={() => deleteFile(resources[i][0], resources[i][3])}>Delete</Button>
                 </p>
             )
         }
@@ -381,7 +381,7 @@ export function ClassList() {
                                 <Typography variant="body1" component="div">
                                     {`${student[3]} ${student[4]}`} <br></br>
 
-                                    <Button variant="contained" color="primary" size="small" onClick={() => promoteStudent(index)}>
+                                    <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={() => promoteStudent(index)}>
                                         Promote to moderator
                                     </Button> <br></br>
                                     <Button variant="contained" color="error" size="small" onClick={() => removeClassS(index)}>
@@ -419,7 +419,7 @@ export function ClassList() {
                             <Typography variant="body1" component="div">
                                 Invite Code: {classString}
                             </Typography>
-                            <Button variant="contained" color="primary" size="small" onClick={() => generateNewString()} style={{ marginLeft: '10px' }}>
+                            <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={() => generateNewString()} style={{ marginLeft: '10px' }}>
                                 Generate New
                             </Button>
                         </Box>
@@ -433,7 +433,7 @@ export function ClassList() {
                                 size="small"
                                 onChange={(e) => setAddStudent(e.target.value)}
                             />
-                            <Button variant="contained" color="primary" size="small" onClick={(e) => addStudentClass(e)} style={{ marginLeft: '8px' }}>
+                            <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={(e) => addStudentClass(e)} style={{ marginLeft: '8px' }}>
                                 Add
                             </Button>
                         </Box>
@@ -479,7 +479,7 @@ export function ClassList() {
                         <Typography>{fileList}</Typography>
 
                         <input type="file" id="file" name="file" accept = 'application/pdf' onChange={fileChange} />
-                        <Button variant="contained" color="primary" size="small" style={{ marginLeft: '13px' }} onClick={(e) => addFile(e)}>
+                        <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" style={{ marginLeft: '13px' }} onClick={(e) => addFile(e)}>
                             Add
                         </Button>
 
