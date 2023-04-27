@@ -70,7 +70,7 @@ function Home() {
 
   if(!sessionStorage.getItem('token') && fetchDone){
     return (
-      <Grid >
+      <Grid sx={{backgroundImage:'url(https://utdmercury.com/wp-content/uploads/2019/08/utdallas_min-1024x683.jpg)', backgroundSize: 'cover', height: '100vh'}}>
       <Box sx={{ flexGrow: 1}} > 
       <AppBar position="static" style={{ background: '#ef6c00' }}>
         <Toolbar>
@@ -105,7 +105,7 @@ function Home() {
         </Toolbar>
       </AppBar>
     </Box>
-    <Typography variant="h1" align="center" marginTop={40} sx={{ fontFamily: 'Segoe UI' }}>
+    <Typography variant="h1" align="center" marginTop={3} sx={{ fontFamily: 'Segoe UI', color:'white' }}>
     Welcome to Intelligent Discussion Board
     </Typography>
     </Grid>
