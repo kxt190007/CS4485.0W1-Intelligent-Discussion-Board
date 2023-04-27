@@ -158,7 +158,7 @@ function CreateClass() {
             {profList.map((prof, index) => (
               <Box key={index} display="flex" alignItems="center" mt={2}>
                 <Typography>{prof}</Typography>
-                <Button variant="outlined" onClick={() => removeItem(index)}>
+                <Button variant="outlined" color="error" size="small" onClick={() => removeItem(index)}>
                   Remove
                 </Button>
               </Box>
