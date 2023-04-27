@@ -12,15 +12,10 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 function ProfilePage() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [classes, setClasses] = useState([[]]);
   const [userName, setUserName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [classCode, setClassCode] = useState("")
-  const [errMessage, setErrMessage] = useState("")
-  const [passwordConf, setPasswordConf] = useState("")
-  const [errMessage1, setErrMessage1] = useState("")
   const [fetchDone, setFetchDone] = useState(false)
   const [inputs, setInputs] = useState([]);
 
@@ -73,30 +68,7 @@ function ProfilePage() {
         res => res.json()
       )
   }
-  async function addClass(credentials) {
-    return fetch("http://localhost:5000/addToClass1", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(credentials),
-    })
-      .then(
-        res => res.json()
-      )
-  }
-  async function changePass(credentials) {
-    return fetch("http://localhost:5000/changePassword", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(credentials),
-    })
-      .then(
-        res => res.json()
-      )
-  }
+
   useEffect(() => {
     async function fetchData() {
       const token = await getClass({
@@ -108,39 +80,6 @@ function ProfilePage() {
     }
     fetchData()
   }, [])
-
-  const addToClass = async e => {
-    const token = await addClass({
-      userID: sessionStorage.getItem('token'),
-      classCode,
-    })
-    if (token.status == "Failed") {
-      setErrMessage(token.message)
-    }
-    else {
-      const temp = token.classList
-      setClasses(temp)
-    }
-  }
-  const changePassword = async e => {
-    if(password == ""){
-      setErrMessage1("Password cannot be empty")
-    }
-    else if (password != passwordConf) {
-      setErrMessage1("Passwords do not match")
-    }
-    else {
-      const token = await changePass({
-        userID: sessionStorage.getItem('token'),
-        password,
-      })
-
-      setErrMessage1("Password changed")
-      document.getElementById("pass").value = ""
-      document.getElementById("pass1").value = ""
-    }
-  }
-
 
   useEffect(() => {
     async function fetchData() {
@@ -176,7 +115,6 @@ function ProfilePage() {
     navigate("/changePass")
   }
 
-
   const paperStyle = { padding: "30px 500px", height: '60vh', width: 320, margin: "50px auto" }
   const avatarStyle = { backgroundColor: '#ef6c00' }
   const btnStyle = { margin: '40px 0' }
@@ -185,30 +123,21 @@ function ProfilePage() {
   }
   else if (fetchDone) {
     return (
-      <nav>
+      <Grid sx={{backgroundImage:'url(https://utdmercury.com/wp-content/uploads/2019/08/utdallas_min-1024x683.jpg)', backgroundSize: 'cover', height: '100vh'}}>
+      <Typography gutterBottom variant="h6" component="div">
         <Layout />
-        <Grid   container component="main" sx={{ height: '100vh' }}>
-        <Typography gutterBottom variant="h6" component="div">
-          <Box sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'left',
-            }}>
+        <Grid   container component="main" item xs={false} sm={4} md={7} sx={{ height: '100vh' }}>
             <Paper style = {paperStyle}>
             <Avatar style={avatarStyle} sx={{width: 70, height:70}} align='center'><AccountBoxIcon /></Avatar>
-                  <h2>{userName}'s Profile Page</h2>
-                  <h3>E-Mail: {email}</h3>
-                  <br></br>
-                  <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goChange()}>Change Password</Button>
+                <h2>{userName}'s Profile Page</h2>
+                <h3>E-Mail: {email}</h3>
+                <br></br>
+              <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goChange()}>Change Password</Button>
             </Paper>
-          </Box>
-          <div>
-          <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+        </Grid>
+          <Grid container component="main" item xs={false} sm={'auto'} md={'auto'} sx={{ height: '100vh' }}>
             <Paper style = {paperStyle}>
                <Divider/>
-                 <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
                  <h2>Enrolled Classes</h2>
                   <nav aria-label="enrolled classes">
                     <List>
@@ -216,13 +145,10 @@ function ProfilePage() {
                     </List>
                   </nav>
                     <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goAdd()}>Add Class</Button>
-                </Box>
               </Paper>
-            </Box>
-          </div>
-          </Typography>
-        </Grid>
-      </nav>
+          </Grid>
+        </Typography>
+      </Grid>
     )
   }
   else{
