@@ -158,10 +158,10 @@ export function Board() {
     }
     else {
       for (let i = 0; i < postIDs.length; i++) {
-        if(userIDs[i] == sessionStorage.getItem('token')) {
+        if(UserIDs[i] != sessionStorage.getItem('token')) {
 
             temp.push(
-              <Card sx={{ maxWidth: "100%", my: 2}}>
+              <Card sx={{ maxWidth: "100%", m: 2}}>
                 <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
                   <CardContent>
