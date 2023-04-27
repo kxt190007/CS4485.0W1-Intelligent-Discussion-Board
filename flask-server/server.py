@@ -167,7 +167,7 @@ def getPosts():
         postLastName.append(x[12])
     arr = [postIDs,UserIDs,postStatus,postBodies,postTitles,postTags, postFirstName, postLastName]
     cursor.close()
-    return arr
+    return {"status":"Success","arr":arr}
 
 @app.route("/getPostComments", methods = ['POST'])
 def getPostComments():

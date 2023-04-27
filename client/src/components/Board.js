@@ -95,13 +95,14 @@ export function Board() {
     setClassName(token1.name)
     //fetch post list as JSON
 
-    const postList = await getPosts({
+    const token2 = await getPosts({
       classID: classID,
     });
     const moderator = await checkModerator({
       userID: sessionStorage.getItem('token'),
       classID,
     })
+    const postList = token2.arr
     // setPostJSON(postList);
     // console.log(postJSON)
     const postIDs = [];
