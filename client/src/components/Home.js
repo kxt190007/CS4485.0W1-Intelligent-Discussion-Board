@@ -82,7 +82,7 @@ function Home() {
             sx={{ mr: 2 }}
           >
             <HomeIcon 
-            href="/login"/>
+            href="/#/login"/>
           </IconButton>
           <Typography
             variant="h6"
@@ -101,14 +101,13 @@ function Home() {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/login">Login</Button>
+          <Button color="inherit" href="/#/login">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
     <Typography variant="h1" align="center" marginTop={40} sx={{ fontFamily: 'Segoe UI' }}>
     Welcome to Intelligent Discussion Board
     </Typography>
-    <Link to="/login">Login</Link>
     </Grid>
     )
   }

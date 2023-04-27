@@ -113,7 +113,7 @@ function Login() {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/login" size="large">Login</Button>
+          <Button color="inherit" href="/#/login" size="large">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
@@ -144,7 +144,7 @@ function Login() {
         <Typography variant="caption" display="block" gutterBottom sx={{ ml: 1 }}>
         Not a user yet?
       </Typography>
-        <Button color="secondary" href="/register">
+        <Button color="secondary" href="/#/register">
           Sign up here!
           </Button>
         

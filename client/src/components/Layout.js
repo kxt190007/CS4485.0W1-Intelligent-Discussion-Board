@@ -75,9 +75,9 @@ function Layout(){
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/profile">Profile</Button>
+          <Button color="inherit" href="/#/profile">Profile</Button>
       
-        <Button  variant="secondary" href="/logout" size="large">
+        <Button  variant="secondary" href="/#/logout" size="large">
          Log out
         </Button>
         </Toolbar>
@@ -89,7 +89,7 @@ function Layout(){
     <Box display="flex" sx={{ flexGrow: 1 }} style={{ height: '100%' }}> 
     <AppBar position="static" style={{ background: '#f57c00' }} >
       <Toolbar>
-      <Button color="inherit" disabled={false} label="create post button" href="/create" size="large"> 
+      <Button color="inherit" disabled={false} label="create post button" href="/#/create" size="large"> 
       Create Post
       </Button>
       </Toolbar>
@@ -137,8 +137,8 @@ function Layout(){
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/profile">Profile</Button>
-          <Button  variant="secondary" href="/logout" size="large">
+          <Button color="inherit" href="/#/profile">Profile</Button>
+          <Button  variant="secondary" href="/#/logout" size="large">
               Log out
              </Button>
               </Toolbar>
@@ -151,13 +151,13 @@ function Layout(){
           <AppBar position="static" style={{ background: '#f57c00' }} >
             <Toolbar>
             
-            <Button color="inherit" href="/classes" size="large"> 
+            <Button color="inherit" href="/#/classes" size="large"> 
               Classes
             </Button>
-            <Button color="inherit" href="/create-class" size="large"> 
+            <Button color="inherit" href="/#/create-class" size="large"> 
               Create Class
             </Button>
-            <Button color="inherit" href="/create" size="large"> 
+            <Button color="inherit" href="/#/create" size="large"> 
               Create Post
             </Button>
             </Toolbar>
