@@ -272,7 +272,6 @@ function Post() {
 
         comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
 
           <CardContent >
 
@@ -290,7 +289,6 @@ function Post() {
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
             <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
-        </CardActionArea>
       </Card>
     )
         }
