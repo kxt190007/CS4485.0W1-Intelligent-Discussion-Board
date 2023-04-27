@@ -7,7 +7,6 @@ import Button from '@mui/material/Button'
 import { Paper, Divider, Grid, Typography, Box, InputLabel, TextField, CircularProgress } from '@mui/material'
 
 export async function loader({ params }) {
-    console.log(params.classID)
     //const classInfo = await getClass(params.classID);
     return params.classID
 }
@@ -111,9 +110,6 @@ export function ClassList() {
             const token = await getStudents({
                 classID,
             });
-
-            console.log(token.instructors)
-            console.log(sessionStorage.getItem('token'))
             var found = 0
             for (let i = 0; i < token.instructors.length; i++) {
                 if (token.instructors[i][0] == sessionStorage.getItem('token')) {
@@ -287,9 +283,7 @@ export function ClassList() {
             })
         }).then((response) => response.blob())
             .then((blob) => {
-                console.log(blob)
                 const objURL = URL.createObjectURL(blob)
-                console.log(objURL)
                 setObjectURL(objURL)
             })
 

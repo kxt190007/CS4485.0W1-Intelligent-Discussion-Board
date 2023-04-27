@@ -50,8 +50,6 @@ const Register = () => {
       else{
         const classList = []
         const user = new UserProfile(token.token, token.email, token.password, token.name, token.lastname, classList, token.accesslevel);
-        console.log(user.userID)
-        console.log(user)
         sessionStorage.setItem('user', JSON.stringify(user))
         sessionStorage.setItem('token', user.userID);
         sessionStorage.setItem('email', user.email);
@@ -60,7 +58,6 @@ const Register = () => {
         sessionStorage.setItem('password', user.password);
         sessionStorage.setItem('accesslevel', user.accesslevel);
         sessionStorage.setItem('classes', JSON.stringify(user.classes));
-        console.log(sessionStorage.getItem('classes'));
         navigate("/");
       }
     }

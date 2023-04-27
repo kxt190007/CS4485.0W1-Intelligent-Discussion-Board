@@ -61,7 +61,6 @@ export function MyProfile() {
         fetchData()
     }, [])
     const addToClass = async e =>{
-        console.log("test")
         setErrMessage("")
         const token = await addClass({
             userID:sessionStorage.getItem('token'),
@@ -76,7 +75,6 @@ export function MyProfile() {
         }
     }
     const changePassword = async e =>{
-        console.log(password)
         if(password == ""){
             setErrMessage1("Password cannot be empty")
         }

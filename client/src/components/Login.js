@@ -51,14 +51,11 @@ function Login() {
       email,
       password
     });
-    console.log(token.token);
     if(token.token !== ''){
       const token1 = await getClass({
         userID : token.token
       });
       const user = new UserProfile(token.token, token.email, token.password, token.name, token.lastname, token1.classList, token.accesslevel);
-      console.log(user.userID)
-      console.log(user)
       sessionStorage.setItem('user', JSON.stringify(user))
       sessionStorage.setItem('token', user.userID);
       sessionStorage.setItem('email', user.email);
@@ -67,7 +64,6 @@ function Login() {
       sessionStorage.setItem('password', user.password);
       sessionStorage.setItem('accesslevel', user.accesslevel);
       sessionStorage.setItem('classes', JSON.stringify(user.classes));
-      console.log(sessionStorage.getItem('classes'));
       navigate("/");
     }
     else{

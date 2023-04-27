@@ -15,7 +15,6 @@ import { CardActionArea } from '@mui/material';
 import { Link, Navigate } from 'react-router-dom'
 
 export async function loader({ params }) {
-  console.log(params.classID)
   //const classInfo = await getClass(params.classID);
   return params.classID
 }
@@ -104,7 +103,6 @@ export function Board() {
     })
     const postList = token2.arr
     // setPostJSON(postList);
-    // console.log(postJSON)
     const postIDs = [];
     const UserIDs = [];
     const postStatus = [];
@@ -250,7 +248,6 @@ export function Board() {
       )
   }
   const removePost = async (index) => {
-    console.log(index)
     await remove({
       postID: index,
     })
@@ -266,10 +263,8 @@ export function Board() {
 
 
   const handleChange = (postID) => {
-    // console.log(event.target.value)
     // sessionStorage.setItem('postTitle', postTitles[event.target.value])
     // sessionStorage.setItem('postBody', postBodies[event.target.value])
-    console.log(postID)
     navigate("post/" + postID);
   }
 

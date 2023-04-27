@@ -59,7 +59,6 @@ function Create() {
           <MenuItem value={classList[i][0]}>{classList[i][1]}</MenuItem>
         );
         setInputs(temp);
-        console.log(inputs);
       }
       setFetchDone(true)
     }
@@ -93,7 +92,6 @@ function Create() {
   }
 
   const handleSubmit = async e => {
-    console.log(inputs)
     e.preventDefault();
     if (chosenclass === "" || chosenclass === "Select a Class") {
       setErrorText("Please select a class.")
@@ -106,7 +104,6 @@ function Create() {
       postTag,
       chosenclass
     });
-    console.log(token.message)
     if (token.message == "message") {
       await createPost1({
         userID: sessionStorage.getItem('token'),
@@ -127,8 +124,6 @@ function Create() {
   }
 
   const handlePop = async e => {
-    console.log(inputs)
-    console.log("a")
     await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
@@ -136,7 +131,6 @@ function Create() {
       postTag,
       chosenclass
     });
-    console.log("a")
     navigate("/")
   }
 

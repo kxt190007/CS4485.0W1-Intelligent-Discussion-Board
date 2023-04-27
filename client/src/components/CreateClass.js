@@ -79,9 +79,7 @@ function CreateClass() {
                 .then(
                     res => res.json()
                 )
-                .then((data) => {
-                    console.log(data)
-                    console.log(data.status)
+                .then((data) => {    
                     if (data.status == "Failed") {
                         setErrMessage(data.message)
                     }
