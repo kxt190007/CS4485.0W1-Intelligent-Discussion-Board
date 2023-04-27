@@ -248,7 +248,7 @@ function Post() {
             <Typography variant="caption text" color="text.secondary">
               {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
-            <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
+            <Button color="error" onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
@@ -274,7 +274,7 @@ function Post() {
               {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
 
-            <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
+            <Button color="error" onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
@@ -473,11 +473,13 @@ function Post() {
                   {title}
                 </Typography>
               </div>
-              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
+              <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
             <Divider />
             <Typography variant="body1" color="text.secondary">
               {body}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
               <br/> Posted by: {firstName + " " + lastName}
             </Typography>
             <br />
@@ -507,7 +509,7 @@ function Post() {
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
                 />
-                <Button type="submit" variant="contained" sx={{marginTop: 2 }}>Submit</Button>
+                <Button type="submit" variant="contained" sx={{ marginTop: 2 ,backgroundColor: 'orange'}} >Submit</Button>
               </form>
             </Box>
 
@@ -556,7 +558,7 @@ function Post() {
                   <br/> Posted by: {firstName + " " + lastName}
                 </Typography>
               </div>
-              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
+              <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
             <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
               <CardActionArea onClick={(e) => handleChange(e)}>
@@ -583,7 +585,7 @@ function Post() {
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
                 />
-                <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>Submit</Button>
+                <Button type="submit" variant="contained" sx={{ marginTop: 2 ,backgroundColor: 'orange'}}>Submit</Button>
               </form>
             </Box>
 
