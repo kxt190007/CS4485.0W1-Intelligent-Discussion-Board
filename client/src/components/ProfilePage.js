@@ -88,7 +88,7 @@ function ProfilePage() {
       setClasses(classList);
       setUserName(sessionStorage.getItem('name'))
       setEmail(sessionStorage.getItem('email'))
-      setLastName(sessionStorage.getItem('lastName'))
+      setLastName(sessionStorage.getItem('lastname'))
     }
     fetchData();
 
