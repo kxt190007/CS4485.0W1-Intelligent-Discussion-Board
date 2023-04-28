@@ -126,9 +126,8 @@ function ProfilePage() {
       <Typography gutterBottom variant="h6" component="div">
         <Layout />
         <Stack direction={"row"} spacing={2}>
-        <Grid container item>
-            <Paper style={paperStyle}>
-              <Avatar style={avatarStyle} sx={{width: 70, height:70}} align='center'><AccountBoxIcon /></Avatar>
+        <Grid container item style={{textAlign: "center"}} alignContent={'center'}> 
+            <Paper style={paperStyle} justifyContent="center">
                 <h2>{userName}'s Profile Page</h2>
                 <h3>E-Mail: {email}</h3>
                 <h3>Name: {userName}</h3>
@@ -137,7 +136,7 @@ function ProfilePage() {
               <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goChange()}>Change Password</Button>
             </Paper> 
         </Grid>
-        <Grid container item> 
+        <Grid container item style={{textAlign: "center"}}> 
           <Paper style={paperStyle}>
             <Divider/>
             <h2>Enrolled Classes</h2>
@@ -146,6 +145,7 @@ function ProfilePage() {
                 {inputs}
               </List>
             </nav>
+            <br></br>
             <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goAdd()}>Add Class</Button>
           </Paper>
         </Grid>
