@@ -62,6 +62,7 @@ def ask_question(postTitle, postBody, classID, pdfName):
         try:
             syllabusText = extract_text(syllabus)
             new_question = "A student has made a new question on a discussion board. \n the file name is: " + name + ".pdf \n file content: " + syllabusText + "\n end file content \n" + \
+
                            "answer the following question. Post Title: " + postTitle + "\n end Post Title \n Post Body: " + postBody + " ?" + " end post body"
             response = get_response(INSTRUCTIONS + new_question)
             response = response.lstrip()

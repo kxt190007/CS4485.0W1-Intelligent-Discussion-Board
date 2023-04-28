@@ -79,9 +79,7 @@ function CreateClass() {
                 .then(
                     res => res.json()
                 )
-                .then((data) => {
-                    console.log(data)
-                    console.log(data.status)
+                .then((data) => {    
                     if (data.status == "Failed") {
                         setErrMessage(data.message)
                     }
@@ -132,7 +130,7 @@ function CreateClass() {
             
             {error && <Typography color="error">{error}</Typography>}
             
-            <Button variant="contained" type="submit">
+            <Button variant="contained" sx={{ backgroundColor: 'orange' }} type="submit">
               Create Class
             </Button>
           </form>
@@ -149,7 +147,7 @@ function CreateClass() {
               value={additionalEmail}
               onChange={(e) => setAdditionalEmail(e.target.value)}
             />
-            <Button variant="contained" onClick={handleChange}>
+            <Button sx={{ backgroundColor: 'orange' }} variant="contained" onClick={handleChange}>
               Add
             </Button>
             {errMessage && (
@@ -160,7 +158,7 @@ function CreateClass() {
             {profList.map((prof, index) => (
               <Box key={index} display="flex" alignItems="center" mt={2}>
                 <Typography>{prof}</Typography>
-                <Button variant="outlined" onClick={() => removeItem(index)}>
+                <Button variant="outlined" color="error" size="small" onClick={() => removeItem(index)}>
                   Remove
                 </Button>
               </Box>

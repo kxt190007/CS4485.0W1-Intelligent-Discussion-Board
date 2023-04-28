@@ -15,7 +15,6 @@ import { CardActionArea } from '@mui/material';
 import { Link, Navigate } from 'react-router-dom'
 
 export async function loader({ params }) {
-  console.log(params.classID)
   //const classInfo = await getClass(params.classID);
   return params.classID
 }
@@ -36,6 +35,8 @@ export function Board() {
   const [postArr, setPostArr] = useState([]);
   const [className, setClassName] = useState("");
   const [fetchDone, setFetchDone] = useState(false)
+  const [postFirstName, setPostFirstName] = useState([])
+  const [postLastName, setPostLastName] = useState([])
 
   async function getClass(credentials) {
     return fetch("http://localhost:5000/getClasses", {
@@ -93,24 +94,23 @@ export function Board() {
     setClassName(token1.name)
     //fetch post list as JSON
 
-    const postList = await getPosts({
+    const token2 = await getPosts({
       classID: classID,
     });
-    console.log(postList);
-    console.log("postlist at 1 1: ")
-    console.log(postList[1][1])
     const moderator = await checkModerator({
       userID: sessionStorage.getItem('token'),
       classID,
     })
+    const postList = token2.arr
     // setPostJSON(postList);
-    // console.log(postJSON)
     const postIDs = [];
     const UserIDs = [];
     const postStatus = [];
     const postBodies = [];
     const postTitles = [];
     const postTags = [];
+    const postFirstName = [];
+    const postLastName = [];
 
     for (let i = 0; i < postList[0].length; i++) {
       postIDs[i] = postList[0][i]
@@ -119,6 +119,8 @@ export function Board() {
       postBodies[i] = postList[3][i]
       postTitles[i] = postList[4][i]
       postTags[i] = postList[5][i]
+      postFirstName[i] = postList[6][i]
+      postLastName[i] = postList[7][i]
     }
     setPostIDs(postIDs)
     setUserIDs(UserIDs)
@@ -126,14 +128,13 @@ export function Board() {
     setPostBodies(postBodies)
     setPostTitles(postTitles)
     setPostTags(postTags)
-
-    console.log({ postIDs })
-    console.log({ postBodies })
+    setPostFirstName(postFirstName)
+    setPostLastName(postLastName)
     const temp = []
     if (sessionStorage.getItem('accesslevel') == 5 || moderator.message == 'yes') {
       for (let i = 0; i < postIDs.length; i++) {
         temp.push(
-          <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
+          <Card sx={{ maxWidth: "100%", m: 2}}>
             <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
               <CardContent>
@@ -141,23 +142,26 @@ export function Board() {
                   <option value={i}>{postTitles[i]}</option>
                 </Typography>
                 <Divider />
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" maxHeight = "40px" overflow="hidden">
                   {postBodies[i]}
-
+                </Typography >
+                <br/> 
+                <Typography variant="caption" color="text.secondary">
+                Posted by: {postFirstName[i] + " "  + postLastName[i]}
                 </Typography>
               </CardContent>
             </CardActionArea>
-            <Button onClick={() => removePost(postIDs[i])}>Delete</Button>
+            <Button color="error" onClick={() => removePost(postIDs[i])}>Delete</Button>
           </Card>
         )
       }
     }
     else {
       for (let i = 0; i < postIDs.length; i++) {
-        if(userIDs[i] == sessionStorage.getItem('token')) {
+        if(UserIDs[i] != sessionStorage.getItem('token')) {
 
             temp.push(
-              <Card sx={{ maxWidth: "100%", my: 2, maxHeight: 200 }}>
+              <Card sx={{ maxWidth: "100%", m: 2}}>
                 <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
                   <CardContent>
@@ -165,10 +169,10 @@ export function Board() {
                       <option value={i}>{postTitles[i]}</option>
                     </Typography>
                     <Divider />
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant="body2" color="text.secondary" maxHeight = "40px" overflow="hidden">
                       {postBodies[i]}
-
                     </Typography>
+                    <br/> Posted by: {postFirstName[i] + " "  + postLastName[i]}
                   </CardContent>
                 </CardActionArea>
               </Card>
@@ -176,7 +180,7 @@ export function Board() {
         }
         else {
             temp.push(
-          <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
+          <Card sx={{ maxWidth: "100%", m: 2}}>
             <CardActionArea onClick={() => handleChange(postIDs[i])}>
 
               <CardContent>
@@ -184,13 +188,13 @@ export function Board() {
                   <option value={i}>{postTitles[i]}</option>
                 </Typography>
                 <Divider />
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" maxHeight = "40px" overflow="hidden">
                   {postBodies[i]}
-
                 </Typography>
+                <br/> Posted by: {postFirstName[i] + " "  + postLastName[i]}
               </CardContent>
             </CardActionArea>
-            <Button onClick={() => removePost(postIDs[i])}>Delete</Button>
+            <Button color="error" onClick={() => removePost(postIDs[i])}>Delete</Button>
           </Card>
         )
         }
@@ -247,7 +251,6 @@ export function Board() {
       )
   }
   const removePost = async (index) => {
-    console.log(index)
     await remove({
       postID: index,
     })
@@ -263,10 +266,8 @@ export function Board() {
 
 
   const handleChange = (postID) => {
-    // console.log(event.target.value)
     // sessionStorage.setItem('postTitle', postTitles[event.target.value])
     // sessionStorage.setItem('postBody', postBodies[event.target.value])
-    console.log(postID)
     navigate("post/" + postID);
   }
 
@@ -301,9 +302,7 @@ export function Board() {
               borderRadius: 1,
             }}>
               <h2>There are no posts for {className}</h2>
-              <Button variant="contained" color="primary" >
-                <Link to="/">Back</Link>
-              </Button>
+              <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
             <Divider />
             <Typography gutterBottom variant="h6" component="div">
@@ -344,7 +343,7 @@ export function Board() {
               borderRadius: 1,
             }}>
               <h2>Discussion Board for {className}</h2>
-              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
+              <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
 
             <Divider />
@@ -359,7 +358,7 @@ export function Board() {
       <Grid >
       <Layout/>
       <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-      <CircularProgress color="success" size={80}/>
+      <CircularProgress style={{ color: 'orange' }} size={80}/>
       </Box>
       </Grid>
       )

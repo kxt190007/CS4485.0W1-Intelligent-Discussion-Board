@@ -22,6 +22,7 @@ function Create() {
   const [errorText, setErrorText] = useState("");
   const [inputs, setInputs] = useState([]);
   const [fetchDone, setFetchDone] = useState(false)
+  const [waitAi, setWaitAi] = useState(false)
   const navigate = useNavigate();
 
   async function navHome() {
@@ -59,7 +60,6 @@ function Create() {
           <MenuItem value={classList[i][0]}>{classList[i][1]}</MenuItem>
         );
         setInputs(temp);
-        console.log(inputs);
       }
       setFetchDone(true)
     }
@@ -93,12 +93,12 @@ function Create() {
   }
 
   const handleSubmit = async e => {
-    console.log(inputs)
     e.preventDefault();
     if (chosenclass === "" || chosenclass === "Select a Class") {
       setErrorText("Please select a class.")
       return;
     }
+    setWaitAi(true)
     const token = await createPost({
       userID: sessionStorage.getItem('token'),
       postContent,
@@ -106,16 +106,15 @@ function Create() {
       postTag,
       chosenclass
     });
-    console.log(token.message)
     if (token.message == "message") {
-      await createPost1({
+      const token1 = await createPost1({
         userID: sessionStorage.getItem('token'),
         postContent,
         postTitle,
         postTag,
         chosenclass
       });
-      navigate('/')
+      navigate('/board/' + token1.classID + '/post/' + token1.newID)
     }
     if (token.message.includes("localhost")) {
       setLink(token.message)
@@ -123,21 +122,19 @@ function Create() {
     else {
       setMessage(token.message)
     }
+    setWaitAi(false)
     togglepopup();
   }
 
   const handlePop = async e => {
-    console.log(inputs)
-    console.log("a")
-    await createPost1({
+    const token = await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
       postTitle,
       postTag,
       chosenclass
     });
-    console.log("a")
-    navigate("/")
+    navigate('/board/' + token.classID + '/post/' + token.newID)
   }
 
 
@@ -163,11 +160,12 @@ function Create() {
     return (
 
       <Grid>
-
+        
         <Layout />
+        
         <Paper elevation={10} style={paperStyle}>
-
-          <>
+              <CircularProgress  className = {waitAi ? "loadCircle" : "loadCircleGone"} style={{ color: 'orange' }} size={80} />
+            <>
             {popup && (
               <div className="popup">
                 <div onClick={togglepopup} className="overlay"></div>
@@ -208,8 +206,6 @@ function Create() {
               variant="standard"
               onChange={(e) => setPostTitle(e.target.value)}
             ></TextField>
-
-
             <br />
             <TextareaAutosize
               name="postcontent"
@@ -220,6 +216,7 @@ function Create() {
               rowsMin={6}
               onChange={(e) => setPostContent(e.target.value)}
               style={{ width: '100%', height: '360px' }}
+              
             />
 
 
@@ -256,18 +253,19 @@ function Create() {
 
       </Grid>
 
+      
 
 
     )
   }
-  else{
+  else {
     return (
-    <Grid >
-    <Layout/>
-    <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-    <CircularProgress color="success" size={80}/>
-    </Box>
-    </Grid>
+      <Grid >
+        <Layout />
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '300px' }}>
+          <CircularProgress style={{ color: 'orange' }} size={80} />
+        </Box>
+      </Grid>
     )
   }
 }

@@ -15,15 +15,18 @@ import Classes from "./components/Classes"
 import CreateClass from "./components/CreateClass"
 import {
   createBrowserRouter,
+  createHashRouter,
   RouterProvider,
 } from "react-router-dom";
 import ClassList, {
   loader as classListLoader,
 } from "./components/ClassList"
 import ProfilePage from "./components/ProfilePage";
+import AddClass from "./components/AddClass";
+import ChangePass from "./components/ChangePass";
 import MyProfile from "./components/MyProfile"
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     children:[
@@ -69,6 +72,14 @@ const router = createBrowserRouter([
         path: "classlist/:classID",
         element: <ClassList />,
         loader: classListLoader,
+      },
+      {
+        path: "addClass",
+        element: <AddClass />,
+      },
+      {
+        path: "changePass",
+        element: <ChangePass />,
       },
       {
         path: "profile",

@@ -61,7 +61,6 @@ export function MyProfile() {
         fetchData()
     }, [])
     const addToClass = async e =>{
-        console.log("test")
         setErrMessage("")
         const token = await addClass({
             userID:sessionStorage.getItem('token'),
@@ -76,6 +75,9 @@ export function MyProfile() {
         }
     }
     const changePassword = async e =>{
+        if(password == ""){
+            setErrMessage1("Password cannot be empty")
+        }
         if(password != passwordConf){
             setErrMessage1("Passwords do not match")
         }
@@ -88,6 +90,7 @@ export function MyProfile() {
             setErrMessage1("Password changed")
             document.getElementById("pass").value = ""
             document.getElementById("pass1").value = ""
+            setPassword("")
         }
     }
     if (!sessionStorage.getItem('token')) {

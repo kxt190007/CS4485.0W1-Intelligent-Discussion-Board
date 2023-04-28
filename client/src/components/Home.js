@@ -50,14 +50,9 @@ function Home() {
           </ListItem>
         );
         setInputs(temp);
-        console.log("inputs:");
-        console.log(inputs);
       }
       const userData = sessionStorage.getItem('name')
-      console.log(userData);
       setUserName(userData);
-      console.log("classlist length:")
-      console.log(inputs.length)
       setFetchDone(true)
     }
     fetchData();
@@ -70,7 +65,7 @@ function Home() {
 
   if(!sessionStorage.getItem('token') && fetchDone){
     return (
-      <Grid >
+      <Grid sx={{backgroundImage:'url(https://utdmercury.com/wp-content/uploads/2019/08/utdallas_min-1024x683.jpg)', backgroundSize: 'cover', height: '100vh'}}>
       <Box sx={{ flexGrow: 1}} > 
       <AppBar position="static" style={{ background: '#ef6c00' }}>
         <Toolbar>
@@ -82,7 +77,7 @@ function Home() {
             sx={{ mr: 2 }}
           >
             <HomeIcon 
-            href="/login"/>
+            href="/#/login"/>
           </IconButton>
           <Typography
             variant="h6"
@@ -101,11 +96,11 @@ function Home() {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/login">Login</Button>
+          <Button color="inherit" href="/#/login">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
-    <Typography variant="h1" align="center" marginTop={40} sx={{ fontFamily: 'Segoe UI' }}>
+    <Typography variant="h1" align="center" marginTop={3} sx={{ fontFamily: 'Segoe UI', color:'white' }}>
     Welcome to Intelligent Discussion Board
     </Typography>
     </Grid>
@@ -131,7 +126,7 @@ function Home() {
       </Stack>
       </div>
     )
-
+    
   }
   else if(fetchDone){
     return (
@@ -164,7 +159,7 @@ function Home() {
       <Grid >
       <Layout/>
       <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-      <CircularProgress color="success" size={80}/>
+      <CircularProgress style={{ color: 'orange' }} size={80}/>
       </Box>
       </Grid>
       )

@@ -26,3 +26,15 @@
     z-index: 999
 }
 
+.loadCircleGone {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    display:none !important;
+}
+.loadCircle{
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    display:block;
+}

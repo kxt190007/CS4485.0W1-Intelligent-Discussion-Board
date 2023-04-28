@@ -7,7 +7,6 @@ import Button from '@mui/material/Button'
 import { Paper, Divider, Grid, Typography, Box, InputLabel, TextField, CircularProgress } from '@mui/material'
 
 export async function loader({ params }) {
-    console.log(params.classID)
     //const classInfo = await getClass(params.classID);
     return params.classID
 }
@@ -111,9 +110,6 @@ export function ClassList() {
             const token = await getStudents({
                 classID,
             });
-
-            console.log(token.instructors)
-            console.log(sessionStorage.getItem('token'))
             var found = 0
             for (let i = 0; i < token.instructors.length; i++) {
                 if (token.instructors[i][0] == sessionStorage.getItem('token')) {
@@ -270,7 +266,7 @@ export function ClassList() {
             temp.push(
                 <p>
                     <Button onClick={() => getFile(resources[i][3])}>{resources[i][1]}</Button>
-                    <Button onClick={() => deleteFile(resources[i][0], resources[i][3])}>Delete</Button>
+                    <Button variant="contained" color="error" size="small" onClick={() => deleteFile(resources[i][0], resources[i][3])}>Delete</Button>
                 </p>
             )
         }
@@ -287,9 +283,7 @@ export function ClassList() {
             })
         }).then((response) => response.blob())
             .then((blob) => {
-                console.log(blob)
                 const objURL = URL.createObjectURL(blob)
-                console.log(objURL)
                 setObjectURL(objURL)
             })
 
@@ -327,7 +321,7 @@ export function ClassList() {
                         <Typography variant="h4" fontWeight='bold'>
                             {className}
 
-                            <Button variant="contained" color="primary" onClick={() => goBack()} style={{ marginLeft: '1185px' }}>
+                            <Button variant="contained" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()} style={{ marginLeft: '1185px' }}>
                                 BACK
                             </Button>
                         </Typography>
@@ -367,9 +361,9 @@ export function ClassList() {
                                 <Typography variant="body1" component="div">
                                     {`${moderator[3]} ${moderator[4]}`}
                                 </Typography>
-                                <Button variant="contained" color="primary" size="small" onClick={() => demoteStudent(index)}>
+                                <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={() => demoteStudent(index)}>
                                     Demote to student
-                                </Button>
+                                </Button> <br></br>
                                 <Button variant="contained" color="error" size="small" onClick={() => removeClassM(index)}>
                                     Remove from class
                                 </Button>
@@ -385,11 +379,11 @@ export function ClassList() {
                         {studentList.map((student, index) => (
                             <div key={index}>
                                 <Typography variant="body1" component="div">
-                                    {`${student[3]} ${student[4]}`}
+                                    {`${student[3]} ${student[4]}`} <br></br>
 
-                                    <Button variant="contained" color="primary" size="small" onClick={() => promoteStudent(index)}>
+                                    <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={() => promoteStudent(index)}>
                                         Promote to moderator
-                                    </Button>
+                                    </Button> <br></br>
                                     <Button variant="contained" color="error" size="small" onClick={() => removeClassS(index)}>
                                         Remove from class
                                     </Button>
@@ -425,7 +419,7 @@ export function ClassList() {
                             <Typography variant="body1" component="div">
                                 Invite Code: {classString}
                             </Typography>
-                            <Button variant="contained" color="primary" size="small" onClick={() => generateNewString()} style={{ marginLeft: '10px' }}>
+                            <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={() => generateNewString()} style={{ marginLeft: '10px' }}>
                                 Generate New
                             </Button>
                         </Box>
@@ -439,7 +433,7 @@ export function ClassList() {
                                 size="small"
                                 onChange={(e) => setAddStudent(e.target.value)}
                             />
-                            <Button variant="contained" color="primary" size="small" onClick={(e) => addStudentClass(e)} style={{ marginLeft: '8px' }}>
+                            <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" onClick={(e) => addStudentClass(e)} style={{ marginLeft: '8px' }}>
                                 Add
                             </Button>
                         </Box>
@@ -484,8 +478,8 @@ export function ClassList() {
                         <br />
                         <Typography>{fileList}</Typography>
 
-                        <input type="file" id="file" name="file" onChange={fileChange} />
-                        <Button variant="contained" color="primary" size="small" style={{ marginLeft: '13px' }} onClick={(e) => addFile(e)}>
+                        <input type="file" id="file" name="file" accept = 'application/pdf' onChange={fileChange} />
+                        <Button variant="contained" sx={{ backgroundColor: 'orange' }} size="small" style={{ marginLeft: '13px' }} onClick={(e) => addFile(e)}>
                             Add
                         </Button>
 
@@ -519,7 +513,7 @@ export function ClassList() {
             <Grid >
             <Layout/>
             <Box sx={{ display: 'flex',justifyContent: 'center', marginTop: '300px'}}>
-            <CircularProgress color="success" size={80}/>
+            <CircularProgress style={{ color: 'orange' }} size={80}/>
             </Box>
             </Grid>
             )

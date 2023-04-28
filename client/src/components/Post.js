@@ -17,7 +17,6 @@ import "./Post.css"
 
 
 export async function loader({ params }) {
-  console.log(params.postID)
   //const classInfo = await getClass(params.classID);
   return [params.postID, params.classID]
 }
@@ -42,12 +41,13 @@ function Post() {
   const navigate = useNavigate();
   const paperStyle = { padding: "30px 20px", height: '90%', width: '90%', margin: "20px auto" }
   const [userReply, setUserReply] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
 
 
 
 
   useEffect(() => {
-    console.log(title)
     fetchData();
 
   }, []);
@@ -66,8 +66,6 @@ function Post() {
       .then((response) => response.json())
     const temp1 = token.classList
     setClassList(temp1)
-    console.log(temp1)
-    console.log(classID)
     var inClass = false
     for (let i = 0; i < temp1.length; i++) {
       if (temp1[i][0] == classID) {
@@ -75,8 +73,6 @@ function Post() {
       }
     }
     if (!inClass) {
-      console.log(token.classList)
-      console.log("Exiting")
       navigate("/")
     }
     const token1 = await getPostComments({
@@ -89,6 +85,8 @@ function Post() {
 
     setTitle(postInfo["title"])
     setBody(postInfo["body"])
+    setFirstName(postInfo['firstName'])
+    setLastName(postInfo['lastName'])
     const commentList = token1.arr
     const userIDs = []
     const commentBodies = []
@@ -106,25 +104,21 @@ function Post() {
     setPostTimes(postTimes)
     setCommentIDs(commentIDs)
     setCommentTotal(token1.rows)
-    console.log(token1.rows[0])
 
-    const userMap = new Map()
-    for (let i = 0; i < commentList[0].length; i++) {
-      let n = await getName({
-        userID: userIDs[i]
-      });
-      userMap.set(userIDs[i], n.name)
-    }
-    setUserNames(userMap)
-    console.log(userMap)
+    // const userMap = new Map()
+    // for (let i = 0; i < commentList[0].length; i++) {
+    //   let n = await getName({
+    //     userID: userIDs[i]
+    //   });
+    //   userMap.set(userIDs[i], n.name)
+    // }
+    // setUserNames(userMap)
     setFetchDone(true)
     const moderator = await checkModerator({
       userID: sessionStorage.getItem('token'),
       classID,
     })
     setModerator(moderator.message)
-    console.log("checking mod")
-    console.log(moderator.message)
   }
 
   async function checkModerator(credentials) {
@@ -143,7 +137,6 @@ function Post() {
 
 
   async function remove(credentials) {
-    console.log("remove is called")
     return fetch("http://localhost:5000/removeComment", {
       method: "POST",
       headers: {
@@ -184,18 +177,18 @@ function Post() {
       )
   }
 
-  async function getName(credentials) {
-    return fetch("http://localhost:5000/getCommentUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    })
-      .then(
-        res => res.json()
-      )
-  }
+  // async function getName(credentials) {
+  //   return fetch("http://localhost:5000/getCommentUser", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(credentials),
+  //   })
+  //     .then(
+  //       res => res.json()
+  //     )
+  // }
   async function createComment(credentials) {
     return fetch("http://localhost:5000/createComment", {
       method: "POST",
@@ -248,25 +241,19 @@ function Post() {
     if (sessionStorage.getItem('accesslevel') == 5 || moderator == 'yes') {
     comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
-
           <CardContent >
-
             <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {curComment[3]}
             </Typography>
-
             <Typography variant="caption text" color="text.secondary">
-              {userNames.get(curComment[1])} commented at {curComment[4]}
+              {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
-
-            <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
+            <Button color="error" onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
             <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
-        </CardActionArea>
       </Card>
     )
     }
@@ -275,48 +262,37 @@ function Post() {
 
         comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
-
           <CardContent >
-
             <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {curComment[3]}
             </Typography>
-
             <Typography variant="caption text" color="text.secondary">
-              {userNames.get(curComment[1])} commented at {curComment[4]}
+              {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
-
-            <Button onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
+            <Button color="error" onClick={() => removeComment({ postID }, curComment[2])}>Delete</Button>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
             <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
-        </CardActionArea>
       </Card>
     )
         }
         else {
             comments1.push(
       <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
-        <CardActionArea onClick={(e) => handleChange(e)}>
-
           <CardContent >
-
             <Typography gutterBottom variant="body1" component="div" sx={{}}>
               {curComment[3]}
             </Typography>
-
             <Typography variant="caption text" color="text.secondary">
-              {userNames.get(curComment[1])} commented at {curComment[4]}
+              {curComment[9] + " " + curComment[10]} commented at {curComment[4]}
             </Typography>
             <Button onClick={() => handleReplyChange(curComment[2])}>Reply</Button>
             <Textarea value={userReply} name={"reply-content-" + curComment[2]} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}
               onChange={(e) => setUserReply(e.target.value)}></Textarea>
             <Button onClick={() => handleReplySubmit(curComment[2])} className={clickID == curComment[2] ? "reply-text" : "reply-text-hidden"}>Post</Button>
           </CardContent>
-        </CardActionArea>
       </Card>
         )
         }
@@ -392,23 +368,19 @@ function Post() {
       setPostTimes(postTimes)
       setCommentIDs(commentIDs)
       setCommentTotal(token1.rows)
-      console.log(token1.rows[0])
   
-      const userMap = new Map()
-      for (let i = 0; i < commentList[0].length; i++) {
-        let n = await getName({
-          userID: userIDs[i]
-        });
-        userMap.set(userIDs[i], n.name)
-      }
-      setUserNames(userMap)
-      console.log(userMap)
-    }
+    //   const userMap = new Map()
+    //   for (let i = 0; i < commentList[0].length; i++) {
+    //     let n = await getName({
+    //       userID: userIDs[i]
+    //     });
+    //     userMap.set(userIDs[i], n.name)
+    //   }
+    //   setUserNames(userMap)
+     }
   }
 
   const removeComment = async (index, commentIndex) => {
-    console.log(index)
-    console.log(commentIndex)
     await remove({
       postID: index,
       commentID: commentIndex,
@@ -448,17 +420,15 @@ function Post() {
       setPostTimes(postTimes)
       setCommentIDs(commentIDs)
       setCommentTotal(token1.rows)
-      console.log(token1.rows[0])
   
-      const userMap = new Map()
-      for (let i = 0; i < commentList[0].length; i++) {
-        let n = await getName({
-          userID: userIDs[i]
-        });
-        userMap.set(userIDs[i], n.name)
-      }
-      setUserNames(userMap)
-      console.log(userMap)
+      // const userMap = new Map()
+      // for (let i = 0; i < commentList[0].length; i++) {
+      //   let n = await getName({
+      //     userID: userIDs[i]
+      //   });
+      //   userMap.set(userIDs[i], n.name)
+      // }
+      // setUserNames(userMap)
     }
   }
 
@@ -492,11 +462,14 @@ function Post() {
                   {title}
                 </Typography>
               </div>
-              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
+              <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
             <Divider />
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1">
               {body}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              <br/> Posted by: {firstName + " " + lastName}
             </Typography>
             <br />
             <br />
@@ -507,11 +480,7 @@ function Post() {
               <Box pr={2} >Comments</Box>
             </Typography>
             <Divider />
-
-
             {comments1}
-
-
             <Divider />
             <Box sx={{ my: 2 }}>
               <form
@@ -520,17 +489,14 @@ function Post() {
                 <Textarea
                   placeholder="Add a comment here..."
                   required
-                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto', display: 'block' }}
+                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto'}}
                   id="inputComment"
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
                 />
-                <Button type="submit" variant="contained" sx={{marginTop: 2 }}>Submit</Button>
+                <Button type="submit" variant="contained" sx={{ marginTop: 2 ,backgroundColor: 'orange'}} >Submit</Button>
               </form>
             </Box>
-
-
-
           </Paper>
         </Grid>
       </nav>
@@ -569,15 +535,13 @@ function Post() {
                   {title}
                 </Typography>
                 <Divider />
-                <Typography variant="body1" color="text.secondary">
-                  {body}
-                </Typography>
+                <Typography variant="caption" color="text.secondary">
+              <br/> Posted by: {firstName + " " + lastName}
+            </Typography>
               </div>
-              <Button variant="contained" color="primary" onClick={() => goBack()}>Back</Button>
+              <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
             <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
-              <CardActionArea onClick={(e) => handleChange(e)}>
-
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="div">
                     It's quiet here... Be the first to comment!
@@ -585,7 +549,6 @@ function Post() {
                   <Divider />
 
                 </CardContent>
-              </CardActionArea>
             </Card>
             <Divider />
             <Box sx={{ my: 2 }}>
@@ -595,12 +558,12 @@ function Post() {
                 <Textarea
                   placeholder="Add a comment here..."
                   required
-                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto', display: 'block' }}
+                  sx={{ mt: 1, width: '86.5%', marginRight: 'auto'}}
                   id="inputComment"
                   onChange={(v) => setNewComment(v.target.value)}
                   value={newComment}
                 />
-                <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>Submit</Button>
+                <Button type="submit" variant="contained" sx={{ marginTop: 2 ,backgroundColor: 'orange'}}>Submit</Button>
               </form>
             </Box>
 
@@ -616,7 +579,7 @@ function Post() {
       <Grid >
         <Layout />
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '300px' }}>
-          <CircularProgress color="success" size={80} />
+        <CircularProgress style={{ color: 'orange' }} size={80}/>
         </Box>
       </Grid>
     )
