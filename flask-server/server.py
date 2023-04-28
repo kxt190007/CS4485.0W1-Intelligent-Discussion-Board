@@ -301,7 +301,7 @@ def getStudents():
         isModerator = False
         if moderator:
             for y in moderator:
-                if y[1] == classID:
+                if str(y[1]) == str(classID):
                     moderators.append(student)
                     isModerator = True
                     break
