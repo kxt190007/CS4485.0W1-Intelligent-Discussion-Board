@@ -100,7 +100,7 @@ const Register = () => {
           >
             INTELLIGENT DISCUSSION BOARD
           </Typography>
-          <Button color="inherit" href="/login" size="large">Login</Button>
+          <Button color="inherit" href="/#/login" size="large">Login</Button>
         </Toolbar>
       </AppBar>
     </Box>
