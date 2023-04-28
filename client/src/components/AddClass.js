@@ -31,8 +31,8 @@ function AddClass() {
     else {
       const temp = token.classList
       setClasses(temp)
+      goBack()
     }
-    goBack()
   }
 
   const handleChange = (index) => {
