@@ -114,7 +114,9 @@ function Create() {
         postTag,
         chosenclass
       });
-      navigate('/board/' + token1.classID + '/post/' + token1.newID)
+      if(token1.message=="message"){
+        navigate('/board/' + token1.classID + '/post/' + token1.newID)
+      }
     }
     if (token.message.includes("localhost")) {
       setLink(token.message)
@@ -127,6 +129,7 @@ function Create() {
   }
 
   const handlePop = async e => {
+    e.preventDefault()
     const token = await createPost1({
       userID: sessionStorage.getItem('token'),
       postContent,
@@ -134,10 +137,10 @@ function Create() {
       postTag,
       chosenclass
     });
-    navigate('/board/' + token.classID + '/post/' + token.newID)
+    if(token.message=="message"){
+      navigate('/board/' + token.classID + '/post/' + token.newID)
+    }
   }
-
-
   const handleChange = (event) => {
     setchosenclass(event.target.value);
   }

@@ -70,6 +70,7 @@ def ask_question(postTitle, postBody, classID, pdfName):
                 print("not here")
             else:
                 check = response
+                break
         except FileNotFoundError:
             print("fail")
         else:
