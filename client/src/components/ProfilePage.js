@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Button from '@mui/material/Button'
 import { useNavigate } from "react-router-dom";
 import Layout from './Layout.js'
-import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Typography, CircularProgress } from '@mui/material'
+import { Avatar, Grid, Paper, TextField, Checkbox, FormControlLabel, Typography, CircularProgress, Stack } from '@mui/material'
 import Box from '@mui/material/Box';
 import { Link, Navigate } from 'react-router-dom'
 import ListItem from '@mui/joy/ListItem';
@@ -115,7 +115,7 @@ function ProfilePage() {
     navigate("/changePass")
   }
 
-  const paperStyle = { padding: "30px 500px", height: '60vh', width: 320, margin: "50px auto" }
+  const paperStyle = { padding: "30px 300px", height: '60vh', width: 320, margin: "50px auto" }
   const avatarStyle = { backgroundColor: '#ef6c00' }
   const btnStyle = { margin: '40px 0' }
   if (!sessionStorage.getItem('token')) {
@@ -123,34 +123,37 @@ function ProfilePage() {
   }
   else if (fetchDone) {
     return (
-      <Grid sx={{backgroundImage:'url(https://utdmercury.com/wp-content/uploads/2019/08/utdallas_min-1024x683.jpg)', backgroundSize: 'cover', height: '100vh'}}>
       <Typography gutterBottom variant="h6" component="div">
         <Layout />
-        <Grid   container component="main" item xs={false} sm={4} md={7} sx={{ height: '100vh' }}>
-            <Paper style = {paperStyle}>
-            <Avatar style={avatarStyle} sx={{width: 70, height:70}} align='center'><AccountBoxIcon /></Avatar>
+        <Stack direction={"row"} spacing={2}>
+        <Grid container item>
+            <Paper style={paperStyle}>
+              <Avatar style={avatarStyle} sx={{width: 70, height:70}} align='center'><AccountBoxIcon /></Avatar>
                 <h2>{userName}'s Profile Page</h2>
                 <h3>E-Mail: {email}</h3>
+                <h3>Name: {userName}</h3>
+                <h3>Last Name: {lastName}</h3>
                 <br></br>
               <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goChange()}>Change Password</Button>
-            </Paper>
+            </Paper> 
         </Grid>
-          <Grid container component="main" item xs={false} sm={'auto'} md={'auto'} sx={{ height: '100vh' }}>
-            <Paper style = {paperStyle}>
-               <Divider/>
-                 <h2>Enrolled Classes</h2>
-                  <nav aria-label="enrolled classes">
-                    <List>
-                      {inputs}
-                    </List>
-                  </nav>
-                    <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goAdd()}>Add Class</Button>
-              </Paper>
-          </Grid>
+        <Grid container item> 
+          <Paper style={paperStyle}>
+            <Divider/>
+            <h2>Enrolled Classes</h2>
+            <nav aria-label="enrolled classes">
+              <List>
+                {inputs}
+              </List>
+            </nav>
+            <Button type='submit' variant="contained" sx={{ backgroundColor: 'orange' }} style={btnStyle} onClick={() => goAdd()}>Add Class</Button>
+          </Paper>
+        </Grid>
+        </Stack>
         </Typography>
-      </Grid>
     )
   }
+
   else{
     return (
       <Grid >
