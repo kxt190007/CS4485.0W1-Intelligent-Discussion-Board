@@ -531,22 +531,31 @@ function Post() {
               borderRadius: 1,
             }}>
               <div>
-                <Typography gutterBottom variant="h4" component="div">
+              <Typography gutterBottom variant="h4" component="div">
                   {title}
                 </Typography>
-                <Divider />
-                <Typography variant="caption" color="text.secondary">
-              <br/> Posted by: {firstName + " " + lastName}
-            </Typography>
               </div>
               <Button variant="contained" color="primary" sx={{ backgroundColor: 'orange' }} onClick={() => goBack()}>Back</Button>
             </Grid>
-            <Card sx={{ maxWidth: "100%", m: 2, maxHeight: 200 }}>
+            <Divider />
+            <Typography variant="body1">
+              {body}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              <br/> Posted by: {firstName + " " + lastName}
+            </Typography>
+            <br />
+            <br />
+            
+            <Typography gutterBottom variant="h5" component="div">
+              <Box pr={2} >Comments</Box>
+            </Typography>
+            <Divider />
+            <Card sx={{ maxWidth: "85%", m: 2, maxHeight: 200, marginLeft: curMargin, marginRight: 'auto' }}>
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="div">
                     It's quiet here... Be the first to comment!
                   </Typography>
-                  <Divider />
 
                 </CardContent>
             </Card>
