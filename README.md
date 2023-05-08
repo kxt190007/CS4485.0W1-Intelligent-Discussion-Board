@@ -1,4 +1,21 @@
 # CS4485.0W1-Intelligent-Discussion-Board
-We are making an intelligent discussion board. It will have the same functions as the discussion board from elearning, but we will also have an intelligent chatbot that will give answers to trivial questions that are asked. Before the user posts a question to the discussion board, the chatbot will scan the syllabus and the discussion board for previous answers and then prompt the user with possible solutions before they post.
+Clone repo to desired destination
+Install python (ver. 3.9 or later)
+Install Node.js (npm)
+Install required dependencies with the following commands:
+  pip install Flask
+  pip install -U flask-cors
+  pip install flask-mysqldb
+  pip install openai
+  pip install python-dotenv
+  pip install pdfminer.six
+  npm i react-router-dom
+  pip install -U scikit-learn scipy matplotlib
+  npm install @mui/joy @emotion/react @emotion/styled
+  npm install --save moment react-moment
 
-The design board will have a home page, a login system, and a search function. Users will login to the system and have the option to create posts and comment on other posts. When posts are created, the recommendation algorithm will scan the content of the post and if applicable, give some sort of relevant recommendation to the user.
+(open split terminal to do the following two tasks)
+cd into the client folder and run the following command:
+  npm run start
+cd into the flask-server folder and run the following command:
+  python server.py
